@@ -4,99 +4,102 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 입주민 포털</title>
-<meta name="description" content="산들마을 아파트 입주민을 위한 회의록·업무현황·커뮤니티센터 안내 모음">
+<meta name="description" content="산들마을 아파트 입주민 포털 — 회의록·업무현황·자료·커뮤니티센터를 한 화면의 탭으로">
 <style>
-:root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--paper:#fffdf8;--bg:#f4f1ea;--gold:#b5841a;--gold-soft:#f6eccf;--teal:#3f7fa6;--teal-soft:#e3eef5;--green:#4f7a47;--green-soft:#e8efe5}
+:root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--bg:#f4f1ea;--gold:#b5841a;--gold-soft:#f6eccf;--teal:#3f7fa6;--teal-soft:#e3eef5;--green:#4f7a47;--green-soft:#e8efe5;--top:56px}
 *{box-sizing:border-box}
-body{margin:0;font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
-.wrap{max-width:900px;margin:0 auto;padding:28px 18px 60px}
-header{display:flex;align-items:center;gap:14px;margin-bottom:6px}
-.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#e8d6a2,#b5841a);display:grid;place-items:center;color:#fff;font-weight:900;font-size:22px;box-shadow:0 4px 14px rgba(0,0,0,.08)}
-h1{font-size:24px;margin:0;letter-spacing:-.01em}
-.sub{color:var(--muted);font-size:14px;margin:0 0 22px 62px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-a.card{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:transform .12s,box-shadow .12s}
-a.card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.08)}
-.card .k{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;letter-spacing:.06em;padding:3px 9px;border-radius:999px;width:max-content}
-.k.gold{background:var(--gold-soft);color:#7a5a12}.k.teal{background:var(--teal-soft);color:#2f5f80}.k.green{background:var(--green-soft);color:#3c6134}.k.gray{background:#eeebe3;color:#6f6b62}
-.card h2{font-size:17px;margin:0}
-.card p{margin:0;color:var(--muted);font-size:13.5px}
-.card .meta{margin-top:auto;padding-top:8px;font-size:12px;color:#9a937f;display:flex;justify-content:space-between;gap:8px}
-.card .go{color:var(--gold);font-weight:800}
-.sec{margin:26px 0 8px;font-size:13px;font-weight:800;color:#9a937f;letter-spacing:.08em}
-.sub-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
-.sub-links a{font-size:12.5px;text-decoration:none;color:#5c5b56;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
-.sub-links a:hover{background:#f7f4ec}
-footer{margin-top:36px;font-size:12px;color:#9a937f;border-top:1px dashed var(--line);padding-top:14px}
-footer a{color:inherit}
+html,body{height:100%;margin:0}
+body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;overflow:hidden}
+header{height:var(--top);display:flex;align-items:center;gap:10px;padding:0 12px;background:#fffdf8;border-bottom:1px solid var(--line);flex:0 0 auto}
+.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#e8d6a2,#b5841a);display:grid;place-items:center;color:#fff;font-weight:900;font-size:16px;flex:0 0 auto}
+.brand{font-weight:900;font-size:15px;white-space:nowrap;margin-right:6px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:transparent;border-radius:10px;padding:8px 12px;font-size:13.5px;font-weight:700;color:#5c5b56;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{background:#f2eee5}
+nav.tabs button.active{background:var(--gold-soft);color:#6a4d0f;border-color:#e7cf8e}
+nav.tabs button.t-green.active{background:var(--green-soft);color:#3c6134;border-color:#b9d3ae}
+nav.tabs button.t-teal.active{background:var(--teal-soft);color:#2f5f80;border-color:#b9d0e0}
+.tools{display:flex;gap:6px;flex:0 0 auto}
+.tools a,.tools button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 10px;font-size:12px;color:#5c5b56;text-decoration:none;cursor:pointer;white-space:nowrap}
+.tools a:hover,.tools button:hover{background:#f7f4ec}
+main{flex:1 1 auto;position:relative;min-height:0}
+.pane{position:absolute;inset:0;display:none;background:#fff}
+.pane.active{display:block}
+.pane iframe{width:100%;height:100%;border:0;display:block;background:#fff}
+.fallback{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;color:var(--muted);background:var(--bg)}
+.pane.blocked .fallback{display:grid}
+.fallback a{display:inline-block;margin-top:10px;padding:10px 16px;border-radius:12px;background:var(--gold);color:#fff;text-decoration:none;font-weight:800}
+.loading{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:bar 1.1s linear infinite;display:none}
+.pane.loading-on .loading{display:block}
+@keyframes bar{from{background-position:-200px 0}to{background-position:400px 0}}
+@media (max-width:640px){.brand{display:none}.tools .hide-sm{display:none}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header><div class="logo">산</div><h1>산들마을 입주민 포털</h1></header>
-  <p class="sub">회의록·업무현황·커뮤니티센터 안내를 한곳에서. 각 카드는 새 창으로 열립니다.</p>
-
-  <div class="sec">회의 · 의사결정</div>
-  <div class="grid">
-    <a class="card" href="https://sandleapt.github.io/minutes/" target="_blank" rel="noopener">
-      <span class="k gold">◆ 회의록</span>
-      <h2>입주자·임차인대표회의 회의록</h2>
-      <p>매월 회의의 안건·의결·표결을 기록하고, 주제별·시간순으로 흐름을 볼 수 있습니다. 이전 회의록 열람, 주제 흐름 요약, 동대표 명단·임기 포함.</p>
-      <div class="meta"><span id="minutesMeta">회의록 최신 갱신 확인 중…</span><span class="go">열기 →</span></div>
-    </a>
-    <a class="card" href="https://valuable-silicon-f1f.notion.site/3b15f4b3bcdd81f9a550e8d3cf46e48d" target="_blank" rel="noopener">
-      <span class="k green">업무현황</span>
-      <h2>산들마을 업무현황 공개용</h2>
-      <p>진행 중인 일반업무(관리규약·공사·용역·회계·안전)와 커뮤니티센터 업무를 "언제 요청 → 어디까지 확인 → 다음 할 일"로 정리한 현황판(Notion).</p>
-      <div class="meta"><span>Notion</span><span class="go">열기 →</span></div>
-    </a>
-    <a class="card" href="https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79" target="_blank" rel="noopener">
-      <span class="k green">자료</span>
-      <h2>산들마을 자료 페이지</h2>
-      <p>입주자대표회의 관련 자료 모음(Notion).</p>
-      <div class="meta"><span>Notion</span><span class="go">열기 →</span></div>
-    </a>
+<header>
+  <div class="logo">산</div><div class="brand">산들마을 입주민 포털</div>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="tools">
+    <button id="reloadBtn" title="현재 탭 새로고침">↻</button>
+    <a id="openBtn" href="#" target="_blank" rel="noopener" title="현재 탭을 새 창으로">새 창 ↗</a>
   </div>
-
-  <div class="sub-links" style="margin:10px 0 0 2px">
-    <span style="font-size:12px;color:#9a937f;align-self:center">회의록 바로가기:</span>
-    <a href="https://sandleapt.github.io/minutes/?tab=archiveView" target="_blank" rel="noopener">이전 회의록</a>
-    <a href="https://sandleapt.github.io/minutes/?tab=topicView" target="_blank" rel="noopener">주제별 보기</a>
-    <a href="https://sandleapt.github.io/minutes/?tab=repsView" target="_blank" rel="noopener">동대표 명단</a>
-    <a href="https://sandleapt.github.io/minutes/?tab=hajaView" target="_blank" rel="noopener">하자판결금</a>
-  </div>
-
-  <div class="sec">생활 · 시설</div>
-  <div class="grid">
-    <a class="card" href="https://sandleapt.github.io/CommunityNotice/" target="_blank" rel="noopener">
-      <span class="k teal">커뮤니티센터</span>
-      <h2>커뮤니티센터 이용 안내</h2>
-      <p>헬스장·작은도서관 등 주민공동시설 이용 방법과 안내.</p>
-      <div class="meta"><span>안내 페이지</span><span class="go">열기 →</span></div>
-    </a>
-    <a class="card" href="https://sandleapt.github.io/minutes/?tab=hajaView" target="_blank" rel="noopener">
-      <span class="k gray">하자소송</span>
-      <h2>하자판결금 수령 현황 조회</h2>
-      <p>채권양도(소송 참여) 370세대의 판결금 수령 여부·시기와 미수령 세대 제출 서류 안내. 우리 집 동·호로 바로 확인.</p>
-      <div class="meta"><span>회의록 앱 안</span><span class="go">열기 →</span></div>
-    </a>
-  </div>
-
-  <footer>
-    산들마을아파트 입주자대표회의 · 문의는 관리사무소 또는 네이버 카페 "성남여수 산들마을" ·
-    <a href="https://github.com/SandleAPT" target="_blank" rel="noopener">GitHub</a>
-  </footer>
-</div>
+</header>
+<main id="main"></main>
 <script>
-// 회의록 최신 갱신일: 같은 호스트의 minutes/data.json(generatedAt)을 읽어 표시
-fetch("https://sandleapt.github.io/minutes/data.json?v=" + new Date().toISOString().slice(0,10), {cache:"no-store"})
-  .then(r => r.ok ? r.json() : null)
-  .then(j => {
-    var el = document.getElementById("minutesMeta"); if (!el || !j) { if (el) el.textContent = "회의록 앱"; return; }
-    var items = j.items || []; var latest = "";
-    items.forEach(function (it) { if (it && it.date && it.date > latest) latest = it.date; });
-    el.textContent = (latest ? "최근 회의 " + latest.replace(/-/g, ".") + " · " : "") + "회의록 " + items.length + "건";
-  }).catch(function () { var el = document.getElementById("minutesMeta"); if (el) el.textContent = "회의록 앱"; });
+// 한 페이지 안에서 하위 서비스를 탭으로 전환해 보여 주는 껍데기. 각 탭은 iframe(같은 호스트는 로그인/관리자 키 공유).
+// 주소 #탭id 로 기억·공유. 새 탭(서비스)을 더하려면 SERVICES에 한 줄 추가.
+var SERVICES = [
+  { id: "minutes",   label: "◆ 회의록",         cls: "",        url: "https://sandleapt.github.io/minutes/" },
+  { id: "archive",   label: "이전 회의록",      cls: "",        url: "https://sandleapt.github.io/minutes/?tab=archiveView" },
+  { id: "topics",    label: "주제별 보기",      cls: "",        url: "https://sandleapt.github.io/minutes/?tab=topicView" },
+  { id: "haja",      label: "하자판결금",       cls: "",        url: "https://sandleapt.github.io/minutes/?tab=hajaView" },
+  { id: "work",      label: "업무현황",         cls: "t-green", url: "https://valuable-silicon-f1f.notion.site/3b15f4b3bcdd81f9a550e8d3cf46e48d" },
+  { id: "docs",      label: "자료",             cls: "t-green", url: "https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79" },
+  { id: "community", label: "◇ 커뮤니티센터",   cls: "t-teal",  url: "https://sandleapt.github.io/CommunityNotice/" }
+];
+var tabs = document.getElementById("tabs"), main = document.getElementById("main"), openBtn = document.getElementById("openBtn");
+var current = null;
+SERVICES.forEach(function (s) {
+  var b = document.createElement("button"); b.textContent = s.label; b.className = s.cls; b.dataset.id = s.id; b.onclick = function () { show(s.id, true); };
+  tabs.appendChild(b);
+  var p = document.createElement("div"); p.className = "pane"; p.id = "pane-" + s.id;
+  p.innerHTML = '<div class="loading"></div><div class="fallback"><div><b>이 화면은 포털 안에 끼워 넣을 수 없게 설정되어 있습니다.</b><br>새 창에서 열어 주세요.<br><a href="' + s.url + '" target="_blank" rel="noopener">새 창에서 열기 ↗</a></div></div>';
+  main.appendChild(p);
+});
+function ensureFrame(s) {
+  var p = document.getElementById("pane-" + s.id);
+  if (p.querySelector("iframe")) return p;
+  var f = document.createElement("iframe"); f.src = s.url; f.title = s.label; f.setAttribute("loading", "eager");
+  f.setAttribute("allow", "clipboard-write; fullscreen");
+  p.classList.add("loading-on");
+  var done = false;
+  f.addEventListener("load", function () { done = true; p.classList.remove("loading-on"); });
+  // 끼워 넣기를 막는 사이트(X-Frame-Options)는 load 는 오지만 내용이 비므로 일정 시간 뒤 안내 표시(같은 호스트는 검사 가능)
+  setTimeout(function () {
+    try {
+      var sameHost = new URL(s.url).host === location.host;
+      if (sameHost) { if (!f.contentDocument || !f.contentDocument.body || !f.contentDocument.body.childElementCount) p.classList.add("blocked"); }
+      else if (!done) { /* 외부: 로딩이 길면 안내만, 차단 여부는 알 수 없음 */ }
+    } catch (e) {}
+  }, 6000);
+  p.insertBefore(f, p.firstChild);
+  return p;
+}
+function show(id, push) {
+  var s = SERVICES.find(function (x) { return x.id === id; }) || SERVICES[0];
+  current = s;
+  document.querySelectorAll("nav.tabs button").forEach(function (b) { b.classList.toggle("active", b.dataset.id === s.id); });
+  document.querySelectorAll(".pane").forEach(function (p) { p.classList.remove("active"); });
+  ensureFrame(s).classList.add("active");
+  openBtn.href = s.url;
+  document.title = "산들마을 입주민 포털 — " + s.label.replace(/^[◆◇]\s*/, "");
+  if (push) { try { history.replaceState(null, "", "#" + s.id); } catch (e) {} }
+  var b = document.querySelector('nav.tabs button[data-id="' + s.id + '"]'); if (b && b.scrollIntoView) b.scrollIntoView({ inline: "nearest", block: "nearest" });
+}
+document.getElementById("reloadBtn").onclick = function () { if (!current) return; var p = document.getElementById("pane-" + current.id); var f = p.querySelector("iframe"); if (f) { p.classList.add("loading-on"); f.src = f.src; } };
+window.addEventListener("hashchange", function () { show((location.hash || "").replace(/^#/, ""), false); });
+show((location.hash || "").replace(/^#/, "") || "minutes", false);
 </script>
 </body>
 </html>

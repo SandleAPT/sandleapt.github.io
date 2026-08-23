@@ -13,5 +13,8 @@
 - (참고) 이름을 다시 바꾸면 주소도 `https://sandleapt.github.io/<저장소명>/`으로 바뀝니다.
 - Settings → Pages → Build and deployment: `Deploy from a branch`, Branch `main` / `(root)`.
 
+## 구조
+한 화면의 탭 껍데기입니다. 각 탭은 `iframe`으로 하위 서비스를 그 자리에서 열고, 주소 `#탭id`(minutes·archive·topics·haja·work·docs·community)로 기억됩니다. 탭을 더하려면 `index.html`의 `SERVICES` 배열에 한 줄 추가.
+
 ## 수정
 `index.html` 한 파일입니다. 카드(서비스)를 더하려면 `<a class="card">` 블록을 복사해 주소·제목·설명을 바꾸세요.
