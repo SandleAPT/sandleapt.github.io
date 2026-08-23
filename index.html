@@ -4,102 +4,275 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 입주민 포털</title>
-<meta name="description" content="산들마을 아파트 입주민 포털 — 회의록·업무현황·자료·커뮤니티센터를 한 화면의 탭으로">
+<meta name="description" content="산들마을 아파트 입주민 포털 — 회의록·하자판결금·업무현황·자료·커뮤니티센터를 왼쪽 메뉴 하나로">
 <style>
-:root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--bg:#f4f1ea;--gold:#b5841a;--gold-soft:#f6eccf;--teal:#3f7fa6;--teal-soft:#e3eef5;--green:#4f7a47;--green-soft:#e8efe5;--top:56px}
+:root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--bg:#f4f1ea;--paper:#fffdf8;--gold:#b5841a;--gold-ink:#6a4d0f;--gold-soft:#f6eccf;--gold-line:#e7cf8e;--teal:#2f5f80;--teal-soft:#e3eef5;--teal-line:#b9d0e0;--green:#3c6134;--green-soft:#e8efe5;--green-line:#b9d3ae;--rail:232px;--top:52px;--bottom:56px}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;overflow:hidden}
-header{height:var(--top);display:flex;align-items:center;gap:10px;padding:0 12px;background:#fffdf8;border-bottom:1px solid var(--line);flex:0 0 auto}
-.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#e8d6a2,#b5841a);display:grid;place-items:center;color:#fff;font-weight:900;font-size:16px;flex:0 0 auto}
-.brand{font-weight:900;font-size:15px;white-space:nowrap;margin-right:6px}
-nav.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1 1 auto;min-width:0}
-nav.tabs::-webkit-scrollbar{display:none}
-nav.tabs button{flex:0 0 auto;border:1px solid transparent;background:transparent;border-radius:10px;padding:8px 12px;font-size:13.5px;font-weight:700;color:#5c5b56;cursor:pointer;white-space:nowrap}
-nav.tabs button:hover{background:#f2eee5}
-nav.tabs button.active{background:var(--gold-soft);color:#6a4d0f;border-color:#e7cf8e}
-nav.tabs button.t-green.active{background:var(--green-soft);color:#3c6134;border-color:#b9d3ae}
-nav.tabs button.t-teal.active{background:var(--teal-soft);color:#2f5f80;border-color:#b9d0e0}
-.tools{display:flex;gap:6px;flex:0 0 auto}
-.tools a,.tools button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 10px;font-size:12px;color:#5c5b56;text-decoration:none;cursor:pointer;white-space:nowrap}
+body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;overflow:hidden}
+
+/* ── 왼쪽 메뉴(레일) ── */
+aside.rail{width:var(--rail);flex:0 0 auto;height:100%;background:var(--paper);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:thin}
+.brand{display:flex;align-items:center;gap:10px;padding:16px 16px 12px}
+.logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#e8d6a2,#b5841a);display:grid;place-items:center;color:#fff;font-weight:900;font-size:16px;flex:0 0 auto}
+.brand b{font-size:15px;font-weight:900;line-height:1.2;display:block}
+.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+nav.menu{padding:4px 10px 12px;flex:1 1 auto}
+.grp{margin-top:10px}
+.grp-title{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 8px 4px;display:flex;align-items:center;gap:6px}
+.grp-title .dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.grp.teal .grp-title .dot{background:var(--teal)}
+.grp.green .grp-title .dot{background:#4f7a47}
+.grp-title.toggle{width:100%;background:none;border:0;cursor:pointer;font:inherit;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.06em;text-align:left;border-radius:8px}
+.grp-title.toggle:hover{background:#f2eee5}
+.grp-title .arrow{margin-left:auto;transition:transform .15s}
+.grp.open .grp-title .arrow{transform:rotate(90deg)}
+.grp .items{display:grid;gap:2px}
+.grp.collapsible .items{display:none}
+.grp.collapsible.open .items{display:grid}
+.item{display:flex;align-items:center;gap:8px;width:100%;border:1px solid transparent;background:transparent;border-radius:10px;padding:8px 10px;font-size:13.5px;font-weight:600;color:#4a4841;cursor:pointer;text-align:left;text-decoration:none;white-space:nowrap}
+.item:hover{background:#f2eee5}
+.item.active{background:var(--gold-soft);color:var(--gold-ink);border-color:var(--gold-line);font-weight:800}
+.grp.teal .item.active{background:var(--teal-soft);color:var(--teal);border-color:var(--teal-line)}
+.grp.green .item.active{background:var(--green-soft);color:var(--green);border-color:var(--green-line)}
+.item .ext{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
+.item .num{font-weight:800;opacity:.85}
+.rail-foot{padding:12px 16px 16px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);line-height:1.5}
+.rail-foot a{color:var(--muted)}
+
+/* ── 본문 ── */
+.stage{flex:1 1 auto;min-width:0;height:100%;display:flex;flex-direction:column}
+.topbar{height:var(--top);display:none;align-items:center;gap:8px;padding:0 10px;background:var(--paper);border-bottom:1px solid var(--line);flex:0 0 auto}
+.topbar .title{font-weight:900;font-size:15px;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.icon-btn{border:1px solid var(--line);background:#fff;border-radius:9px;width:34px;height:34px;display:grid;place-items:center;font-size:15px;color:#5c5b56;cursor:pointer;text-decoration:none;flex:0 0 auto}
+.icon-btn:hover{background:#f7f4ec}
+.tools{position:absolute;right:10px;top:8px;display:flex;gap:6px;z-index:3;opacity:.55;transition:opacity .15s}
+.tools:hover{opacity:1}
+.tools a,.tools button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:5px 9px;font-size:12px;color:#5c5b56;text-decoration:none;cursor:pointer;white-space:nowrap}
 .tools a:hover,.tools button:hover{background:#f7f4ec}
 main{flex:1 1 auto;position:relative;min-height:0}
 .pane{position:absolute;inset:0;display:none;background:#fff}
 .pane.active{display:block}
 .pane iframe{width:100%;height:100%;border:0;display:block;background:#fff}
-.fallback{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;color:var(--muted);background:var(--bg)}
-.pane.blocked .fallback{display:grid}
-.fallback a{display:inline-block;margin-top:10px;padding:10px 16px;border-radius:12px;background:var(--gold);color:#fff;text-decoration:none;font-weight:800}
-.loading{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:bar 1.1s linear infinite;display:none}
+.loading{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);background-size:200px 100%;animation:bar 1.1s linear infinite;display:none}
 .pane.loading-on .loading{display:block}
 @keyframes bar{from{background-position:-200px 0}to{background-position:400px 0}}
-@media (max-width:640px){.brand{display:none}.tools .hide-sm{display:none}}
+/* 새 창으로 여는 서비스(노션) 안내 */
+.ext-pane{position:absolute;inset:0;display:grid;place-items:center;padding:24px;background:var(--bg)}
+.ext-card{max-width:420px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:26px 28px;text-align:center}
+.ext-card h2{margin:0 0 6px;font-size:18px}
+.ext-card p{margin:0 0 14px;color:var(--muted);font-size:13.5px;line-height:1.6}
+.ext-card a.go{display:inline-block;padding:10px 18px;border-radius:12px;background:var(--gold);color:#fff;text-decoration:none;font-weight:800}
+.ext-card small{display:block;margin-top:12px;color:var(--muted);font-size:12px}
+
+/* ── 모바일: 위 ≡ 서랍 + 아래 바로가기 바 ── */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:20}
+.bottom{display:none;height:var(--bottom);background:var(--paper);border-top:1px solid var(--line);flex:0 0 auto}
+.bottom button{flex:1;border:0;background:none;font:inherit;font-size:11px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer}
+.bottom button .ic{font-size:17px;line-height:1}
+.bottom button.active{color:var(--gold-ink)}
+.bottom button.t-teal.active{color:var(--teal)}
+.bottom button.t-green.active{color:var(--green)}
+@media (max-width:860px){
+  aside.rail{position:fixed;left:0;top:0;bottom:0;z-index:21;transform:translateX(-100%);transition:transform .18s;box-shadow:0 0 0 rgba(0,0,0,0)}
+  body.drawer aside.rail{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.15)}
+  body.drawer .scrim{display:block}
+  .topbar{display:flex}
+  .tools{display:none}
+  .bottom{display:flex}
+}
+@media (prefers-reduced-motion:reduce){aside.rail,.grp-title .arrow{transition:none}.loading{animation:none}}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">산</div><div class="brand">산들마을 입주민 포털</div>
-  <nav class="tabs" id="tabs"></nav>
-  <div class="tools">
-    <button id="reloadBtn" title="현재 탭 새로고침">↻</button>
-    <a id="openBtn" href="#" target="_blank" rel="noopener" title="현재 탭을 새 창으로">새 창 ↗</a>
+<aside class="rail" id="rail">
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>회의록 · 하자판결금 · 업무현황 · 자료 · 커뮤니티</small></div></div>
+  <nav class="menu" id="menu"></nav>
+  <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
+</aside>
+<div class="scrim" id="scrim"></div>
+<div class="stage">
+  <div class="topbar">
+    <button class="icon-btn" id="menuBtn" title="메뉴">☰</button>
+    <div class="title" id="topTitle">산들마을 입주민 포털</div>
+    <a class="icon-btn" id="openBtnM" href="#" target="_blank" rel="noopener" title="새 창으로">↗</a>
   </div>
-</header>
-<main id="main"></main>
+  <main id="main">
+    <div class="tools">
+      <button id="reloadBtn" title="현재 화면 새로고침">↻</button>
+      <a id="openBtn" href="#" target="_blank" rel="noopener" title="현재 화면을 새 창으로">새 창 ↗</a>
+    </div>
+  </main>
+  <div class="bottom" id="bottom"></div>
+</div>
 <script>
-// 한 페이지 안에서 하위 서비스를 탭으로 전환해 보여 주는 껍데기. 각 탭은 iframe(같은 호스트는 로그인/관리자 키 공유).
-// 주소 #탭id 로 기억·공유. 새 탭(서비스)을 더하려면 SERVICES에 한 줄 추가.
-var SERVICES = [
-  { id: "minutes",   label: "◆ 회의록",         cls: "",        url: "https://sandleapt.github.io/minutes/" },
-  { id: "archive",   label: "이전 회의록",      cls: "",        url: "https://sandleapt.github.io/minutes/?tab=archiveView" },
-  { id: "topics",    label: "주제별 보기",      cls: "",        url: "https://sandleapt.github.io/minutes/?tab=topicView" },
-  { id: "haja",      label: "하자판결금",       cls: "",        url: "https://sandleapt.github.io/minutes/?tab=hajaView" },
-  { id: "work",      label: "업무현황",         cls: "t-green", url: "https://valuable-silicon-f1f.notion.site/3b15f4b3bcdd81f9a550e8d3cf46e48d" },
-  { id: "docs",      label: "자료",             cls: "t-green", url: "https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79" },
-  { id: "community", label: "◇ 커뮤니티센터",   cls: "t-teal",  url: "https://sandleapt.github.io/CommunityNotice/" }
+// ── 산들마을 입주민 포털 — 왼쪽 메뉴 하나로 하위 서비스를 오가는 껍데기 ──
+// 같은 호스트(sandleapt.github.io)의 앱은 iframe 한 벌로 띄우고, 회의록 앱은 끼움 모드(?embed=1)로 띄워
+// 화면 전환을 postMessage 로 주고받는다(앱 한 벌만 떠서 빠르고, 관리자 키·입력 상태도 하나).
+// 노션처럼 끼워 넣기를 막는 사이트는 새 창으로 열고, 포털 안에는 안내 카드만 보여 준다.
+// 메뉴를 더하려면 GROUPS 에 한 줄 추가. 주소 #항목id 로 기억·공유.
+// 같은 호스트 기준 주소(배포: https://sandleapt.github.io, 로컬 점검: http://localhost:…)
+var BASE = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://sandleapt.github.io";
+var MIN = BASE + "/minutes/";
+var GROUPS = [
+  { id: "minutes", title: "회의록", cls: "", service: "minutes", items: [
+    { id: "previewView", label: "회의록 미리보기", num: "①", view: "previewView" },
+    { id: "archiveView", label: "이전 회의록",     num: "②", view: "archiveView" },
+    { id: "topicView",   label: "주제별 보기",     num: "③", view: "topicView" },
+    { id: "hajaView",    label: "하자판결금",      num: "④", view: "hajaView" }
+  ]},
+  { id: "admin", title: "작성 · 관리자", cls: "", service: "minutes", collapsible: true, items: [
+    { id: "setupView",  label: "회의 설정",   num: "⑤", view: "setupView" },
+    { id: "repsView",   label: "동대표 명단", num: "⑥", view: "repsView" },
+    { id: "agendaView", label: "안건 · 발언", num: "⑦", view: "agendaView" }
+  ]},
+  { id: "office", title: "관리사무소", cls: "green", items: [
+    { id: "work", label: "업무현황", external: true, url: "https://valuable-silicon-f1f.notion.site/3b15f4b3bcdd81f9a550e8d3cf46e48d", note: "진행 중인 일반업무·커뮤니티센터 업무를 카드로 정리한 노션 페이지입니다." },
+    { id: "docs", label: "자료",     external: true, url: "https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79", note: "산들마을 관련 자료를 모아 둔 노션 페이지입니다." }
+  ]},
+  { id: "comm", title: "커뮤니티", cls: "teal", items: [
+    { id: "community", label: "커뮤니티센터 이용 안내", service: "community", url: BASE + "/CommunityNotice/" }
+  ]}
 ];
-var tabs = document.getElementById("tabs"), main = document.getElementById("main"), openBtn = document.getElementById("openBtn");
-var current = null;
-SERVICES.forEach(function (s) {
-  var b = document.createElement("button"); b.textContent = s.label; b.className = s.cls; b.dataset.id = s.id; b.onclick = function () { show(s.id, true); };
-  tabs.appendChild(b);
-  var p = document.createElement("div"); p.className = "pane"; p.id = "pane-" + s.id;
-  p.innerHTML = '<div class="loading"></div><div class="fallback"><div><b>이 화면은 포털 안에 끼워 넣을 수 없게 설정되어 있습니다.</b><br>새 창에서 열어 주세요.<br><a href="' + s.url + '" target="_blank" rel="noopener">새 창에서 열기 ↗</a></div></div>';
-  main.appendChild(p);
+// 같은 호스트 서비스(iframe 한 벌씩). minutes 는 끼움 모드.
+var SERVICES = {
+  minutes:   { url: MIN + "?embed=1", embed: true },
+  community: { url: BASE + "/CommunityNotice/" }
+};
+// 모바일 하단 바(서비스 단위)
+var BOTTOM = [
+  { id: "previewView", label: "회의록",   ic: "◆", cls: "" },
+  { id: "hajaView",    label: "하자판결금", ic: "₩", cls: "" },
+  { id: "work",        label: "업무현황", ic: "▤", cls: "t-green" },
+  { id: "community",   label: "커뮤니티", ic: "◇", cls: "t-teal" }
+];
+
+var ITEMS = {}; GROUPS.forEach(function (g) { g.items.forEach(function (it) { it.group = g; ITEMS[it.id] = it; }); });
+var menu = document.getElementById("menu"), main = document.getElementById("main"), bottom = document.getElementById("bottom");
+var openBtn = document.getElementById("openBtn"), openBtnM = document.getElementById("openBtnM"), topTitle = document.getElementById("topTitle");
+var current = null, frames = {}, ready = {};
+
+// 메뉴 그리기
+GROUPS.forEach(function (g) {
+  var box = document.createElement("div"); box.className = "grp " + g.cls + (g.collapsible ? " collapsible" : ""); box.id = "grp-" + g.id;
+  if (g.collapsible) {
+    var tb = document.createElement("button"); tb.type = "button"; tb.className = "grp-title toggle";
+    tb.innerHTML = '<span class="dot"></span>' + g.title + '<span class="arrow">▸</span>';
+    tb.onclick = function () { box.classList.toggle("open"); try { localStorage.setItem("sandle_portal_admin_open", box.classList.contains("open") ? "1" : "0"); } catch (e) {} };
+    box.appendChild(tb);
+    // 회의록 앱과 같은 규칙: 관리자 키가 있는 기기나 한 번 펼친 기기는 펼친 채로
+    try { var v = localStorage.getItem("sandle_portal_admin_open"); if (v === "1" || (v === null && localStorage.getItem("sandle_admin_key"))) box.classList.add("open"); } catch (e) {}
+  } else {
+    var t = document.createElement("div"); t.className = "grp-title"; t.innerHTML = '<span class="dot"></span>' + g.title; box.appendChild(t);
+  }
+  var items = document.createElement("div"); items.className = "items";
+  g.items.forEach(function (it) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "item"; b.dataset.id = it.id;
+    b.innerHTML = (it.num ? '<span class="num">' + it.num + '</span>' : "") + '<span>' + it.label + '</span>' + (it.external ? '<span class="ext">새 창 ↗</span>' : "");
+    b.onclick = function () { show(it.id, true); if (it.external) window.open(it.url, "_blank", "noopener"); closeDrawer(); };
+    items.appendChild(b);
+  });
+  box.appendChild(items); menu.appendChild(box);
 });
-function ensureFrame(s) {
-  var p = document.getElementById("pane-" + s.id);
-  if (p.querySelector("iframe")) return p;
-  var f = document.createElement("iframe"); f.src = s.url; f.title = s.label; f.setAttribute("loading", "eager");
-  f.setAttribute("allow", "clipboard-write; fullscreen");
-  p.classList.add("loading-on");
-  var done = false;
-  f.addEventListener("load", function () { done = true; p.classList.remove("loading-on"); });
-  // 끼워 넣기를 막는 사이트(X-Frame-Options)는 load 는 오지만 내용이 비므로 일정 시간 뒤 안내 표시(같은 호스트는 검사 가능)
-  setTimeout(function () {
-    try {
-      var sameHost = new URL(s.url).host === location.host;
-      if (sameHost) { if (!f.contentDocument || !f.contentDocument.body || !f.contentDocument.body.childElementCount) p.classList.add("blocked"); }
-      else if (!done) { /* 외부: 로딩이 길면 안내만, 차단 여부는 알 수 없음 */ }
-    } catch (e) {}
-  }, 6000);
-  p.insertBefore(f, p.firstChild);
+BOTTOM.forEach(function (bt) {
+  var b = document.createElement("button"); b.className = bt.cls; b.dataset.id = bt.id; b.innerHTML = '<span class="ic">' + bt.ic + '</span>' + bt.label;
+  b.onclick = function () { var it = ITEMS[bt.id]; show(bt.id, true); if (it && it.external) window.open(it.url, "_blank", "noopener"); };
+  bottom.appendChild(b);
+});
+
+// 화면(pane) 준비
+function paneFor(key) {
+  var p = document.getElementById("pane-" + key);
+  if (p) return p;
+  p = document.createElement("div"); p.className = "pane"; p.id = "pane-" + key;
+  p.innerHTML = '<div class="loading"></div>';
+  main.appendChild(p);
   return p;
 }
-function show(id, push) {
-  var s = SERVICES.find(function (x) { return x.id === id; }) || SERVICES[0];
-  current = s;
-  document.querySelectorAll("nav.tabs button").forEach(function (b) { b.classList.toggle("active", b.dataset.id === s.id); });
-  document.querySelectorAll(".pane").forEach(function (p) { p.classList.remove("active"); });
-  ensureFrame(s).classList.add("active");
-  openBtn.href = s.url;
-  document.title = "산들마을 입주민 포털 — " + s.label.replace(/^[◆◇]\s*/, "");
-  if (push) { try { history.replaceState(null, "", "#" + s.id); } catch (e) {} }
-  var b = document.querySelector('nav.tabs button[data-id="' + s.id + '"]'); if (b && b.scrollIntoView) b.scrollIntoView({ inline: "nearest", block: "nearest" });
+function ensureService(key) {
+  var s = SERVICES[key], p = paneFor("svc-" + key);
+  if (!frames[key]) {
+    var f = document.createElement("iframe"); f.src = s.url; f.title = key; f.setAttribute("allow", "clipboard-write; fullscreen");
+    p.classList.add("loading-on");
+    f.addEventListener("load", function () { p.classList.remove("loading-on"); });
+    p.insertBefore(f, p.firstChild); frames[key] = f;
+  }
+  return p;
 }
-document.getElementById("reloadBtn").onclick = function () { if (!current) return; var p = document.getElementById("pane-" + current.id); var f = p.querySelector("iframe"); if (f) { p.classList.add("loading-on"); f.src = f.src; } };
+function ensureExternal(it) {
+  var p = paneFor("ext-" + it.id);
+  if (!p.querySelector(".ext-pane")) {
+    p.innerHTML = '<div class="ext-pane"><div class="ext-card"><h2>' + it.label + ' <span style="color:var(--muted);font-weight:600;font-size:13px">새 창</span></h2>' +
+      '<p>' + (it.note || "") + '<br>이 페이지는 노션에 있어 포털 안에 끼워 넣을 수 없어, 새 창으로 열립니다. 포털은 이 창에 그대로 남아 있어요.</p>' +
+      '<a class="go" href="' + it.url + '" target="_blank" rel="noopener">' + it.label + ' 열기 ↗</a>' +
+      '<small>창이 안 열렸으면 위 단추를 눌러 주세요(팝업 차단).</small></div></div>';
+  }
+  return p;
+}
+
+// 회의록 앱에 화면 전환 요청 — 앱이 준비(ready)되기 전이면 준비된 뒤 보낸다
+var pendingView = null;
+function tellMinutes(view) {
+  var f = frames.minutes; if (!f) return;
+  if (!ready.minutes) { pendingView = view; return; }
+  try { f.contentWindow.postMessage({ source: "sandle-portal", type: "show", view: view }, location.origin); } catch (e) {}
+}
+window.addEventListener("message", function (e) {
+  if (e.origin !== location.origin || !e.data || e.data.source !== "sandle-minutes") return;
+  if (e.data.type === "ready") {
+    ready.minutes = true;
+    if (pendingView) { var v = pendingView; pendingView = null; tellMinutes(v); }
+  } else if (e.data.type === "view" && e.data.view) {
+    // 앱 안에서 화면이 바뀌면(예: 시작 시 자동 열기) 메뉴 표시를 맞춘다
+    if (ITEMS[e.data.view] && (!current || current.id !== e.data.view)) show(e.data.view, false, true);
+  }
+});
+
+function directUrl(it) {
+  if (it.external || it.url) return it.url;
+  return MIN + (it.view && it.view !== "previewView" ? "?tab=" + it.view : "");
+}
+function show(id, push, fromApp) {
+  var it = ITEMS[id] || ITEMS.previewView;
+  current = it;
+  document.querySelectorAll(".item").forEach(function (b) { b.classList.toggle("active", b.dataset.id === it.id); });
+  // 하단 바: 하자판결금은 자기 단추, 그 밖의 회의록 화면은 '회의록', 외부/커뮤니티는 같은 id
+  var bottomId = it.id === "hajaView" ? "hajaView" : (!it.external && it.group.service === "minutes") ? "previewView" : it.id;
+  document.querySelectorAll(".bottom button").forEach(function (b) { b.classList.toggle("active", b.dataset.id === bottomId); });
+  if (it.group.collapsible) document.getElementById("grp-" + it.group.id).classList.add("open");
+  document.querySelectorAll(".pane").forEach(function (p) { p.classList.remove("active"); });
+  if (it.external) ensureExternal(it).classList.add("active");
+  else {
+    var svc = it.group.service || it.id;
+    ensureService(svc).classList.add("active");
+    if (svc === "minutes" && it.view && !fromApp) tellMinutes(it.view);
+  }
+  var u = directUrl(it); openBtn.href = u; openBtnM.href = u;
+  topTitle.textContent = it.label;
+  document.title = "산들마을 입주민 포털 — " + it.label;
+  if (push) { try { history.replaceState(null, "", "#" + it.id); } catch (e) {} }
+}
+document.getElementById("reloadBtn").onclick = function () {
+  if (!current || current.external) return;
+  var svc = current.group.service || current.id, f = frames[svc]; if (!f) return;
+  paneFor("svc-" + svc).classList.add("loading-on");
+  if (svc === "minutes") { ready.minutes = false; pendingView = current.view; f.src = MIN + "?embed=1" + (current.view && current.view !== "previewView" ? "&tab=" + current.view : ""); }
+  else f.src = f.src;
+};
+// 모바일 서랍
+function closeDrawer() { document.body.classList.remove("drawer"); }
+document.getElementById("menuBtn").onclick = function () { document.body.classList.toggle("drawer"); };
+document.getElementById("scrim").onclick = closeDrawer;
+window.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
+
 window.addEventListener("hashchange", function () { show((location.hash || "").replace(/^#/, ""), false); });
-show((location.hash || "").replace(/^#/, "") || "minutes", false);
+(function () {
+  var first = (location.hash || "").replace(/^#/, "") || "previewView";
+  var it = ITEMS[first] || ITEMS.previewView;
+  // 첫 화면이 회의록 앱 안의 탭이면 iframe 주소에 &tab= 을 붙여 처음부터 그 화면으로(메시지 왕복 없이)
+  if (!it.external && (it.group.service === "minutes") && it.view && it.view !== "previewView") SERVICES.minutes.url = MIN + "?embed=1&tab=" + it.view;
+  show(it.id, false);
+})();
 </script>
 </body>
 </html>
