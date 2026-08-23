@@ -9,8 +9,8 @@
 - 하자판결금 수령 현황: 회의록 앱 ④ 탭
 
 ## 주소
-- 이 저장소 이름이 `Main`이면 https://sandleapt.github.io/Main/ 으로 열립니다.
-- 루트 주소 https://sandleapt.github.io/ 로 쓰려면 저장소 이름을 **`sandleapt.github.io`** 로 바꾸면 됩니다(Settings → General → Repository name). 그러면 GitHub Pages가 자동으로 루트에 게시합니다.
+- 저장소 이름이 `sandleapt.github.io`라서 루트 주소 **https://sandleapt.github.io/** 로 열립니다(2026-08-23 이름 변경 완료).
+- (참고) 이름을 다시 바꾸면 주소도 `https://sandleapt.github.io/<저장소명>/`으로 바뀝니다.
 - Settings → Pages → Build and deployment: `Deploy from a branch`, Branch `main` / `(root)`.
 
 ## 수정
