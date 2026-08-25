@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "updated": "2026-08-25",
-  "note": "관리비부과명세서의 월별 핵심 수치를 구조화한 분석용 데이터입니다. 원문은 아파트아이, 네이버카페 또는 관리사무소에서 확인할 수 있습니다.",
+  "note": "관리비부과명세서의 금액을 월별·항목별·세부표별로 구조화합니다. 원문은 아파트아이, 네이버카페 또는 관리사무소에서 확인할 수 있습니다. 총괄표뿐 아니라 원문 15쪽의 세부 산출표·수입지출·예금현황까지 장기적으로 누적하는 구조입니다.",
   "months": [
     {
       "period": "2026-06",
@@ -10,7 +10,10 @@
         "title": "2026년 06월분 관리비부과명세서",
         "published": "2026-07-24",
         "originalVisibility": "아파트아이·네이버카페·관리사무소 확인 가능",
-        "pages": 18
+        "originalPages": 15,
+        "capturedPages": 18,
+        "summarySourcePage": 4,
+        "captureSummaryPage": 6
       },
       "totals": {
         "assessed": 229655989,
@@ -20,7 +23,12 @@
         "adjustment": 631,
         "previousBilled": 237887730,
         "change": -8231110,
-        "managementFee": 229265619
+        "overpayment": -390370,
+        "managementFeeAssessed": 229265619,
+        "managementFeeResidentShare": 227444320,
+        "managementFeeBilled": 229266250,
+        "previousManagementFeeBilled": 237460130,
+        "managementFeeChange": -8193880
       },
       "categories": [
         {"code":"general","name":"일반관리비","group":"공용관리","assessed":44634620,"residentShare":44017730,"lhShare":621200,"billed":44638930,"adjustment":4310,"previousBilled":44675640,"change":-36710},
@@ -31,11 +39,54 @@
         {"code":"repair-maintenance","name":"수선유지비","group":"공용관리","assessed":12029200,"residentShare":11902020,"lhShare":136050,"billed":12038070,"adjustment":8870,"previousBilled":13840510,"change":-1802440},
         {"code":"management-commission","name":"위탁관리수수료","group":"공용관리","assessed":313660,"residentShare":312950,"lhShare":0,"billed":312950,"adjustment":-710,"previousBilled":312950,"change":0},
         {"code":"management-commission-extra","name":"위탁관리수수료(분전)","group":"공용관리","assessed":272145,"residentShare":271460,"lhShare":0,"billed":271460,"adjustment":-685,"previousBilled":271460,"change":0},
+
+        {"code":"household-heating","name":"세대난방비","group":"세대사용료/난방","assessed":0,"residentShare":0,"lhShare":0,"billed":0,"adjustment":0,"previousBilled":681950,"change":-681950},
+        {"code":"household-hotwater","name":"세대급탕비","group":"세대사용료/난방","assessed":16617900,"residentShare":16617900,"lhShare":0,"billed":16617900,"adjustment":0,"previousBilled":26277480,"change":-9659580},
+        {"code":"heating-basic","name":"기본요금","group":"세대사용료/난방","assessed":4162010,"residentShare":4106280,"lhShare":57950,"billed":4164230,"adjustment":2220,"previousBilled":4164230,"change":0},
+        {"code":"common-heating","name":"공동난방비","group":"세대사용료/난방","assessed":531110,"residentShare":518980,"lhShare":7320,"billed":526300,"adjustment":-4810,"previousBilled":848790,"change":-322490},
+
+        {"code":"household-electricity","name":"세대전기료","group":"세대사용료/전기","assessed":39951370,"residentShare":39882060,"lhShare":69310,"billed":39951370,"adjustment":0,"previousBilled":36804360,"change":3147010},
+        {"code":"tv-license","name":"TV수신료","group":"세대사용료/전기","assessed":2597500,"residentShare":2597500,"lhShare":0,"billed":2597500,"adjustment":0,"previousBilled":2605000,"change":-7500},
+        {"code":"elevator-electricity","name":"승강기전기료","group":"세대사용료/전기","assessed":2365660,"residentShare":2331270,"lhShare":35130,"billed":2366400,"adjustment":740,"previousBilled":2751790,"change":-385390},
+        {"code":"common-electricity","name":"공동전기료","group":"세대사용료/전기","assessed":13205264,"residentShare":13020720,"lhShare":183760,"billed":13204480,"adjustment":-784,"previousBilled":12485940,"change":718540},
+        {"code":"daycare-electricity","name":"어린이집전기료","group":"세대사용료/전기","assessed":143860,"residentShare":143860,"lhShare":0,"billed":143860,"adjustment":0,"previousBilled":144630,"change":-770},
+        {"code":"carecenter-electricity","name":"다함께돌봄센터","group":"세대사용료/전기","assessed":103280,"residentShare":103280,"lhShare":0,"billed":103280,"adjustment":0,"previousBilled":121140,"change":-17860},
+
+        {"code":"household-water","name":"세대수도료","group":"세대사용료/수도","assessed":16932190,"residentShare":16932190,"lhShare":0,"billed":16932190,"adjustment":0,"previousBilled":16311900,"change":620290},
+        {"code":"common-water","name":"공동수도료","group":"세대사용료/수도","assessed":199020,"residentShare":199430,"lhShare":2800,"billed":202230,"adjustment":3210,"previousBilled":202230,"change":0},
+
         {"code":"food-waste","name":"음식물처리비","group":"기타부과","assessed":960000,"residentShare":956330,"lhShare":0,"billed":956330,"adjustment":-3670,"previousBilled":1280900,"change":-324570},
         {"code":"insurance","name":"보험료","group":"기타부과","assessed":2531230,"residentShare":2528600,"lhShare":0,"billed":2528600,"adjustment":-2630,"previousBilled":2630810,"change":-102210},
         {"code":"tenant-council","name":"임차인대표회의운영비","group":"기타부과","assessed":1595000,"residentShare":1597010,"lhShare":0,"billed":1597010,"adjustment":2010,"previousBilled":1160770,"change":436240,"flags":["절차점검 연계","원본지출 증빙 대조 필요"]},
-        {"code":"election-committee","name":"선거관리위원회운영비","group":"기타부과","assessed":260000,"residentShare":258720,"lhShare":0,"billed":258720,"adjustment":-1280,"previousBilled":269350,"change":-10630}
+        {"code":"election-committee","name":"선거관리위원회운영비","group":"기타부과","assessed":260000,"residentShare":258720,"lhShare":0,"billed":258720,"adjustment":-1280,"previousBilled":269350,"change":-10630},
+        {"code":"longterm-repair","name":"장기수선충당금","group":"충당금·수입","assessed":4873260,"residentShare":4873260,"lhShare":0,"billed":4873260,"adjustment":0,"previousBilled":4873260,"change":0},
+        {"code":"longterm-repair-sale","name":"장기수선충당금(분양전환)","group":"충당금·수입","assessed":3937190,"residentShare":3937190,"lhShare":0,"billed":3937190,"adjustment":0,"previousBilled":3937190,"change":0},
+        {"code":"longterm-repair-sale2","name":"장기수선충당금(분양전환2)","group":"충당금·수입","assessed":1460500,"residentShare":1460500,"lhShare":0,"billed":1460500,"adjustment":0,"previousBilled":1168440,"change":292060},
+        {"code":"parking-income","name":"주차수입","group":"충당금·수입","assessed":9070000,"residentShare":9070000,"lhShare":0,"billed":9070000,"adjustment":0,"previousBilled":9210980,"change":-140980}
       ],
+      "groupTotals": [
+        {"name":"공용관리 합계","assessed":108159645,"residentShare":106699610,"lhShare":1465660,"billed":108165270,"adjustment":5625,"previousBilled":109956590,"change":-1791320},
+        {"name":"난방 합계","assessed":21311020,"residentShare":21243160,"lhShare":65270,"billed":21308430,"adjustment":-2590,"previousBilled":31972450,"change":-10664020},
+        {"name":"전기 합계","assessed":58366934,"residentShare":58078690,"lhShare":288200,"billed":58366890,"adjustment":-44,"previousBilled":54912860,"change":3454030},
+        {"name":"수도 합계","assessed":17131210,"residentShare":17131620,"lhShare":2800,"billed":17134420,"adjustment":3210,"previousBilled":16514130,"change":620290},
+        {"name":"세대사용료 합계","assessed":96809164,"residentShare":96453470,"lhShare":356270,"billed":96809740,"adjustment":576,"previousBilled":103399440,"change":-6589700}
+      ],
+      "detailPlan": {
+        "policy": "총괄표 숫자로 끝내지 않고 원문 각 쪽의 산출근거와 세부표를 행 단위로 보존한다.",
+        "sections": [
+          {"originalPage":5,"kind":"account-detail","title":"일반관리비 세부내역 및 동별 부과기준"},
+          {"originalPage":6,"kind":"allocation-detail","title":"청소비·경비비·소독비 세부 산출"},
+          {"originalPage":7,"kind":"account-detail","title":"승강기유지비·수선유지비 세부내역"},
+          {"originalPage":8,"kind":"account-detail","title":"수선유지비 계속·위탁관리수수료·난방 관련"},
+          {"originalPage":9,"kind":"utility-detail","title":"난방·전기·공동사용량 세부표"},
+          {"originalPage":10,"kind":"utility-detail","title":"전기료 세부 산출 및 연간 자료"},
+          {"originalPage":11,"kind":"utility-detail","title":"수도료 및 계량기 관련 세부표"},
+          {"originalPage":12,"kind":"other-charge-detail","title":"기타부과 및 충당금 관련 세부표"},
+          {"originalPage":13,"kind":"reserve-detail","title":"충당금·주차수입 등 세부표"},
+          {"originalPage":14,"kind":"income-expense","title":"관리외 수익·관리외 비용"},
+          {"originalPage":15,"kind":"deposit-balance","title":"예금 잔액 현황"}
+        ]
+      },
       "flags": [
         {"kind":"linked-investigation","label":"임차인대표회의 운영비는 현재 절차 점검 건과 연결됨","categoryCode":"tenant-council"}
       ]
