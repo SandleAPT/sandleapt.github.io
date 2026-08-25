@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>산들마을 관리비 추적</title>
+<style>
+:root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--bg:#f4f1ea;--paper:#fffdf8;--gold:#b5841a;--soft:#f6eccf;--green:#3c6134;--red:#9b2c23}
+*{box-sizing:border-box}body{margin:0;font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:#fff;color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:22px}.head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;flex-wrap:wrap}.head h1{margin:0;font-size:25px}.head p{margin:5px 0 0;color:var(--muted);font-size:13px}.ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.ctrl select,.ctrl input{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff;font-size:14px}.note{margin:16px 0;padding:12px 14px;border:1px solid #ead39b;background:#fff8e7;border-radius:12px;font-size:13px;line-height:1.6}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.card{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:14px}.card span{font-size:12px;color:var(--muted)}.card b{display:block;font-size:20px;margin-top:5px}.card small{display:block;margin-top:5px;color:var(--muted)}
+.tabs{display:flex;gap:8px;margin:18px 0 12px;flex-wrap:wrap}.tabs button{border:1px solid var(--line);border-radius:10px;background:#fff;padding:8px 12px;font-weight:700;cursor:pointer}.tabs button.on{background:var(--soft);border-color:#e1c36f;color:#6a4d0f}.panel{display:none}.panel.on{display:block}.section{margin-top:14px}.section h2{font-size:17px;margin:0 0 9px}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:13px}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:10px 11px;border-bottom:1px solid #eee9df;text-align:right;font-size:13px}th{background:#f8f5ee;color:#5b574e;position:sticky;top:0}th:first-child,td:first-child{text-align:left}.chg.pos{color:#236b3a}.chg.neg{color:var(--red)}.flag{display:inline-block;margin-left:5px;padding:2px 6px;border-radius:999px;background:#fff0dd;color:#875000;font-size:11px}.trend{display:grid;gap:10px}.trend-row{display:grid;grid-template-columns:95px minmax(0,1fr) 120px;gap:10px;align-items:center;font-size:13px}.bar{height:13px;background:#eee9df;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:#b5841a;border-radius:999px}.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:13px}.evidence{padding:13px 14px;border-radius:12px;background:#f5f7f4;border:1px solid #d8e2d4;line-height:1.6;font-size:13px}.schema{font-size:13px;line-height:1.7;color:#4e4a43}.schema code{background:#f4f1ea;padding:2px 5px;border-radius:5px}
+@media(max-width:760px){.wrap{padding:14px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.head h1{font-size:21px}.trend-row{grid-template-columns:75px minmax(0,1fr);}.trend-row strong{grid-column:2}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head"><div><h1>관리비 추적</h1><p>월별 부과내역을 구조화해 흐름·증감·특이항목을 추적합니다.</p></div><div class="ctrl"><select id="month"></select><input id="search" placeholder="항목 검색"></div></div>
+  <div class="note">원본 관리비부과명세서는 증거자료로 별도 비공개 보관합니다. 이 화면에는 분석에 필요한 수치만 구조화해 싣고, 개인정보·계좌번호·연락처 등은 공개하지 않습니다.</div>
+  <div id="cards" class="cards"></div>
+  <div class="tabs"><button data-tab="items" class="on">항목별 보기</button><button data-tab="trend">월별 흐름</button><button data-tab="flags">점검 필요</button><button data-tab="design">데이터 구조</button></div>
+  <div id="items" class="panel on"><div class="section"><h2>항목별 부과 흐름</h2><div class="tablewrap"><table><thead><tr><th>항목</th><th>당월발생</th><th>입주자분</th><th>LH분</th><th>당월부과</th><th>전월부과</th><th>증감</th></tr></thead><tbody id="rows"></tbody></table></div></div></div>
+  <div id="trend" class="panel"><div class="section"><h2>월별 총액 흐름</h2><div id="trendBody" class="trend"></div></div></div>
+  <div id="flags" class="panel"><div class="section"><h2>점검 필요 항목</h2><div id="flagBody"></div></div></div>
+  <div id="design" class="panel"><div class="section"><h2>앞으로 쌓을 데이터 구조</h2><div class="schema">각 월을 <code>기간 → 전체 부과액 → 항목별 금액 → 입주자/LH 부담 → 전월 대비 증감 → 세부 집행내역 → 점검 플래그 → 원본 증거자료 연결</code> 순서로 저장합니다.<br><br>이 구조면 나중에 특정 항목의 3년 흐름, 갑자기 튄 금액, 반복 지출, LH 부담분 변화, 회의록·계약·절차점검과의 교차분석까지 같은 데이터로 이어갈 수 있습니다.</div></div></div>
+  <div class="section"><div class="evidence"><b>증거자료 보관 원칙</b><br>원본 PDF는 비공개 저장소에 보관하고 공개 화면에는 분석값만 표시합니다. 현재 2026년 06월 관리비부과명세서와 임차인대표회의 운영비 자료가 증거자료로 별도 보관돼 있습니다.</div></div>
+</div>
+<script>
+let DATA=null,cur=null;const won=n=>(Number(n)||0).toLocaleString('ko-KR')+'원';
+fetch('data.json?v=1').then(r=>r.json()).then(j=>{DATA=j;const s=document.getElementById('month');j.months.slice().reverse().forEach(m=>{const o=document.createElement('option');o.value=m.period;o.textContent=m.label;s.appendChild(o)});s.onchange=render;document.getElementById('search').oninput=render;render()});
+function render(){if(!DATA)return;cur=DATA.months.find(m=>m.period===document.getElementById('month').value)||DATA.months[DATA.months.length-1];const t=cur.totals;document.getElementById('cards').innerHTML=[['당월 부과액',won(t.billed),'전월 대비 '+signed(t.change)],['입주자 부담',won(t.residentShare),'구조화 기준'],['LH 부담',won(t.lhShare),'별도 추적 가능'],['관리비 총액',won(t.managementFee),'과오입금 제외 관리비']].map(x=>`<div class="card"><span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></div>`).join('');
+ const q=document.getElementById('search').value.trim().toLowerCase();const rows=cur.categories.filter(x=>!q||x.name.toLowerCase().includes(q));document.getElementById('rows').innerHTML=rows.map(x=>`<tr><td>${x.name}${x.flags?.length?'<span class="flag">점검</span>':''}</td><td>${won(x.assessed)}</td><td>${won(x.residentShare)}</td><td>${won(x.lhShare)}</td><td>${won(x.billed)}</td><td>${won(x.previousBilled)}</td><td class="chg ${x.change>0?'pos':x.change<0?'neg':''}">${signed(x.change)}</td></tr>`).join('');renderTrend();renderFlags()}
+function signed(n){n=Number(n)||0;return (n>0?'+':'')+n.toLocaleString('ko-KR')+'원'}
+function renderTrend(){const ms=DATA.months.slice();const max=Math.max(...ms.map(m=>m.totals.billed),1);document.getElementById('trendBody').innerHTML=ms.length<2?'<div class="empty">현재는 2026년 06월 한 달이 등록돼 있습니다. 다음 달 자료가 들어오면 월별 그래프가 자동으로 이어집니다.</div>':ms.map(m=>`<div class="trend-row"><span>${m.label}</span><div class="bar"><i style="width:${m.totals.billed/max*100}%"></i></div><strong>${won(m.totals.billed)}</strong></div>`).join('')}
+function renderFlags(){const fs=cur.categories.filter(x=>x.flags?.length);document.getElementById('flagBody').innerHTML=fs.length?fs.map(x=>`<div class="card" style="margin-bottom:8px"><b style="font-size:15px">${x.name}</b><small>${x.flags.join(' · ')}</small><div style="margin-top:7px">당월부과 ${won(x.billed)} · 전월 대비 ${signed(x.change)}</div></div>`).join(''):'<div class="empty">현재 등록된 점검 플래그가 없습니다.</div>'}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById(b.dataset.tab).classList.add('on')});
+</script>
+</body>
+</html>
