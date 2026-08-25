@@ -33,7 +33,7 @@
       ],
       "pending": [
         {"period":"2026-05","recorded":310000,"note":"운영비 원자료 확보. 해당 월 회의자료와 최종 매칭 필요."},
-        {"period":"2026-06","recorded":509000,"note":"운영비 원자료 확보. 6월 임시·정기회의 참석인원과 지출일자·성격을 매칭한 뒤 추정액 계산 필요."}
+        {"period":"2026-06","recorded":509000,"note":"원문 14쪽 관리외 비용의 임차인대표회의운영비 당월발생액. 6월 임시·정기회의 참석인원과 지출일자·성격을 매칭한 뒤 추정액 계산 필요."}
       ],
       "sourceNote": "공개 관리비 자료·임차인대표회의 결과공고·임차인 관리규약을 대조한 참고값. 지급결의서, 영수증, 카드전표, 참석부, 수당지급명세 확인 후 수정." 
     }
@@ -89,7 +89,7 @@
         {"code":"common-water","name":"공동수도료","group":"세대사용료/수도","assessed":199020,"residentShare":199430,"lhShare":2800,"billed":202230,"adjustment":3210,"previousBilled":202230,"change":0},
         {"code":"food-waste","name":"음식물처리비","group":"기타부과","assessed":960000,"residentShare":956330,"lhShare":0,"billed":956330,"adjustment":-3670,"previousBilled":1280900,"change":-324570},
         {"code":"insurance","name":"보험료","group":"기타부과","assessed":2531230,"residentShare":2528600,"lhShare":0,"billed":2528600,"adjustment":-2630,"previousBilled":2630810,"change":-102210},
-        {"code":"tenant-council","name":"임차인대표회의운영비","group":"기타부과","assessed":1595000,"residentShare":1597010,"lhShare":0,"billed":1597010,"adjustment":2010,"previousBilled":1160770,"change":436240},
+        {"code":"owner-council","name":"입주자대표회의운영비","group":"기타부과","assessed":1595000,"residentShare":1597010,"lhShare":0,"billed":1597010,"adjustment":2010,"previousBilled":1160770,"change":436240},
         {"code":"election-committee","name":"선거관리위원회운영비","group":"기타부과","assessed":260000,"residentShare":258720,"lhShare":0,"billed":258720,"adjustment":-1280,"previousBilled":269350,"change":-10630},
         {"code":"longterm-repair","name":"장기수선충당금","group":"충당금·수입","assessed":4873260,"residentShare":4873260,"lhShare":0,"billed":4873260,"adjustment":0,"previousBilled":4873260,"change":0},
         {"code":"longterm-repair-sale","name":"장기수선충당금(분양전환)","group":"충당금·수입","assessed":3937190,"residentShare":3937190,"lhShare":0,"billed":3937190,"adjustment":0,"previousBilled":3937190,"change":0},
