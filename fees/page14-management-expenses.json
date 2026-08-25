@@ -17,7 +17,7 @@
     {"name":"공동체활성화비용","previousBalance":800000,"currentActivity":0,"currentBalance":800000,"note":"경로당 지원금"},
     {"name":"법인세비용","previousBalance":3085730,"currentActivity":0,"currentBalance":3085730,"note":"2025년도 법인세"},
     {"name":"주차스티커비용","previousBalance":0,"currentActivity":0,"currentBalance":0,"note":""},
-    {"name":"입주자대표회의운영비","previousBalance":2051000,"currentActivity":509000,"currentBalance":2560000,"note":"입주자대표회의 식대, 음료대"},
+    {"name":"임차인대표회의운영비","previousBalance":2051000,"currentActivity":509000,"currentBalance":2560000,"note":"임차인대표회의 식대, 음료대"},
     {"name":"임차인선거관리위원회운영비","previousBalance":384780,"currentActivity":0,"currentBalance":384780,"note":""},
     {"name":"공동주택지원금비용","previousBalance":369510,"currentActivity":3287670,"currentBalance":3657180,"note":"가로등 전기료 보조금 지원금(25.11/1~26.5/31)"},
     {"name":"잡지출","previousBalance":4,"currentActivity":0,"currentBalance":4,"note":"2025년 2기 확정 부가세 환급 선납금액"},
