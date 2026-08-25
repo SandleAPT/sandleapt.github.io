@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "dataset": "sandle-fees",
   "title": "산들마을 관리비 월별 데이터",
   "updatedAt": "2026-08-25",
@@ -14,7 +14,7 @@
       "from": "2026-01",
       "to": "2026-06",
       "monthCount": 6,
-      "status": "billing-summary-complete"
+      "status": "billing-summary-and-management-expense-complete"
     }
   ],
   "primaryKey": {
@@ -43,11 +43,22 @@
     "null": "원문에 값이 없거나 아직 추출하지 않은 값",
     "zero": "원문 금액이 0인 값"
   },
+  "comparisonSemantics": {
+    "previousMonth": "period의 바로 앞 달과 같은 categoryCode의 billed를 비교한다.",
+    "previousYearSameMonth": "period에서 1년 전 같은 달과 같은 categoryCode의 billed를 비교한다.",
+    "missingComparison": "비교 대상 기간 또는 같은 categoryCode가 없으면 자료 없음으로 표시하고 0으로 간주하지 않는다.",
+    "storageRule": "비교값은 월별 원자료에서 계산하며 중복 저장하지 않는다."
+  },
+  "noteSemantics": {
+    "sourceNotes": "관리비 원문 비고를 의미 변경 없이 보존하는 선택 필드. text, sourcePage, sourceField를 기록한다.",
+    "analysisNotes": "검토자 판단과 분석 메모는 reviews.json에만 저장하며 sourceNotes와 섞지 않는다."
+  },
   "policies": [
     "원문 금액과 분석·판단을 같은 객체에 섞지 않는다.",
     "항목명 변경은 sourceName에 보존하고 categoryCode로 시계열을 연결한다.",
     "새 연도는 data-YYYY.json으로 추가하고 기존 연도 파일을 불필요하게 다시 쓰지 않는다.",
     "정정할 때 기존 출처와 정정 사유를 기록하고 updatedAt을 갱신한다.",
-    "PDF 원본은 저장소에 올리지 않으며 파일명과 SHA-256으로 추출 근거를 식별한다."
+    "PDF 원본은 저장소에 올리지 않으며 파일명과 SHA-256으로 추출 근거를 식별한다.",
+    "원문 비고가 없거나 아직 추출하지 않은 경우 내용을 만들어 넣지 않는다."
   ]
 }

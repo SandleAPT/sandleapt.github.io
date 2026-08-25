@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "dataset": "sandle-fees",
   "updatedAt": "2026-08-25",
   "identityRule": "기간이 달라도 동일한 비용 성격은 같은 code를 사용하고, 원문 명칭은 각 lineItem의 sourceName에 별도 보존한다.",

@@ -1,9 +1,18 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "dataset": "sandle-fees",
   "year": 2026,
   "currency": "KRW",
   "periodGranularity": "month",
+  "optionalLineItemFields": {
+    "sourceNotes": [
+      {
+        "text": "원문 비고",
+        "sourcePage": "원문 쪽 번호",
+        "sourceField": "비고·적요 등 원문 열 이름"
+      }
+    ]
+  },
   "periods": [
     "2026-01",
     "2026-02",
@@ -3119,6 +3128,9 @@
         "adjustment",
         "previousBilled",
         "change"
+      ],
+      "optionalFields": [
+        "sourceNotes"
       ]
     },
     "management-expense": {
@@ -3132,6 +3144,643 @@
     }
   },
   "supplementalTables": [
+    {
+      "period": "2026-01",
+      "sourceDocumentId": "fee-statement-2026-01",
+      "sourceTable": "management-expense",
+      "sourcePage": 14,
+      "note": "2026년 1월 관리비부과명세서 원문 14쪽의 '관리외 비용' 표를 원문 열 구조와 비고 그대로 옮긴 자료입니다.",
+      "columns": [
+        "구분",
+        "전월잔액",
+        "당월발생액",
+        "당월잔액",
+        "비고"
+      ],
+      "rows": [
+        {
+          "name": "장기수선충당예치금이자전입액",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "장기수선충당금 만기해지 이자 전입액"
+        },
+        {
+          "name": "장기수선충당예치금이자전입액(분전)",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "장기수선충당금 만기해지 이자(분전) 전입액"
+        },
+        {
+          "name": "하자보수충당부채이자전입액",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "하자보수충당 예치이자전입액"
+        },
+        {
+          "name": "커뮤니티비용",
+          "previousBalance": 0,
+          "currentActivity": 17000,
+          "currentBalance": 17000,
+          "note": "커뮤니티 정수기 렌탈비, 커뮤니티센터 화이트보드 폐기물 비용"
+        },
+        {
+          "name": "재활용품비용",
+          "previousBalance": 0,
+          "currentActivity": 367600,
+          "currentBalance": 367600,
+          "note": "미화원 재활용 분리수거비, 재활용 비닐봉투"
+        },
+        {
+          "name": "전기검침수당",
+          "previousBalance": 0,
+          "currentActivity": 500000,
+          "currentBalance": 500000,
+          "note": "한전업무지원 검침수당"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 0,
+          "currentActivity": 247550,
+          "currentBalance": 247550,
+          "note": "작은도서관 운영비, 정수기 렌탈 사용료"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "법인세비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "주차스티커비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "임차인대표회의운영비",
+          "previousBalance": 0,
+          "currentActivity": 577000,
+          "currentBalance": 577000,
+          "note": "임차인대표회의 식대, 음료대"
+        },
+        {
+          "name": "임차인선거관리위원회운영비",
+          "previousBalance": 0,
+          "currentActivity": 264750,
+          "currentBalance": 264750,
+          "note": "6기 임차인대표 선출 선거관리 운영비"
+        },
+        {
+          "name": "공동주택지원금비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "잡지출",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "잡지출(수/광선 비상대책비용)",
+          "previousBalance": 0,
+          "currentActivity": 55030,
+          "currentBalance": 55030,
+          "note": "인터넷 사용료"
+        }
+      ],
+      "totals": {
+        "previousBalance": 0,
+        "currentActivity": 2028930,
+        "currentBalance": 2028930
+      }
+    },
+    {
+      "period": "2026-02",
+      "sourceDocumentId": "fee-statement-2026-02",
+      "sourceTable": "management-expense",
+      "sourcePage": 14,
+      "note": "2026년 2월 관리비부과명세서 원문 14쪽의 '관리외 비용' 표를 원문 열 구조와 비고 그대로 옮긴 자료입니다.",
+      "columns": [
+        "구분",
+        "전월잔액",
+        "당월발생액",
+        "당월잔액",
+        "비고"
+      ],
+      "rows": [
+        {
+          "name": "장기수선충당예치금이자전입액",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "장기수선충당금 만기해지 이자 전입액"
+        },
+        {
+          "name": "장기수선충당예치금이자전입액(분전)",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "장기수선충당금 만기해지 이자(분전) 전입액"
+        },
+        {
+          "name": "하자보수충당부채이자전입액",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "하자보수충당 예치이자전입액"
+        },
+        {
+          "name": "커뮤니티비용",
+          "previousBalance": 17000,
+          "currentActivity": 105540,
+          "currentBalance": 122540,
+          "note": "커뮤니티 플러그 구입, 정수기 렌탈료"
+        },
+        {
+          "name": "재활용품비용",
+          "previousBalance": 367600,
+          "currentActivity": 904000,
+          "currentBalance": 1271600,
+          "note": "미화원 재활용 분리수거비, 재활용 비닐봉투"
+        },
+        {
+          "name": "전기검침수당",
+          "previousBalance": 500000,
+          "currentActivity": 500000,
+          "currentBalance": 1000000,
+          "note": "한전업무지원 검침수당"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 247550,
+          "currentActivity": 225900,
+          "currentBalance": 473450,
+          "note": "작은도서관 운영비, 정수기 렌탈 사용료"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 0,
+          "currentActivity": 250000,
+          "currentBalance": 250000,
+          "note": "경로당 지원금(26년 1분기 01월~03월)"
+        },
+        {
+          "name": "법인세비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "주차스티커비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "임차인대표회의운영비",
+          "previousBalance": 577000,
+          "currentActivity": 444000,
+          "currentBalance": 1021000,
+          "note": "임차인대표회의 식대, 음료대"
+        },
+        {
+          "name": "임차인선거관리위원회운영비",
+          "previousBalance": 264750,
+          "currentActivity": 90000,
+          "currentBalance": 354750,
+          "note": "커뮤니티 위탁관리업체 선정 찬반투표 선관위 운영비"
+        },
+        {
+          "name": "공동주택지원금비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "잡지출",
+          "previousBalance": 0,
+          "currentActivity": 4,
+          "currentBalance": 4,
+          "note": "2025년 2기 확정 부가세 환급 절사금액"
+        },
+        {
+          "name": "잡지출(수/광선 비상대책비용)",
+          "previousBalance": 55030,
+          "currentActivity": 9304091,
+          "currentBalance": 9359121,
+          "note": "인터넷 사용료, 2025년 이익잉여금(26.02.25 입주자대표회의 의결) 수광선비상대책비용 사용으로 처분 의결"
+        }
+      ],
+      "totals": {
+        "previousBalance": 2028930,
+        "currentActivity": 11823535,
+        "currentBalance": 13852465
+      }
+    },
+    {
+      "period": "2026-03",
+      "sourceDocumentId": "fee-statement-2026-03",
+      "sourceTable": "management-expense",
+      "sourcePage": 14,
+      "note": "2026년 3월 관리비부과명세서 원문 14쪽의 '관리외 비용' 표를 원문 열 구조와 비고 그대로 옮긴 자료입니다.",
+      "columns": [
+        "구분",
+        "전월잔액",
+        "당월발생액",
+        "당월잔액",
+        "비고"
+      ],
+      "rows": [
+        {
+          "name": "장기수선충당예치금이자전입액",
+          "previousBalance": 0,
+          "currentActivity": 1314694,
+          "currentBalance": 1314694,
+          "note": "장기수선충당금 만기해지 이자 전입액"
+        },
+        {
+          "name": "장기수선충당예치금이자전입액(분전)",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "장기수선충당금 만기해지 이자(분전) 전입액"
+        },
+        {
+          "name": "하자보수충당부채이자전입액",
+          "previousBalance": 0,
+          "currentActivity": 5715,
+          "currentBalance": 5715,
+          "note": "하자보수충당 예치이자전입액"
+        },
+        {
+          "name": "커뮤니티비용",
+          "previousBalance": 122540,
+          "currentActivity": 4834200,
+          "currentBalance": 4956740,
+          "note": "커뮤니티 CCTV 및 음향설비 설치 비용, 정수기 렌탈료"
+        },
+        {
+          "name": "재활용품비용",
+          "previousBalance": 1271600,
+          "currentActivity": 518000,
+          "currentBalance": 1789600,
+          "note": "미화원 재활용 분리수거비, 재활용 비닐봉투"
+        },
+        {
+          "name": "전기검침수당",
+          "previousBalance": 1000000,
+          "currentActivity": 488710,
+          "currentBalance": 1488710,
+          "note": "한전업무지원 검침수당"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 473450,
+          "currentActivity": 245770,
+          "currentBalance": 719220,
+          "note": "작은도서관 운영비, 전화요금, 정수기 렌탈 사용료"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 250000,
+          "currentActivity": 0,
+          "currentBalance": 250000,
+          "note": "경로당 지원금(26년 1분기 01월~03월)"
+        },
+        {
+          "name": "법인세비용",
+          "previousBalance": 0,
+          "currentActivity": 2805210,
+          "currentBalance": 2805210,
+          "note": "2025년도 법인세 환급 발생"
+        },
+        {
+          "name": "주차스티커비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "임차인대표회의운영비",
+          "previousBalance": 1021000,
+          "currentActivity": 277000,
+          "currentBalance": 1298000,
+          "note": "임차인대표회의 식대, 음료대"
+        },
+        {
+          "name": "임차인선거관리위원회운영비",
+          "previousBalance": 354750,
+          "currentActivity": 30030,
+          "currentBalance": 384780,
+          "note": "커뮤니티 위탁관리업체 선정 찬반투표 선관위 운영비"
+        },
+        {
+          "name": "공동주택지원금비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "잡지출",
+          "previousBalance": 4,
+          "currentActivity": 0,
+          "currentBalance": 4,
+          "note": "2025년 2기 확정 부가세 환급 절사금액"
+        },
+        {
+          "name": "잡지출(수/광선 비상대책비용)",
+          "previousBalance": 9359121,
+          "currentActivity": 20350,
+          "currentBalance": 9379471,
+          "note": "인터넷 사용료"
+        }
+      ],
+      "totals": {
+        "previousBalance": 13852465,
+        "currentActivity": 10539679,
+        "currentBalance": 24392144
+      }
+    },
+    {
+      "period": "2026-04",
+      "sourceDocumentId": "fee-statement-2026-04",
+      "sourceTable": "management-expense",
+      "sourcePage": 14,
+      "note": "2026년 4월 관리비부과명세서 원문 14쪽의 '관리외 비용' 표를 원문 열 구조와 비고 그대로 옮긴 자료입니다.",
+      "columns": [
+        "구분",
+        "전월잔액",
+        "당월발생액",
+        "당월잔액",
+        "비고"
+      ],
+      "rows": [
+        {
+          "name": "장기수선충당예치금이자전입액",
+          "previousBalance": 1314694,
+          "currentActivity": 0,
+          "currentBalance": 1314694,
+          "note": "장기수선충당금 만기해지 이자 전입액"
+        },
+        {
+          "name": "장기수선충당예치금이자전입액(분전)",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "장기수선충당금 만기해지 이자(분전) 전입액"
+        },
+        {
+          "name": "하자보수충당부채이자전입액",
+          "previousBalance": 5715,
+          "currentActivity": 0,
+          "currentBalance": 5715,
+          "note": "하자보수충당 예치이자전입액"
+        },
+        {
+          "name": "커뮤니티비용",
+          "previousBalance": 4956740,
+          "currentActivity": 25900,
+          "currentBalance": 4982640,
+          "note": "정수기 렌탈료"
+        },
+        {
+          "name": "재활용품비용",
+          "previousBalance": 1789600,
+          "currentActivity": 1050000,
+          "currentBalance": 2839600,
+          "note": "미화원 재활용 분리수거비, 재활용 비닐봉투"
+        },
+        {
+          "name": "전기검침수당",
+          "previousBalance": 1488710,
+          "currentActivity": 486670,
+          "currentBalance": 1975380,
+          "note": "한전업무지원 검침수당"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 719220,
+          "currentActivity": 248900,
+          "currentBalance": 968120,
+          "note": "작은도서관 운영비, 전화요금, 정수기 렌탈 사용료"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 250000,
+          "currentActivity": 550000,
+          "currentBalance": 800000,
+          "note": "경로당 지원금(26년 2분기 04월~06월), 어버이날 지원금"
+        },
+        {
+          "name": "법인세비용",
+          "previousBalance": 2805210,
+          "currentActivity": 280520,
+          "currentBalance": 3085730,
+          "note": "2025년도 법인세 환급"
+        },
+        {
+          "name": "주차스티커비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "임차인대표회의운영비",
+          "previousBalance": 1298000,
+          "currentActivity": 443000,
+          "currentBalance": 1741000,
+          "note": "임차인대표회의 식대, 음료대"
+        },
+        {
+          "name": "임차인선거관리위원회운영비",
+          "previousBalance": 384780,
+          "currentActivity": 0,
+          "currentBalance": 384780,
+          "note": ""
+        },
+        {
+          "name": "공동주택지원금비용",
+          "previousBalance": 0,
+          "currentActivity": 369510,
+          "currentBalance": 369510,
+          "note": "작은도서관 도서 구입"
+        },
+        {
+          "name": "잡지출",
+          "previousBalance": 4,
+          "currentActivity": 0,
+          "currentBalance": 4,
+          "note": "2025년 2기 확정 부가세 환급 절사금액"
+        },
+        {
+          "name": "잡지출(수/광선 비상대책비용)",
+          "previousBalance": 9379471,
+          "currentActivity": 20350,
+          "currentBalance": 9399821,
+          "note": "인터넷 사용료"
+        }
+      ],
+      "totals": {
+        "previousBalance": 24392144,
+        "currentActivity": 3474850,
+        "currentBalance": 27866994
+      }
+    },
+    {
+      "period": "2026-05",
+      "sourceDocumentId": "fee-statement-2026-05",
+      "sourceTable": "management-expense",
+      "sourcePage": 14,
+      "note": "2026년 5월 관리비부과명세서 원문 14쪽의 '관리외 비용' 표를 원문 열 구조와 비고 그대로 옮긴 자료입니다.",
+      "columns": [
+        "구분",
+        "전월잔액",
+        "당월발생액",
+        "당월잔액",
+        "비고"
+      ],
+      "rows": [
+        {
+          "name": "장기수선충당예치금이자전입액",
+          "previousBalance": 1314694,
+          "currentActivity": 0,
+          "currentBalance": 1314694,
+          "note": "장기수선충당금 만기해지 이자 전입액"
+        },
+        {
+          "name": "장기수선충당예치금이자전입액(분전)",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "장기수선충당금 만기해지 이자(분전) 전입액"
+        },
+        {
+          "name": "하자보수충당부채이자전입액",
+          "previousBalance": 5715,
+          "currentActivity": 0,
+          "currentBalance": 5715,
+          "note": "하자보수충당 예치이자전입액"
+        },
+        {
+          "name": "커뮤니티비용",
+          "previousBalance": 4982640,
+          "currentActivity": 25900,
+          "currentBalance": 5008540,
+          "note": "정수기 렌탈료"
+        },
+        {
+          "name": "재활용품비용",
+          "previousBalance": 2839600,
+          "currentActivity": 294000,
+          "currentBalance": 3133600,
+          "note": "미화원 재활용 분리수거비, 재활용 비닐봉투"
+        },
+        {
+          "name": "전기검침수당",
+          "previousBalance": 1975380,
+          "currentActivity": 500000,
+          "currentBalance": 2475380,
+          "note": "한전업무지원 검침수당"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 968120,
+          "currentActivity": 225900,
+          "currentBalance": 1194020,
+          "note": "작은도서관 운영비, 전화요금, 정수기 렌탈 사용료"
+        },
+        {
+          "name": "공동체활성화비용",
+          "previousBalance": 800000,
+          "currentActivity": 0,
+          "currentBalance": 800000,
+          "note": "경로당 지원금"
+        },
+        {
+          "name": "법인세비용",
+          "previousBalance": 3085730,
+          "currentActivity": 0,
+          "currentBalance": 3085730,
+          "note": "2025년도 법인세"
+        },
+        {
+          "name": "주차스티커비용",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        },
+        {
+          "name": "임차인대표회의운영비",
+          "previousBalance": 1741000,
+          "currentActivity": 310000,
+          "currentBalance": 2051000,
+          "note": "임차인대표회의 식대, 음료대"
+        },
+        {
+          "name": "임차인선거관리위원회운영비",
+          "previousBalance": 384780,
+          "currentActivity": 0,
+          "currentBalance": 384780,
+          "note": ""
+        },
+        {
+          "name": "공동주택지원금비용",
+          "previousBalance": 369510,
+          "currentActivity": 0,
+          "currentBalance": 369510,
+          "note": "작은도서관 도서 구입"
+        },
+        {
+          "name": "잡지출",
+          "previousBalance": 4,
+          "currentActivity": 0,
+          "currentBalance": 4,
+          "note": "2025년 2기 확정 부가세 환급 절사금액"
+        },
+        {
+          "name": "잡지출(수/광선 비상대책비용)",
+          "previousBalance": 9399821,
+          "currentActivity": 2472690,
+          "currentBalance": 11872511,
+          "note": "인터넷 사용료"
+        },
+        {
+          "name": "잡지출(전문가 자문비)",
+          "previousBalance": 0,
+          "currentActivity": 330000,
+          "currentBalance": 330000,
+          "note": "입주민 민사소송 대응 관련 변호사 자문료"
+        }
+      ],
+      "totals": {
+        "previousBalance": 27866994,
+        "currentActivity": 4158490,
+        "currentBalance": 32025484
+      }
+    },
     {
       "period": "2026-06",
       "sourceDocumentId": "fee-statement-2026-06",
@@ -3268,7 +3917,9 @@
   ],
   "detailExtraction": {
     "billingSummary": "complete",
-    "supplementalTables": "partial",
-    "note": "2026년 1~6월 부과총괄표 입력 완료. 원문 5~15쪽 세부표는 표 종류별로 추가 가능하다."
+    "managementExpense": "complete-for-2026-01-to-06",
+    "supplementalTables": "partial-other-tables",
+    "sourceNotes": "management-expense-complete-for-2026-01-to-06",
+    "note": "2026년 1~6월 부과총괄표와 원문 14쪽 관리외 비용·비고 입력 완료. 나머지 세부표는 표 종류별로 추가한다. 부과총괄 항목별 비고는 원문에 있는 경우에만 sourceNotes로 추가한다."
   }
 }

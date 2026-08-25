@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "dataset": "sandle-fees",
   "updatedAt": "2026-08-25",
   "purpose": "원자료와 분리된 점검·분석 계층. 자동 감지나 대조 결과는 원문 금액을 수정하지 않는다.",
@@ -17,6 +17,11 @@
         "id": "large-change",
         "label": "전월 대비 큰 증감",
         "rule": "증감률 20% 이상이면서 절대 증감 500,000원 이상이면 확인 후보"
+      },
+      {
+        "id": "year-over-year-large-change",
+        "label": "전년 동월 대비 큰 증감",
+        "rule": "1년 전 같은 달 자료가 있을 때 증감률 20% 이상이면서 절대 증감 500,000원 이상이면 확인 후보"
       },
       {
         "id": "allocation-mismatch",
