@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "period": "2026-06",
+  "sourcePage": 14,
+  "title": "관리외 비용",
+  "asOf": "2026-06-30",
+  "columns": ["구분", "전월잔액", "당월발생액", "당월잔액", "비고"],
+  "note": "2026년 6월 관리비부과명세서 원문 14쪽의 '관리외 비용' 표를 원문 열 구조 그대로 옮긴 자료입니다. 부과총괄표와 성격이 다른 표이므로 전월부과·당월부과 형식으로 변환하지 않습니다.",
+  "rows": [
+    {"name":"장기수선충당예치금이자전입액","previousBalance":1314694,"currentActivity":0,"currentBalance":1314694,"note":"장기수선충당금 만기해지 이자 전입액"},
+    {"name":"장기수선충당예치금이자전입액(분전)","previousBalance":0,"currentActivity":0,"currentBalance":0,"note":"장기수선충당금 만기해지 이자(분전) 전입액"},
+    {"name":"하자보수충당부채이자전입액","previousBalance":5715,"currentActivity":5154,"currentBalance":10869,"note":"하자보수충당 예치이자전입액"},
+    {"name":"커뮤니티비용","previousBalance":5008540,"currentActivity":25900,"currentBalance":5034440,"note":"정수기 렌탈료"},
+    {"name":"재활용품비용","previousBalance":3133600,"currentActivity":994000,"currentBalance":4127600,"note":"미화원 재활용 분리수거비, 재활용 비닐봉투"},
+    {"name":"전기검침수당","previousBalance":2475380,"currentActivity":500000,"currentBalance":2975380,"note":"한전업무지원 검침수당"},
+    {"name":"공동체활성화비용","previousBalance":1194020,"currentActivity":255940,"currentBalance":1449960,"note":"작은도서관 운영비, 전용요금, 정수기 렌탈 사용료"},
+    {"name":"공동체활성화비용","previousBalance":800000,"currentActivity":0,"currentBalance":800000,"note":"경로당 지원금"},
+    {"name":"법인세비용","previousBalance":3085730,"currentActivity":0,"currentBalance":3085730,"note":"2025년도 법인세"},
+    {"name":"주차스티커비용","previousBalance":0,"currentActivity":0,"currentBalance":0,"note":""},
+    {"name":"입주자대표회의운영비","previousBalance":2051000,"currentActivity":509000,"currentBalance":2560000,"note":"입주자대표회의 식대, 음료대"},
+    {"name":"임차인선거관리위원회운영비","previousBalance":384780,"currentActivity":0,"currentBalance":384780,"note":""},
+    {"name":"공동주택지원금비용","previousBalance":369510,"currentActivity":3287670,"currentBalance":3657180,"note":"가로등 전기료 보조금 지원금(25.11/1~26.5/31)"},
+    {"name":"잡지출","previousBalance":4,"currentActivity":0,"currentBalance":4,"note":"2025년 2기 확정 부가세 환급 선납금액"},
+    {"name":"잡지출(수/광선 비상대책비용)","previousBalance":11872511,"currentActivity":20350,"currentBalance":11892861,"note":"인터넷 사용료"},
+    {"name":"잡지출(전문가 자문비)","previousBalance":330000,"currentActivity":0,"currentBalance":330000,"note":"입주민 인사소송 대응 관련 변호사 자문료"}
+  ],
+  "totals": {"previousBalance":32025484,"currentActivity":5598014,"currentBalance":37623498}
+}
