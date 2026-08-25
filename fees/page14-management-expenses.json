@@ -1,7 +1,0 @@
-{
-  "schemaVersion": 5,
-  "deprecated": true,
-  "movedTo": "data-2026.json",
-  "jsonPath": "$.supplementalTables[?(@.sourceTable=='management-expense')]",
-  "note": "관리외 비용 표는 연도별 데이터 파일의 supplementalTables로 통합되었습니다."
-}

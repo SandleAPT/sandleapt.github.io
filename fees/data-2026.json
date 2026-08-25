@@ -111,6 +111,7 @@
       "originalLocation": "아파트아이·네이버카페·관리사무소 확인 가능",
       "sourceFileName": null,
       "sourceFileSha256": null,
+      "sourceFileNote": "원본 PDF 미보관 상태로 추출됨. 원본 확보 시 sourceFileName과 SHA-256을 기입한다.",
       "originalPages": 15,
       "capturedPages": 18,
       "summarySourcePage": 4,
