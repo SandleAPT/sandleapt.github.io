@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 입주민 포털</title>
-<meta name="description" content="산들마을 아파트 입주민 포털 — 회의록·하자판결금·관리비·업무현황·자료·커뮤니티센터를 왼쪽 메뉴 하나로">
+<meta name="description" content="산들마을 아파트 입주민 포털 — 회의록·하자판결금·관리비·업무현황·꿀팁정리·커뮤니티센터를 왼쪽 메뉴 하나로">
 <script>
 // GA4 — 회의록 앱과 같은 속성(G-MH479X0GSE)이라 포털·회의록 이용을 한 화면에서 본다.
 // 메뉴를 오갈 때마다 show() 가 화면별 page_view 를 보내므로 자동 전송은 끈다.
@@ -102,7 +102,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 </head>
 <body>
 <aside class="rail" id="rail">
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v36 · 2026.08.26 02:53:00 갱신</small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v37 · 2026.08.26 03:10:00 갱신</small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -122,7 +122,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
   <div class="bottom" id="bottom"></div>
 </div>
 <script>
-// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 36번째 커밋이다.
+// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 37번째 커밋이다.
 // 회의록(minutes)·관리비(fees) 등 하위 앱을 배포할 때도 여기 버전·시각과 아래 iframe 캐시 키(&v=)를 함께 올린다 — 방문자에게 보이는 버전은 이 포털 것 하나다.
 // ── 산들마을 입주민 포털 — 왼쪽 메뉴 하나로 하위 서비스를 오가는 껍데기 ──
 // 같은 호스트(sandleapt.github.io)의 앱은 iframe 한 벌로 띄우고, 회의록 앱은 끼움 모드(?embed=1)로 띄워
@@ -152,7 +152,7 @@ var GROUPS = [
   ]},
   { id: "office", title: "관리사무소", cls: "green", items: [
     { id: "work", label: "업무현황", external: true, url: "https://valuable-silicon-f1f.notion.site/3b15f4b3bcdd81f9a550e8d3cf46e48d", note: "진행 중인 일반업무·커뮤니티센터 업무를 카드로 정리한 노션 페이지입니다." },
-    { id: "docs", label: "자료",     external: true, url: "https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79", note: "산들마을 관련 자료를 모아 둔 노션 페이지입니다." }
+    { id: "docs", label: "꿀팁정리", external: true, url: "https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79", note: "산들마을 생활에 도움이 되는 꿀팁을 모아 둔 노션 페이지입니다." }
   ]},
   { id: "comm", title: "커뮤니티", cls: "teal", items: [
     { id: "community", label: "커뮤니티센터 이용 안내", service: "community", url: BASE + "/CommunityNotice/" }
