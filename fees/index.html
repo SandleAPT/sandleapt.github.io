@@ -4,6 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>산들마을 관리비 추적</title>
+<script>
+// GA4 — 포털·회의록과 같은 속성(G-MH479X0GSE). 이 페이지는 화면 하나라 자동 page_view 그대로 쓴다.
+(function () {
+  var id = "G-MH479X0GSE";
+  var s = document.createElement("script"); s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag("js", new Date());
+  var admin = false; try { admin = !!localStorage.getItem("sandle_admin_key"); } catch (e) {}
+  gtag("set", "user_properties", { app_role: admin ? "admin" : "viewer" });
+  gtag("config", id, { send_page_view: true });
+})();
+</script>
 <style>
 :root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--paper:#fffdf8;--gold:#b5841a;--soft:#f6eccf;--blue:#2f5f80;--red:#9b2c23;--redSoft:#fff0ed}
 *{box-sizing:border-box}body{margin:0;font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:#fff;color:var(--ink)}

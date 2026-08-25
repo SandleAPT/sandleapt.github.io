@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 입주민 포털</title>
 <meta name="description" content="산들마을 아파트 입주민 포털 — 회의록·하자판결금·관리비·업무현황·자료·커뮤니티센터를 왼쪽 메뉴 하나로">
+<script>
+// GA4 — 회의록 앱과 같은 속성(G-MH479X0GSE)이라 포털·회의록 이용을 한 화면에서 본다.
+// 메뉴를 오갈 때마다 show() 가 화면별 page_view 를 보내므로 자동 전송은 끈다.
+window.GA_MEASUREMENT_ID = "G-MH479X0GSE";
+(function () {
+  var id = window.GA_MEASUREMENT_ID; if (!id) return;
+  var s = document.createElement("script"); s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(id);
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag("js", new Date());
+  var admin = false; try { admin = !!localStorage.getItem("sandle_admin_key"); } catch (e) {}
+  gtag("set", "user_properties", { app_role: admin ? "admin" : "viewer" }); // 관리자 기기 조회는 분리해 볼 수 있게
+  gtag("config", id, { send_page_view: false });
+})();
+</script>
 <style>
 :root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--bg:#f4f1ea;--paper:#fffdf8;--gold:#b5841a;--gold-ink:#6a4d0f;--gold-soft:#f6eccf;--gold-line:#e7cf8e;--teal:#2f5f80;--teal-soft:#e3eef5;--teal-line:#b9d0e0;--green:#3c6134;--green-soft:#e8efe5;--green-line:#b9d3ae;--rail:232px;--top:52px;--bottom:56px}
 *{box-sizing:border-box}
@@ -106,7 +122,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
   <div class="bottom" id="bottom"></div>
 </div>
 <script>
-// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 34번째 커밋이다.
+// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 35번째 커밋이다.
 // ── 산들마을 입주민 포털 — 왼쪽 메뉴 하나로 하위 서비스를 오가는 껍데기 ──
 // 같은 호스트(sandleapt.github.io)의 앱은 iframe 한 벌로 띄우고, 회의록 앱은 끼움 모드(?embed=1)로 띄워
 // 화면 전환을 postMessage 로 주고받는다(앱 한 벌만 떠서 빠르고, 관리자 키·입력 상태도 하나).
@@ -115,7 +131,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 // 같은 호스트 기준 주소(배포: https://sandleapt.github.io, 로컬 점검: http://localhost:…)
 var BASE = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://sandleapt.github.io";
 var MIN = BASE + "/minutes/";
-var FEES = BASE + "/fees/?v=34";
+var FEES = BASE + "/fees/?v=35";
 var GROUPS = [
   { id: "minutes", title: "회의록", cls: "", service: "minutes", items: [
     { id: "previewView", label: "회의록 미리보기", num: "①", view: "previewView" },
@@ -236,6 +252,13 @@ window.addEventListener("message", function (e) {
   }
 });
 
+// 메뉴(세부 화면)마다 화면별 page_view — GA '페이지 및 화면' 보고서에 제목별 행으로 잡힌다
+var lastTracked = null;
+function trackView(it) {
+  if (!window.gtag || lastTracked === it.id) return;
+  lastTracked = it.id;
+  gtag("event", "page_view", { page_title: document.title, page_location: location.origin + "/#" + it.id });
+}
 function directUrl(it) {
   if (it.external || it.url) return it.url;
   return MIN + (it.view && it.view !== "previewView" ? "?tab=" + it.view : "");
@@ -258,6 +281,7 @@ function show(id, push, fromApp) {
   var u = directUrl(it); openBtn.href = u; openBtnM.href = u;
   topTitle.textContent = it.label;
   document.title = "산들마을 입주민 포털 — " + it.label;
+  trackView(it);
   if (push) { try { history.replaceState(null, "", "#" + it.id); } catch (e) {} }
 }
 document.getElementById("reloadBtn").onclick = function () {
