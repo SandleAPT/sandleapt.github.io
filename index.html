@@ -86,7 +86,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 </head>
 <body>
 <aside class="rail" id="rail">
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v29 · 2026.08.25 갱신</small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v30 · 2026.08.25 갱신</small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -106,7 +106,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
   <div class="bottom" id="bottom"></div>
 </div>
 <script>
-// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 29번째 커밋이다.
+// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 30번째 커밋이다.
 // ── 산들마을 입주민 포털 — 왼쪽 메뉴 하나로 하위 서비스를 오가는 껍데기 ──
 // 같은 호스트(sandleapt.github.io)의 앱은 iframe 한 벌로 띄우고, 회의록 앱은 끼움 모드(?embed=1)로 띄워
 // 화면 전환을 postMessage 로 주고받는다(앱 한 벌만 떠서 빠르고, 관리자 키·입력 상태도 하나).
@@ -115,6 +115,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 // 같은 호스트 기준 주소(배포: https://sandleapt.github.io, 로컬 점검: http://localhost:…)
 var BASE = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://sandleapt.github.io";
 var MIN = BASE + "/minutes/";
+var FEES = BASE + "/fees/?v=30";
 var GROUPS = [
   { id: "minutes", title: "회의록", cls: "", service: "minutes", items: [
     { id: "previewView", label: "회의록 미리보기", num: "①", view: "previewView" },
@@ -124,7 +125,7 @@ var GROUPS = [
     { id: "noticeView",  label: "규약·공고",       num: "⑤", view: "noticeView" }
   ]},
   { id: "finance", title: "관리비 · 회계", cls: "green", items: [
-    { id: "fees", label: "관리비 추적", service: "fees", url: BASE + "/fees/" }
+    { id: "fees", label: "관리비 추적", service: "fees", url: FEES }
   ]},
   { id: "admin", title: "작성 · 관리자", cls: "", service: "minutes", collapsible: true, items: [
     { id: "setupView",  label: "회의 설정",   num: "⑥", view: "setupView" },
@@ -142,7 +143,7 @@ var GROUPS = [
 // 같은 호스트 서비스(iframe 한 벌씩). minutes 는 끼움 모드.
 var SERVICES = {
   minutes:   { url: MIN + "?embed=1", embed: true },
-  fees:      { url: BASE + "/fees/" },
+  fees:      { url: FEES },
   community: { url: BASE + "/CommunityNotice/" }
 };
 // 모바일 하단 바(서비스 단위)
