@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-08-25",
+  "note": "관리비부과명세서의 월별 핵심 수치를 구조화한 분석용 데이터입니다. 원본 증거자료는 공개 저장소에 두지 않고 별도 비공개 보관합니다.",
+  "months": [
+    {
+      "period": "2026-06",
+      "label": "2026년 06월",
+      "source": {
+        "title": "2026년 06월분 관리비부과명세서",
+        "published": "2026-07-24",
+        "originalVisibility": "private-evidence",
+        "pages": 18
+      },
+      "totals": {
+        "assessed": 229655989,
+        "residentShare": 227834690,
+        "lhShare": 1821930,
+        "billed": 229656620,
+        "adjustment": 631,
+        "previousBilled": 237887730,
+        "change": -8231110,
+        "managementFee": 229265619
+      },
+      "categories": [
+        {"code":"general","name":"일반관리비","group":"공용관리","assessed":44634620,"residentShare":44017730,"lhShare":621200,"billed":44638930,"adjustment":4310,"previousBilled":44675640,"change":-36710},
+        {"code":"cleaning","name":"청소비","group":"공용관리","assessed":23533000,"residentShare":23203400,"lhShare":327460,"billed":23530860,"adjustment":-2140,"previousBilled":23530860,"change":0},
+        {"code":"security","name":"경비비","group":"공용관리","assessed":24065020,"residentShare":23730520,"lhShare":334920,"billed":24065440,"adjustment":420,"previousBilled":24017610,"change":47830},
+        {"code":"disinfection","name":"소독비","group":"공용관리","assessed":540000,"residentShare":530530,"lhShare":7480,"billed":538010,"adjustment":-1990,"previousBilled":538010,"change":0},
+        {"code":"elevator-maintenance","name":"승강기유지비","group":"공용관리","assessed":2772000,"residentShare":2731000,"lhShare":38550,"billed":2769550,"adjustment":-2450,"previousBilled":2769550,"change":0},
+        {"code":"repair-maintenance","name":"수선유지비","group":"공용관리","assessed":12029200,"residentShare":11902020,"lhShare":136050,"billed":12038070,"adjustment":8870,"previousBilled":13840510,"change":-1802440},
+        {"code":"management-commission","name":"위탁관리수수료","group":"공용관리","assessed":313660,"residentShare":312950,"lhShare":0,"billed":312950,"adjustment":-710,"previousBilled":312950,"change":0},
+        {"code":"management-commission-extra","name":"위탁관리수수료(분전)","group":"공용관리","assessed":272145,"residentShare":271460,"lhShare":0,"billed":271460,"adjustment":-685,"previousBilled":271460,"change":0},
+        {"code":"food-waste","name":"음식물처리비","group":"기타부과","assessed":960000,"residentShare":956330,"lhShare":0,"billed":956330,"adjustment":-3670,"previousBilled":1280900,"change":-324570},
+        {"code":"insurance","name":"보험료","group":"기타부과","assessed":2531230,"residentShare":2528600,"lhShare":0,"billed":2528600,"adjustment":-2630,"previousBilled":2630810,"change":-102210},
+        {"code":"tenant-council","name":"임차인대표회의운영비","group":"기타부과","assessed":1595000,"residentShare":1597010,"lhShare":0,"billed":1597010,"adjustment":2010,"previousBilled":1160770,"change":436240,"flags":["절차점검 연계","원본지출 증빙 대조 필요"]},
+        {"code":"election-committee","name":"선거관리위원회운영비","group":"기타부과","assessed":260000,"residentShare":258720,"lhShare":0,"billed":258720,"adjustment":-1280,"previousBilled":269350,"change":-10630}
+      ],
+      "flags": [
+        {"kind":"linked-investigation","label":"임차인대표회의 운영비는 현재 절차 점검 건과 연결됨","categoryCode":"tenant-council"}
+      ]
+    }
+  ]
+}
