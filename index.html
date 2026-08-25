@@ -53,6 +53,9 @@ nav.menu{padding:4px 10px 12px;flex:1 1 auto}
 .grp.green .item.active{background:var(--green-soft);color:var(--green);border-color:var(--green-line)}
 .item .ext{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
 .item .num{font-weight:800;opacity:.85}
+.items-divider{border-top:1px dashed var(--line);margin:5px 8px 3px}
+.item.locked{color:#8b867a;font-size:12.5px}
+.item.locked .num{font-size:11px}
 .rail-foot{padding:12px 16px 16px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);line-height:1.5}
 .rail-foot a{color:var(--muted)}
 
@@ -102,7 +105,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 </head>
 <body>
 <aside class="rail" id="rail">
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v37 · 2026.08.26 03:10:00 갱신</small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v38 · 2026.08.26 03:24:00 갱신</small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -122,7 +125,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
   <div class="bottom" id="bottom"></div>
 </div>
 <script>
-// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 37번째 커밋이다.
+// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 38번째 커밋이다.
 // 회의록(minutes)·관리비(fees) 등 하위 앱을 배포할 때도 여기 버전·시각과 아래 iframe 캐시 키(&v=)를 함께 올린다 — 방문자에게 보이는 버전은 이 포털 것 하나다.
 // ── 산들마을 입주민 포털 — 왼쪽 메뉴 하나로 하위 서비스를 오가는 껍데기 ──
 // 같은 호스트(sandleapt.github.io)의 앱은 iframe 한 벌로 띄우고, 회의록 앱은 끼움 모드(?embed=1)로 띄워
@@ -132,32 +135,33 @@ main{flex:1 1 auto;position:relative;min-height:0}
 // 같은 호스트 기준 주소(배포: https://sandleapt.github.io, 로컬 점검: http://localhost:…)
 var BASE = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://sandleapt.github.io";
 var MIN = BASE + "/minutes/";
-var MINQ = "?embed=1&v=36"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
-var FEES = BASE + "/fees/?v=36";
+var MINQ = "?embed=1&v=38"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
+var FEES = BASE + "/fees/?v=38";
+// 2026-08-26 재편(v38): 내용 기준 4그룹, 번호 없음. 작성용 화면은 회의록 그룹 안에서 관리자 기기에만 표시.
 var GROUPS = [
   { id: "minutes", title: "회의록", cls: "", service: "minutes", items: [
-    { id: "previewView", label: "회의록 미리보기", num: "①", view: "previewView" },
-    { id: "archiveView", label: "이전 회의록",     num: "②", view: "archiveView" },
-    { id: "topicView",   label: "주제별 보기",     num: "③", view: "topicView" },
-    { id: "hajaView",    label: "하자판결금",      num: "④", view: "hajaView" },
-    { id: "noticeView",  label: "규약·공고",       num: "⑤", view: "noticeView" }
+    { id: "previewView", label: "회의록 미리보기", view: "previewView" },
+    { id: "archiveView", label: "이전 회의록",     view: "archiveView" },
+    { id: "topicView",   label: "주제별 보기",     view: "topicView" },
+    { id: "setupView",  label: "회의 설정",   view: "setupView",  adminOnly: true },
+    { id: "repsView",   label: "동대표 명단", view: "repsView",   adminOnly: true },
+    { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true }
   ]},
-  { id: "finance", title: "관리비 · 회계", cls: "green", items: [
-    { id: "fees", label: "관리비 추적", service: "fees", url: FEES }
+  { id: "rules", title: "규약 · 기록", cls: "", service: "minutes", items: [
+    { id: "noticeView", label: "규약 · 계약 · 공고", view: "noticeView" }
   ]},
-  { id: "admin", title: "작성 · 관리자", cls: "", service: "minutes", collapsible: true, items: [
-    { id: "setupView",  label: "회의 설정",   num: "⑥", view: "setupView" },
-    { id: "repsView",   label: "동대표 명단", num: "⑦", view: "repsView" },
-    { id: "agendaView", label: "안건 · 발언", num: "⑧", view: "agendaView" }
+  { id: "finance", title: "재정 · 회계", cls: "green", items: [
+    { id: "fees",     label: "관리비 추적", service: "fees", url: FEES },
+    { id: "hajaView", label: "하자판결금",  service: "minutes", view: "hajaView" }
   ]},
-  { id: "office", title: "관리사무소", cls: "green", items: [
+  { id: "info", title: "소식 · 정보", cls: "teal", items: [
     { id: "work", label: "업무현황", external: true, url: "https://valuable-silicon-f1f.notion.site/3b15f4b3bcdd81f9a550e8d3cf46e48d", note: "진행 중인 일반업무·커뮤니티센터 업무를 카드로 정리한 노션 페이지입니다." },
-    { id: "docs", label: "꿀팁정리", external: true, url: "https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79", note: "산들마을 생활에 도움이 되는 꿀팁을 모아 둔 노션 페이지입니다." }
-  ]},
-  { id: "comm", title: "커뮤니티", cls: "teal", items: [
+    { id: "docs", label: "꿀팁정리", external: true, url: "https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79", note: "산들마을 생활에 도움이 되는 꿀팁을 모아 둔 노션 페이지입니다." },
     { id: "community", label: "커뮤니티센터 이용 안내", service: "community", url: BASE + "/CommunityNotice/" }
   ]}
 ];
+function isAdminDevice() { try { return !!localStorage.getItem("sandle_admin_key"); } catch (e) { return false; } }
+function svcOf(it) { return it.service || it.group.service || it.id; }
 // 같은 호스트 서비스(iframe 한 벌씩). minutes 는 끼움 모드.
 var SERVICES = {
   minutes:   { url: MIN + MINQ, embed: true },
@@ -167,9 +171,9 @@ var SERVICES = {
 // 모바일 하단 바(서비스 단위)
 var BOTTOM = [
   { id: "previewView", label: "회의록",   ic: "◆", cls: "" },
-  { id: "hajaView",    label: "하자판결금", ic: "₩", cls: "" },
   { id: "fees",        label: "관리비",   ic: "▥", cls: "t-green" },
-  { id: "work",        label: "업무현황", ic: "▤", cls: "t-green" },
+  { id: "hajaView",    label: "하자판결금", ic: "₩", cls: "t-green" },
+  { id: "docs",        label: "꿀팁정리", ic: "✦", cls: "t-teal" },
   { id: "community",   label: "커뮤니티", ic: "◇", cls: "t-teal" }
 ];
 
@@ -192,9 +196,12 @@ GROUPS.forEach(function (g) {
     var t = document.createElement("div"); t.className = "grp-title"; t.innerHTML = '<span class="dot"></span>' + g.title; box.appendChild(t);
   }
   var items = document.createElement("div"); items.className = "items";
+  var admin = isAdminDevice(), dividerAdded = false;
   g.items.forEach(function (it) {
-    var b = document.createElement("button"); b.type = "button"; b.className = "item"; b.dataset.id = it.id;
-    b.innerHTML = (it.num ? '<span class="num">' + it.num + '</span>' : "") + '<span>' + it.label + '</span>' + (it.external ? '<span class="ext">새 창 ↗</span>' : "");
+    if (it.adminOnly && !admin) return; // 작성용 화면은 관리자 키가 있는 기기에서만 메뉴에 보임(앱 자체도 v69부터 서버 검증 잠금)
+    if (it.adminOnly && !dividerAdded) { var d = document.createElement("div"); d.className = "items-divider"; items.appendChild(d); dividerAdded = true; }
+    var b = document.createElement("button"); b.type = "button"; b.className = "item" + (it.adminOnly ? " locked" : ""); b.dataset.id = it.id;
+    b.innerHTML = (it.adminOnly ? '<span class="num">🔒</span>' : "") + '<span>' + it.label + '</span>' + (it.external ? '<span class="ext">새 창 ↗</span>' : "");
     b.onclick = function () { show(it.id, true); if (it.external) window.open(it.url, "_blank", "noopener"); closeDrawer(); };
     items.appendChild(b);
   });
@@ -270,13 +277,13 @@ function show(id, push, fromApp) {
   current = it;
   document.querySelectorAll(".item").forEach(function (b) { b.classList.toggle("active", b.dataset.id === it.id); });
   // 하단 바: 하자판결금은 자기 단추, 그 밖의 회의록 화면은 '회의록', 외부/커뮤니티는 같은 id
-  var bottomId = it.id === "hajaView" ? "hajaView" : (!it.external && it.group.service === "minutes") ? "previewView" : it.id;
+  var bottomId = it.id === "hajaView" ? "hajaView" : (!it.external && svcOf(it) === "minutes") ? "previewView" : it.id;
   document.querySelectorAll(".bottom button").forEach(function (b) { b.classList.toggle("active", b.dataset.id === bottomId); });
   if (it.group.collapsible) document.getElementById("grp-" + it.group.id).classList.add("open");
   document.querySelectorAll(".pane").forEach(function (p) { p.classList.remove("active"); });
   if (it.external) ensureExternal(it).classList.add("active");
   else {
-    var svc = it.group.service || it.id;
+    var svc = svcOf(it);
     ensureService(svc).classList.add("active");
     if (svc === "minutes" && it.view && !fromApp) tellMinutes(it.view);
   }
@@ -288,7 +295,7 @@ function show(id, push, fromApp) {
 }
 document.getElementById("reloadBtn").onclick = function () {
   if (!current || current.external) return;
-  var svc = current.group.service || current.id, f = frames[svc]; if (!f) return;
+  var svc = svcOf(current), f = frames[svc]; if (!f) return;
   paneFor("svc-" + svc).classList.add("loading-on");
   if (svc === "minutes") { ready.minutes = false; pendingView = current.view; f.src = MIN + MINQ + (current.view && current.view !== "previewView" ? "&tab=" + current.view : ""); }
   else f.src = f.src;
@@ -304,7 +311,7 @@ window.addEventListener("hashchange", function () { show((location.hash || "").r
   var first = (location.hash || "").replace(/^#/, "") || "previewView";
   var it = ITEMS[first] || ITEMS.previewView;
   // 첫 화면이 회의록 앱 안의 탭이면 iframe 주소에 &tab= 을 붙여 처음부터 그 화면으로(메시지 왕복 없이)
-  if (!it.external && (it.group.service === "minutes") && it.view && it.view !== "previewView") SERVICES.minutes.url = MIN + MINQ + "&tab=" + it.view;
+  if (!it.external && (svcOf(it) === "minutes") && it.view && it.view !== "previewView") SERVICES.minutes.url = MIN + MINQ + "&tab=" + it.view;
   show(it.id, false);
 })();
 </script>
