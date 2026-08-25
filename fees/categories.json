@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 4,
+  "dataset": "sandle-fees",
+  "updatedAt": "2026-08-25",
+  "identityRule": "기간이 달라도 동일한 비용 성격은 같은 code를 사용하고, 원문 명칭은 각 lineItem의 sourceName에 별도 보존한다.",
+  "groups": [
+    {
+      "code": "common-management",
+      "name": "공용관리"
+    },
+    {
+      "code": "utility-heating",
+      "name": "세대사용료/난방"
+    },
+    {
+      "code": "utility-electricity",
+      "name": "세대사용료/전기"
+    },
+    {
+      "code": "utility-water",
+      "name": "세대사용료/수도"
+    },
+    {
+      "code": "other-charges",
+      "name": "기타부과"
+    },
+    {
+      "code": "reserves-income",
+      "name": "충당금·수입"
+    }
+  ],
+  "categories": [
+    {
+      "code": "general",
+      "displayName": "일반관리비",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "cleaning",
+      "displayName": "청소비",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "security",
+      "displayName": "경비비",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "disinfection",
+      "displayName": "소독비",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "elevator-maintenance",
+      "displayName": "승강기유지비",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "repair-maintenance",
+      "displayName": "수선유지비",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "management-commission",
+      "displayName": "위탁관리수수료",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "management-commission-extra",
+      "displayName": "위탁관리수수료(분전)",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "management-commission-extra2",
+      "displayName": "위탁관리수수료(분전2)",
+      "groupCode": "common-management",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "household-heating",
+      "displayName": "세대난방비",
+      "groupCode": "utility-heating",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "household-hotwater",
+      "displayName": "세대급탕비",
+      "groupCode": "utility-heating",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "heating-basic",
+      "displayName": "기본요금",
+      "groupCode": "utility-heating",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "common-heating",
+      "displayName": "공동난방비",
+      "groupCode": "utility-heating",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "household-electricity",
+      "displayName": "세대전기료",
+      "groupCode": "utility-electricity",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "tv-license",
+      "displayName": "TV수신료",
+      "groupCode": "utility-electricity",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "elevator-electricity",
+      "displayName": "승강기전기료",
+      "groupCode": "utility-electricity",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "common-electricity",
+      "displayName": "공동전기료",
+      "groupCode": "utility-electricity",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "daycare-electricity",
+      "displayName": "어린이집전기료",
+      "groupCode": "utility-electricity",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "carecenter-electricity",
+      "displayName": "다함께돌봄센터",
+      "groupCode": "utility-electricity",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "household-water",
+      "displayName": "세대수도료",
+      "groupCode": "utility-water",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "common-water",
+      "displayName": "공동수도료",
+      "groupCode": "utility-water",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "food-waste",
+      "displayName": "음식물처리비",
+      "groupCode": "other-charges",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "insurance",
+      "displayName": "보험료",
+      "groupCode": "other-charges",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "owner-council",
+      "displayName": "입주자대표회의운영비",
+      "groupCode": "other-charges",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "election-committee",
+      "displayName": "선거관리위원회운영비",
+      "groupCode": "other-charges",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "longterm-repair",
+      "displayName": "장기수선충당금",
+      "groupCode": "reserves-income",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "longterm-repair-sale",
+      "displayName": "장기수선충당금(분양전환)",
+      "groupCode": "reserves-income",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "longterm-repair-sale2",
+      "displayName": "장기수선충당금(분양전환2)",
+      "groupCode": "reserves-income",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
+      "code": "parking-income",
+      "displayName": "주차수입",
+      "groupCode": "reserves-income",
+      "aliases": [],
+      "unit": "KRW",
+      "status": "active"
+    }
+  ]
+}

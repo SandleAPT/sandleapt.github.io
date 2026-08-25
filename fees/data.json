@@ -1,124 +1,53 @@
 {
-  "schemaVersion": 3,
-  "updated": "2026-08-25",
-  "note": "관리비부과명세서의 금액을 월별·항목별·세부표별로 구조화합니다. 원문은 아파트아이, 네이버카페 또는 관리사무소에서 확인할 수 있습니다. 원자료와 점검판단은 분리하며, 점검 필요 항목은 회의록·규약·계약·전월자료 등과 대조해 별도로 기록합니다.",
-  "analysisPolicy": {
-    "rawDataFirst": true,
-    "principles": [
-      "원문 숫자는 문제 여부와 관계없이 그대로 구조화한다.",
-      "사용자 제보가 없어도 전월 대비 큰 증감, 계산 불일치, 회의록·규약과의 불일치 가능성, 근거자료 공백을 매월 점검한다.",
-      "자동 점검은 이상징후를 찾는 용도이며 위법·부당집행을 확정하지 않는다.",
-      "규약 한도나 회의 참석인원을 이용한 계산은 '기준 초과 가능 추정액'으로 따로 표시하고, 환수액으로 단정하지 않는다.",
-      "새 증빙이 확인되면 기존 값을 삭제하지 않고 확인내용과 수정일을 남긴다."
-    ],
-    "automaticChecks": [
-      {"id":"large-change","label":"전월 대비 큰 증감","rule":"증감률 20% 이상이면서 절대 증감 500,000원 이상이면 확인 후보"},
-      {"id":"allocation-mismatch","label":"부담액 합계 불일치","rule":"입주자분+LH분과 당월부과액의 차이가 단순 반올림 범위를 크게 벗어나는지 확인"},
-      {"id":"rule-crosscheck","label":"규약·회의록 대조","rule":"회의수당·식비·물품비 등 규약상 한도가 있는 비용은 회의록 참석인원·회의횟수와 별도 대조"},
-      {"id":"source-gap","label":"근거자료 공백","rule":"회의록·지출증빙·세부산출표가 없거나 월 귀속이 불명확하면 확인 필요로 표시"}
-    ]
-  },
-  "crossChecks": [
+  "schemaVersion": 4,
+  "dataset": "sandle-fees",
+  "title": "산들마을 관리비 월별 데이터",
+  "updatedAt": "2026-08-25",
+  "currency": "KRW",
+  "description": "10년 이상 누적을 전제로 원문, 항목 사전, 월별 관측값, 분석 결과를 분리한다.",
+  "catalog": "categories.json",
+  "reviews": "reviews.json",
+  "years": [
     {
-      "id": "tenant-council-expense",
-      "title": "임차인대표회의 운영경비 — 회의록·규약 대조",
-      "type": "rule-meeting-crosscheck",
-      "status": "확인중",
-      "description": "관리비 또는 운영비 원자료 자체와 별개로, 공개 회의록의 회의횟수·참석인원과 임차인 관리규약 제29조의2 기준을 대조해 기준 초과 가능액을 추정합니다.",
-      "rule": "회의출석수당 1인 1회 30,000원, 식비·다과 1인 10,000원 이내, 회의물품비 1회 30,000원 이내. 공개자료 계산은 확정 환수액이 아님.",
-      "yearSummaries": [
-        {"year":2024,"recorded":2680800,"estimatedPossibleExcess":673800,"note":"공개 회의록과 지급월을 단순 대조한 추정치. 2024-01/02 귀속 조정 반영, 원본 증빙 확인 필요."},
-        {"year":2025,"recorded":3636500,"estimatedPossibleExcess":1304500,"note":"공개 회의록·관리비 자료 단순대조 추정치. 임기 공백기 회의 2회는 별도 확인 필요."},
-        {"year":2026,"period":"1~4월","recorded":1741000,"estimatedPossibleExcess":461000,"note":"2026년 1~4월 공개자료 기준. 6회 회의, 참석인원 합계 32명 기준 대조."}
-      ],
-      "pending": [
-        {"period":"2026-05","recorded":310000,"note":"운영비 원자료 확보. 해당 월 회의자료와 최종 매칭 필요."},
-        {"period":"2026-06","recorded":509000,"note":"원문 14쪽 관리외 비용의 임차인대표회의운영비 당월발생액. 6월 임시·정기회의 참석인원과 지출일자·성격을 매칭한 뒤 추정액 계산 필요."}
-      ],
-      "sourceNote": "공개 관리비 자료·임차인대표회의 결과공고·임차인 관리규약을 대조한 참고값. 지급결의서, 영수증, 카드전표, 참석부, 수당지급명세 확인 후 수정." 
+      "year": 2026,
+      "file": "data-2026.json",
+      "from": "2026-01",
+      "to": "2026-06",
+      "monthCount": 6,
+      "status": "billing-summary-complete"
     }
   ],
-  "months": [
-    {
-      "period": "2026-06",
-      "label": "2026년 06월",
-      "source": {
-        "title": "2026년 06월분 관리비부과명세서",
-        "published": "2026-07-24",
-        "originalVisibility": "아파트아이·네이버카페·관리사무소 확인 가능",
-        "originalPages": 15,
-        "capturedPages": 18,
-        "summarySourcePage": 4,
-        "captureSummaryPage": 6
-      },
-      "totals": {
-        "assessed": 229655989,
-        "residentShare": 227834690,
-        "lhShare": 1821930,
-        "billed": 229656620,
-        "adjustment": 631,
-        "previousBilled": 237887730,
-        "change": -8231110,
-        "overpayment": -390370,
-        "managementFeeAssessed": 229265619,
-        "managementFeeResidentShare": 227444320,
-        "managementFeeBilled": 229266250,
-        "previousManagementFeeBilled": 237460130,
-        "managementFeeChange": -8193880
-      },
-      "categories": [
-        {"code":"general","name":"일반관리비","group":"공용관리","assessed":44634620,"residentShare":44017730,"lhShare":621200,"billed":44638930,"adjustment":4310,"previousBilled":44675640,"change":-36710},
-        {"code":"cleaning","name":"청소비","group":"공용관리","assessed":23533000,"residentShare":23203400,"lhShare":327460,"billed":23530860,"adjustment":-2140,"previousBilled":23530860,"change":0},
-        {"code":"security","name":"경비비","group":"공용관리","assessed":24065020,"residentShare":23730520,"lhShare":334920,"billed":24065440,"adjustment":420,"previousBilled":24017610,"change":47830},
-        {"code":"disinfection","name":"소독비","group":"공용관리","assessed":540000,"residentShare":530530,"lhShare":7480,"billed":538010,"adjustment":-1990,"previousBilled":538010,"change":0},
-        {"code":"elevator-maintenance","name":"승강기유지비","group":"공용관리","assessed":2772000,"residentShare":2731000,"lhShare":38550,"billed":2769550,"adjustment":-2450,"previousBilled":2769550,"change":0},
-        {"code":"repair-maintenance","name":"수선유지비","group":"공용관리","assessed":12029200,"residentShare":11902020,"lhShare":136050,"billed":12038070,"adjustment":8870,"previousBilled":13840510,"change":-1802440},
-        {"code":"management-commission","name":"위탁관리수수료","group":"공용관리","assessed":313660,"residentShare":312950,"lhShare":0,"billed":312950,"adjustment":-710,"previousBilled":312950,"change":0},
-        {"code":"management-commission-extra","name":"위탁관리수수료(분전)","group":"공용관리","assessed":272145,"residentShare":271460,"lhShare":0,"billed":271460,"adjustment":-685,"previousBilled":271460,"change":0},
-        {"code":"household-heating","name":"세대난방비","group":"세대사용료/난방","assessed":0,"residentShare":0,"lhShare":0,"billed":0,"adjustment":0,"previousBilled":681950,"change":-681950},
-        {"code":"household-hotwater","name":"세대급탕비","group":"세대사용료/난방","assessed":16617900,"residentShare":16617900,"lhShare":0,"billed":16617900,"adjustment":0,"previousBilled":26277480,"change":-9659580},
-        {"code":"heating-basic","name":"기본요금","group":"세대사용료/난방","assessed":4162010,"residentShare":4106280,"lhShare":57950,"billed":4164230,"adjustment":2220,"previousBilled":4164230,"change":0},
-        {"code":"common-heating","name":"공동난방비","group":"세대사용료/난방","assessed":531110,"residentShare":518980,"lhShare":7320,"billed":526300,"adjustment":-4810,"previousBilled":848790,"change":-322490},
-        {"code":"household-electricity","name":"세대전기료","group":"세대사용료/전기","assessed":39951370,"residentShare":39882060,"lhShare":69310,"billed":39951370,"adjustment":0,"previousBilled":36804360,"change":3147010},
-        {"code":"tv-license","name":"TV수신료","group":"세대사용료/전기","assessed":2597500,"residentShare":2597500,"lhShare":0,"billed":2597500,"adjustment":0,"previousBilled":2605000,"change":-7500},
-        {"code":"elevator-electricity","name":"승강기전기료","group":"세대사용료/전기","assessed":2365660,"residentShare":2331270,"lhShare":35130,"billed":2366400,"adjustment":740,"previousBilled":2751790,"change":-385390},
-        {"code":"common-electricity","name":"공동전기료","group":"세대사용료/전기","assessed":13205264,"residentShare":13020720,"lhShare":183760,"billed":13204480,"adjustment":-784,"previousBilled":12485940,"change":718540},
-        {"code":"daycare-electricity","name":"어린이집전기료","group":"세대사용료/전기","assessed":143860,"residentShare":143860,"lhShare":0,"billed":143860,"adjustment":0,"previousBilled":144630,"change":-770},
-        {"code":"carecenter-electricity","name":"다함께돌봄센터","group":"세대사용료/전기","assessed":103280,"residentShare":103280,"lhShare":0,"billed":103280,"adjustment":0,"previousBilled":121140,"change":-17860},
-        {"code":"household-water","name":"세대수도료","group":"세대사용료/수도","assessed":16932190,"residentShare":16932190,"lhShare":0,"billed":16932190,"adjustment":0,"previousBilled":16311900,"change":620290},
-        {"code":"common-water","name":"공동수도료","group":"세대사용료/수도","assessed":199020,"residentShare":199430,"lhShare":2800,"billed":202230,"adjustment":3210,"previousBilled":202230,"change":0},
-        {"code":"food-waste","name":"음식물처리비","group":"기타부과","assessed":960000,"residentShare":956330,"lhShare":0,"billed":956330,"adjustment":-3670,"previousBilled":1280900,"change":-324570},
-        {"code":"insurance","name":"보험료","group":"기타부과","assessed":2531230,"residentShare":2528600,"lhShare":0,"billed":2528600,"adjustment":-2630,"previousBilled":2630810,"change":-102210},
-        {"code":"owner-council","name":"입주자대표회의운영비","group":"기타부과","assessed":1595000,"residentShare":1597010,"lhShare":0,"billed":1597010,"adjustment":2010,"previousBilled":1160770,"change":436240},
-        {"code":"election-committee","name":"선거관리위원회운영비","group":"기타부과","assessed":260000,"residentShare":258720,"lhShare":0,"billed":258720,"adjustment":-1280,"previousBilled":269350,"change":-10630},
-        {"code":"longterm-repair","name":"장기수선충당금","group":"충당금·수입","assessed":4873260,"residentShare":4873260,"lhShare":0,"billed":4873260,"adjustment":0,"previousBilled":4873260,"change":0},
-        {"code":"longterm-repair-sale","name":"장기수선충당금(분양전환)","group":"충당금·수입","assessed":3937190,"residentShare":3937190,"lhShare":0,"billed":3937190,"adjustment":0,"previousBilled":3937190,"change":0},
-        {"code":"longterm-repair-sale2","name":"장기수선충당금(분양전환2)","group":"충당금·수입","assessed":1460500,"residentShare":1460500,"lhShare":0,"billed":1460500,"adjustment":0,"previousBilled":1168440,"change":292060},
-        {"code":"parking-income","name":"주차수입","group":"충당금·수입","assessed":9070000,"residentShare":9070000,"lhShare":0,"billed":9070000,"adjustment":0,"previousBilled":9210980,"change":-140980}
-      ],
-      "groupTotals": [
-        {"name":"공용관리 합계","assessed":108159645,"residentShare":106699610,"lhShare":1465660,"billed":108165270,"adjustment":5625,"previousBilled":109956590,"change":-1791320},
-        {"name":"난방 합계","assessed":21311020,"residentShare":21243160,"lhShare":65270,"billed":21308430,"adjustment":-2590,"previousBilled":31972450,"change":-10664020},
-        {"name":"전기 합계","assessed":58366934,"residentShare":58078690,"lhShare":288200,"billed":58366890,"adjustment":-44,"previousBilled":54912860,"change":3454030},
-        {"name":"수도 합계","assessed":17131210,"residentShare":17131620,"lhShare":2800,"billed":17134420,"adjustment":3210,"previousBilled":16514130,"change":620290},
-        {"name":"세대사용료 합계","assessed":96809164,"residentShare":96453470,"lhShare":356270,"billed":96809740,"adjustment":576,"previousBilled":103399440,"change":-6589700}
-      ],
-      "detailPlan": {
-        "policy": "총괄표 숫자로 끝내지 않고 원문 각 쪽의 산출근거와 세부표를 행 단위로 보존한다.",
-        "sections": [
-          {"originalPage":5,"kind":"account-detail","title":"일반관리비 세부내역 및 동별 부과기준"},
-          {"originalPage":6,"kind":"allocation-detail","title":"청소비·경비비·소독비 세부 산출"},
-          {"originalPage":7,"kind":"account-detail","title":"승강기유지비·수선유지비 세부내역"},
-          {"originalPage":8,"kind":"account-detail","title":"수선유지비 계속·위탁관리수수료·난방 관련"},
-          {"originalPage":9,"kind":"utility-detail","title":"난방·전기·공동사용량 세부표"},
-          {"originalPage":10,"kind":"utility-detail","title":"전기료 세부 산출 및 연간 자료"},
-          {"originalPage":11,"kind":"utility-detail","title":"수도료 및 계량기 관련 세부표"},
-          {"originalPage":12,"kind":"other-charge-detail","title":"기타부과 및 충당금 관련 세부표"},
-          {"originalPage":13,"kind":"reserve-detail","title":"충당금·주차수입 등 세부표"},
-          {"originalPage":14,"kind":"income-expense","title":"관리외 수익·관리외 비용"},
-          {"originalPage":15,"kind":"deposit-balance","title":"예금 잔액 현황"}
-        ]
-      }
-    }
+  "primaryKey": {
+    "monthlyTotals": [
+      "period"
+    ],
+    "lineItems": [
+      "period",
+      "sourceTable",
+      "categoryCode"
+    ],
+    "groupTotals": [
+      "period",
+      "sourceTable",
+      "sourceName"
+    ]
+  },
+  "valueSemantics": {
+    "assessed": "원문 당월발생금액",
+    "residentShare": "원문 입주자분",
+    "lhShare": "원문 LH 청구분/공가세대",
+    "billed": "원문 당월부과금액",
+    "adjustment": "원문 부과차액",
+    "previousBilled": "원문 전월부과금액",
+    "change": "원문 증감",
+    "null": "원문에 값이 없거나 아직 추출하지 않은 값",
+    "zero": "원문 금액이 0인 값"
+  },
+  "policies": [
+    "원문 금액과 분석·판단을 같은 객체에 섞지 않는다.",
+    "항목명 변경은 sourceName에 보존하고 categoryCode로 시계열을 연결한다.",
+    "새 연도는 data-YYYY.json으로 추가하고 기존 연도 파일을 불필요하게 다시 쓰지 않는다.",
+    "정정할 때 기존 출처와 정정 사유를 기록하고 updatedAt을 갱신한다.",
+    "PDF 원본은 저장소에 올리지 않으며 파일명과 SHA-256으로 추출 근거를 식별한다."
   ]
 }
