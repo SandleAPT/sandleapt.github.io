@@ -105,7 +105,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 </head>
 <body>
 <aside class="rail" id="rail">
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v52 · 2026.08.31 갱신</small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v53 · 2026.08.31 갱신</small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -125,7 +125,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
   <div class="bottom" id="bottom"></div>
 </div>
 <script>
-// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 46번째 커밋이다.
+// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 53번째 커밋이다.
 // 회의록(minutes)·관리비(fees) 등 하위 앱을 배포할 때도 여기 버전·시각과 아래 iframe 캐시 키(&v=)를 함께 올린다 — 방문자에게 보이는 버전은 이 포털 것 하나다.
 // ── 산들마을 입주민 포털 — 왼쪽 메뉴 하나로 하위 서비스를 오가는 껍데기 ──
 // 같은 호스트(sandleapt.github.io)의 앱은 iframe 한 벌로 띄우고, 회의록 앱은 끼움 모드(?embed=1)로 띄워
@@ -148,7 +148,8 @@ var GROUPS = [
     { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true }
   ]},
   { id: "rules", title: "규약 · 기록", cls: "", service: "minutes", items: [
-    { id: "noticeView", label: "규약 · 계약 · 공고", view: "noticeView" }
+    { id: "noticeView", label: "규약 · 계약 · 공고", view: "noticeView" },
+    { id: "privateView", label: "비공개 자료", view: "privateView", adminOnly: true }
   ]},
   { id: "finance", title: "재정 · 회계", cls: "green", items: [
     { id: "fees",     label: "관리비 추적", service: "fees", url: FEES },
