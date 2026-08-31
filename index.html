@@ -105,7 +105,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 </head>
 <body>
 <aside class="rail" id="rail">
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v60 · 2026.08.31 갱신</small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v61 · 2026.08.31 갱신</small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -125,7 +125,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
   <div class="bottom" id="bottom"></div>
 </div>
 <script>
-// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 60번째 커밋이다.
+// 포털 버전은 저장소의 누적 커밋 순번과 맞춘다. 이 변경은 61번째 커밋이다.
 // 회의록(minutes)·관리비(fees) 등 하위 앱을 배포할 때도 여기 버전·시각과 아래 iframe 캐시 키(&v=)를 함께 올린다 — 방문자에게 보이는 버전은 이 포털 것 하나다.
 // ── 산들마을 입주민 포털 — 왼쪽 메뉴 하나로 하위 서비스를 오가는 껍데기 ──
 // 같은 호스트(sandleapt.github.io)의 앱은 iframe 한 벌로 띄우고, 회의록 앱은 끼움 모드(?embed=1)로 띄워
@@ -135,8 +135,8 @@ main{flex:1 1 auto;position:relative;min-height:0}
 // 같은 호스트 기준 주소(배포: https://sandleapt.github.io, 로컬 점검: http://localhost:…)
 var BASE = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://sandleapt.github.io";
 var MIN = BASE + "/minutes/";
-var MINQ = "?embed=1&v=90"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
-var FEES = BASE + "/fees/?v=44";
+var MINQ = "?embed=1&v=91"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
+var FEES = BASE + "/fees/?v=45";
 // 2026-08-26 재편(v38): 내용 기준 4그룹, 번호 없음. 작성용 화면은 회의록 그룹 안에서 관리자 기기에만 표시.
 var GROUPS = [
   { id: "minutes", title: "회의록", cls: "", service: "minutes", items: [
@@ -161,7 +161,14 @@ var GROUPS = [
     { id: "community", label: "커뮤니티센터 이용 안내", service: "community", url: BASE + "/CommunityNotice/" }
   ]}
 ];
-function isAdminDevice() { try { return !!localStorage.getItem("sandle_admin_key"); } catch (e) { return false; } }
+function isAdminDevice() { // v61: 24시간 만료 규칙(회의록·관리비와 공통) — 만료된 키는 지우고 관리자 메뉴를 숨긴다
+  try {
+    var k = localStorage.getItem("sandle_admin_key"); if (!k) return false;
+    var at = +localStorage.getItem("sandle_admin_unlock_at") || 0;
+    if (!at || (Date.now() - at) > 24*60*60*1000) { localStorage.removeItem("sandle_admin_key"); localStorage.removeItem("sandle_admin_unlock_at"); return false; }
+    return true;
+  } catch (e) { return false; }
+}
 function svcOf(it) { return it.service || it.group.service || it.id; }
 // 같은 호스트 서비스(iframe 한 벌씩). minutes 는 끼움 모드.
 var SERVICES = {
