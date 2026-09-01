@@ -29,6 +29,21 @@
     try { localStorage.setItem(저장키, JSON.stringify(m)); } catch (e) {}
   }
 
+  // 회의록 앱의 resolveStored를 그대로 쓴다. 없으면 최소한의 옛 이름 변환만 한다.
+  function 수동태그읽기(a) {
+    const T = window.TopicTaxonomy;
+    const 자동 = () => {
+      const r = A().classify({ title: a.title, note: [a.summary, a.decision, a.result].filter(Boolean).join(' ') });
+      return [r.topic];
+    };
+    if (T && typeof T.resolveStored === 'function') {
+      const v = T.resolveStored(a, 자동);
+      return Array.isArray(v) ? v.filter(Boolean) : [];
+    }
+    return (Array.isArray(a.tags) ? a.tags : []).filter(Boolean)
+      .map(t => (t === '미화' ? '청소·미화' : t === '소송' ? '하자·소송' : t));
+  }
+
   async function 안건불러오기() {
     const out = [];
     for (let y = 2016; y <= 2026; y++) {
@@ -46,7 +61,11 @@
           title: a.title || '',
           note: [a.summary, a.decision, a.result].filter(Boolean).join(' '),
           // 회의록에서 이미 사람이 붙여둔 태그. 자동 판정보다 우선한다.
-          tags: Array.isArray(a.tags) ? a.tags.filter(Boolean) : []
+          // 저장된 값을 그대로 쓰지 않고 회의록 앱과 같은 방식으로 푼다(resolveStored):
+          //  - 옛 이름을 현재 이름으로 바꾼다(미화 → 청소·미화, 소송 → 하자·소송)
+          //  - '기타'·'저수조·청소' 같은 포괄 태그는 자동 분류로 보강한다
+          // 이걸 건너뛰면 화면에 옛 이름이 뜨고, 나중에 저장할 때 그대로 굳어버린다.
+          tags: 수동태그읽기(a)
         }));
       });
     }
