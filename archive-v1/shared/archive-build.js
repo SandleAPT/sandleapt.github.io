@@ -125,6 +125,12 @@
     topics.forEach(function (t) { byLabel[t.label] = t.id; });
 
     return {
+      /* 화면의 「지금 적용되는 기준 / 현재 기준」을 그대로 쓰면 거짓말이 된다.
+       * 회의록만으로는 무엇이 지금도 유효한 기준인지 알 수 없다. 규약·계약 자료가
+       * 들어오기 전까지는 **최근 기록**이라고만 말한다. */
+      currentHeading: '가장 최근 기록',
+      currentLabel: '최근',
+      currentNote: '규약·계약 자료를 붙이기 전이라 지금은 최근 안건만 보여준다',
       topics: topics,
       recentRecords: 최근.slice(0, 12).map(function (x) {
         return {
