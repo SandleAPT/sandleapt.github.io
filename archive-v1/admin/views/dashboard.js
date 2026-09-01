@@ -4,31 +4,29 @@
   window.SandleAdminViews.dashboard=function(root,store){
     const c=store.getCounts();
     root.innerHTML=`
-      <section class="aw-page-head"><div><p class="admin-kicker">2.5 · 전체 검토</p><h1>2.2 · 2.3 · 2.4를 여기서 각각 테스트</h1><p>앞 화면은 작업대 자리만 보여서 실제로 뭘 눌러봐야 하는지 분명하지 않았어. 이번 화면에서는 각 소단계가 독립적으로 열리고, 마지막에는 하나의 자료가 등록→검토→발행까지 이어지는지 볼 수 있어.</p></div><button class="aw-ghost" data-reset>샘플 초기화</button></section>
-      <section class="aw-grid-2">
-        <article class="aw-panel compact"><p class="admin-kicker">2.2 · TEST</p><h3>AI 새 자료 등록</h3><p>예시 자료를 자동으로 채우고 ‘AI 초안 만들기’를 누르면 새 자료가 실제 검토함으로 이동해.</p><button class="aw-primary" data-go="register">2.2 직접 테스트</button></article>
-        <article class="aw-panel compact"><p class="admin-kicker">2.3 · TEST</p><h3>public / resident / private</h3><p>샘플 자료의 공개등급을 직접 바꾸면 공개 빌드 포함/제외 결과가 즉시 달라져.</p><button class="aw-primary" data-go="visibility">2.3 직접 테스트</button></article>
-        <article class="aw-panel compact"><p class="admin-kicker">2.4 · TEST A</p><h3>분류 검토</h3><p>AI 추천 주제·조직·현행상태를 수정하고 승인 또는 보류해볼 수 있어.</p><button class="aw-primary" data-go="classification">분류 검토 테스트</button></article>
-        <article class="aw-panel compact"><p class="admin-kicker">2.4 · TEST B</p><h3>관계 검토</h3><p>기록끼리 관계 종류와 근거 수준을 바꾸고 승인하거나 연결 없이 진행해볼 수 있어.</p><button class="aw-primary" data-go="relations">관계 검토 테스트</button></article>
+      <section class="aw-page-head"><div><p class="admin-kicker">CURRENT · STAGE 3</p><h1>지금 있는 자료를 더 보기 좋게</h1><p>새 입력 시스템을 하나 더 만드는 것보다, 이미 쌓인 회의록과 규정·계약을 Archive에서 찾기 쉽게 재배치하는 게 현재 목표야. 2단계 관리 기능은 써보면서 보완하고, 지금은 실제 회의록 변환 흐름을 먼저 확인해.</p></div><button class="aw-ghost" data-reset>2단계 샘플 초기화</button></section>
+      <section class="aw-panel">
+        <div class="aw-panel-head"><div><p class="admin-kicker">STAGE 3 · MAIN</p><h2>회의록 → Archive 정리</h2><p>`/minutes/`에 이미 저장된 회의록을 읽고, 회의 전체는 Document로 두고 안건은 Fragment로 나눠 검색·주제별 화면에서 다시 쓰는 흐름이야.</p></div><span>원본 수정 없음</span></div>
+        <div class="aw-flow">
+          <button data-go="meeting"><b>1</b><span>기존 작성</span><small>지금 쓰는 회의록 유지</small></button><i>→</i>
+          <button data-go="meetingImport"><b>2</b><span>자동 읽기</span><small>실제 저장 회의 선택</small></button><i>→</i>
+          <button data-go="meetingImport"><b>3</b><span>Document/Fragment</span><small>안건별 보기 좋은 구조</small></button><i>→</i>
+          <button data-go="classification"><b>4</b><span>애매한 것만 검토</span><small>주제 후보 확인</small></button>
+        </div>
+        <div class="aw-split-note"><strong>핵심</strong><span>회의록 원문·PDF를 Archive 때문에 줄이거나 다시 작성하지 않아. 기존 회의록은 그대로 두고 그 내용을 찾기 쉬운 인덱스와 연결 구조만 덧붙여.</span><button data-go="meetingImport">3단계 직접 보기</button></div>
       </section>
       <section class="aw-stat-grid">
-        <button class="aw-stat" data-go="classification"><span>분류 검토 남음</span><b>${c.classification}</b><small>주제·조직·현행상태 확인</small></button>
-        <button class="aw-stat" data-go="relations"><span>관계 검토 남음</span><b>${c.relations}</b><small>기록 간 연결 근거 확인</small></button>
-        <button class="aw-stat" data-go="publish"><span>발행 대기</span><b>${c.publish}</b><small>공개등급·최종 미리보기</small></button>
-        <article class="aw-stat muted"><span>테스트 발행</span><b>${c.published}</b><small>실제 저장소에는 쓰지 않음</small></article>
+        <button class="aw-stat" data-go="meetingImport"><span>3단계</span><b>LIVE</b><small>실제 minutes 연도별 데이터 읽기</small></button>
+        <button class="aw-stat" data-go="classification"><span>분류 검토</span><b>${c.classification}</b><small>회의 안건·일반 자료 함께 확인</small></button>
+        <button class="aw-stat" data-go="relations"><span>관계 검토</span><b>${c.relations}</b><small>근거 있는 연결만 확인</small></button>
+        <button class="aw-stat" data-go="publish"><span>발행 대기</span><b>${c.publish}</b><small>현재는 메모리 프로토타입</small></button>
       </section>
-      <section class="aw-panel">
-        <div class="aw-panel-head"><div><p class="admin-kicker">END-TO-END TEST</p><h2>한 자료를 끝까지 보내보기</h2></div><span>2.2 → 2.4 → 발행 대기</span></div>
-        <div class="aw-flow">
-          <button data-go="register"><b>2.2</b><span>새 자료 등록</span><small>예시 채우기 → 초안</small></button><i>→</i>
-          <button data-go="classification"><b>2.4</b><span>분류 승인</span><small>주제·조직·상태</small></button><i>→</i>
-          <button data-go="relations"><b>2.4</b><span>관계 승인/생략</span><small>근거 수준 확인</small></button><i>→</i>
-          <button data-go="publish"><b>✓</b><span>발행 대기</span><small>등급·미리보기</small></button>
-        </div>
-        <div class="aw-split-note"><strong>2.3은 어느 시점에도 바꿀 수 있어.</strong><span>공개등급은 등록 때 기본값을 넣되, 전용 2.3 화면이나 발행 직전에도 수정 가능하게 시험하고 있어.</span><button data-go="visibility">2.3 열기</button></div>
+      <section class="aw-grid-2">
+        <article class="aw-panel compact"><p class="admin-kicker">2단계 · 계속 테스트</p><h3>새 자료 / 공개등급 / 검토함</h3><p>2.2~2.4는 확정해 잠그지 않았어. 실제로 써보다 불편한 부분이 보이면 계속 수정할 수 있게 유지해.</p><div class="aw-review-actions"><button class="aw-ghost" data-go="register">2.2 자료 등록</button><button class="aw-ghost" data-go="visibility">2.3 공개등급</button></div></article>
+        <article class="aw-panel compact"><p class="admin-kicker">3단계 · 출력 원칙</p><h3>기존 1페이지 회의록을 침범하지 않음</h3><p>출력은 계속 minutes가 담당하고 Archive는 검색·주제·타임라인용 구조만 만든다. 화면 구성이 나중에 바뀌어도 원본 회의 데이터는 다시 손대지 않는 방식이야.</p><button class="aw-primary" data-go="meetingImport">회의록 변환 보기</button></article>
       </section>
-      <section class="aw-prototype-warning"><b>테스트 범위</b><span>이번에는 실제로 버튼·수정·승인·보류·등급변경·발행대기 이동을 시험할 수 있어. 다만 실제 AI 호출, 인증, GitHub/Drive 저장은 아직 일어나지 않아.</span></section>`;
+      <section class="aw-prototype-warning"><b>현재 상태</b><span>3단계 변환 화면은 공개 `/minutes/` 정적 데이터를 읽기만 해. Archive 분류함으로 보내는 동작 역시 아직 브라우저 메모리 안의 검토 프로토타입이며 실제 회의록 원본을 수정하지 않아.</span></section>`;
     root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>U().nav(b.dataset.go));
-    root.querySelector('[data-reset]').onclick=()=>{store.reset();U().toast('샘플 상태를 초기화했어.');};
+    root.querySelector('[data-reset]').onclick=()=>{store.reset();U().toast('2단계 샘플 상태를 초기화했어.');};
   };
 })();
