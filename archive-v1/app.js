@@ -129,7 +129,9 @@ if(window.SandleArchiveLive&&window.SandleArchiveLive.준비){
        오늘 저장한 회의록은 아직 없다. 안 적어두면 "저장했는데 왜 안 보이지"가 된다. */
     const 기준=document.getElementById('dataAsOf');
     if(기준&&자료.기준&&자료.기준.text){
-      기준.textContent=자료.기준.text+(자료.기준.stale?' — 사본이 며칠째 안 만들어졌어':' 반영돼 있어. 오늘 저장한 건 내일 보여.');
+      /* "그 뒤에"라고 쓴다. "오늘 저장한 건 내일 보여"라고 하면 기준이 오늘일 때
+         "오늘 저장분까지 반영돼 있어. 오늘 저장한 건 내일 보여"가 되어 앞뒤가 어긋난다. */
+      기준.textContent=자료.기준.text+(자료.기준.stale?' — 사본이 며칠째 안 만들어졌어':' 반영돼 있어. 그 뒤에 저장한 건 내일 보여.');
       기준.className='data-asof'+(자료.기준.stale?' stale':'');
     }
     const 부제=document.querySelector('.brand small');
