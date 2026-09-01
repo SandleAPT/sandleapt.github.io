@@ -49,6 +49,23 @@ form.addEventListener('submit',function(e){
   if(!(t.current||[]).length&&!(t.timeline||[]).length&&!(t.records||[]).length){home.classList.add('is-hidden');view.classList.remove('is-hidden');view.innerHTML=`<button type="button" class="home-link" data-b-home>← 첫 화면으로</button><div class="empty"><b>“${esc(q)}”</b>와 연결되는 주제는 찾았지만 아직 Golden Sample 자료가 없어.</div>`;const hb=view.querySelector('[data-b-home]');if(hb)hb.onclick=showHome;return;}
   renderB(t,q);
 },true);
+/* 첫 화면에서 주제 이름을 눌러도 검색 결과와 **같은 화면**을 보여준다.
+ * 사용자가 두 화면을 다 본 뒤 "검색해서 들어가서 보이는 화면이 더 마음에 든다"고
+ * 정했다(2026-09-02). 같은 자료를 두 가지 모양으로 보여줄 이유가 없다.
+ * app.js의 주제 화면은 남겨 둔다 — 이 파일이 빠져도 화면이 비지 않게.
+ */
+document.addEventListener('click',function(e){
+  if(mode!=='B')return;
+  var btn=e.target.closest&&e.target.closest('#allTopics .topic-text-btn');
+  if(!btn)return;
+  var t=(자료().topics||[]).find(function(x){return String(x.label).trim()===btn.textContent.trim();});
+  if(!t)return;
+  if(!(t.current||[]).length&&!(t.timeline||[]).length&&!(t.records||[]).length)return; // 빈 주제는 원래 안내로
+  e.preventDefault();e.stopImmediatePropagation();
+  input.value=t.label;
+  renderB(t,t.label);
+},true);
+
 const observer=new MutationObserver(()=>{
   const a=view.querySelector('.search-a');if(!a)return;
   const actions=a.querySelector('.search-a-actions');if(!actions||actions.querySelector('[data-switch-b]'))return;
