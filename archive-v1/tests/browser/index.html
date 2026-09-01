@@ -32,6 +32,7 @@
 <script src="../specs/assert.js?v=20260901-1815"></script>
 <script src="../specs/stage3-source.spec.js?v=20260901-1815"></script>
 <script src="../specs/stage3-adapter.spec.js?v=20260901-1815"></script>
+<script src="../specs/stage3-live-data.spec.js?v=20260901-1845"></script>
 <script src="../specs/stage4-source-reference.spec.js?v=20260901-1815"></script>
 <script src="../specs/stage4-visibility.spec.js?v=20260901-1815"></script>
 <script src="../specs/stage4-publish-guard.spec.js?v=20260901-1815"></script>
@@ -39,7 +40,7 @@
 <script src="./runner.js?v=20260901-1815"></script>
 <script>
 (function () {
-  var SPECS = ['stage3-source', 'stage3-adapter', 'stage4-source-reference', 'stage4-visibility', 'stage4-publish-guard', 'stage4-admin-integration'];
+  var SPECS = ['stage3-source', 'stage3-adapter', 'stage3-live-data', 'stage4-source-reference', 'stage4-visibility', 'stage4-publish-guard', 'stage4-admin-integration'];
   var btn = document.getElementById('runBtn');
   var box = document.getElementById('result');
   var sum = document.getElementById('summary');
@@ -67,7 +68,15 @@
       var rows = await window.SandleTestRunner.runAll(SPECS, function (partial, done, total) { render(partial, done, total); });
       render(rows, rows.length, rows.length);
       // 자동화(Claude Code 등)에서 결과를 읽어갈 수 있도록 전역에 남긴다.
-      window.__sandleTestResult = { at: new Date().toISOString(), rows: rows, failed: rows.filter(function (r) { return !r.ok; }).length };
+      window.__sandleTestResult = { at: new Date().toISOString(), rows: rows, failed: rows.filter(function (r) { return !r.ok; }).length, liveData: window.__sandleLiveDataStats || null };
+      // 실제 데이터 건수는 화면에도 한 줄 남긴다(인계 기록에 옮기기 위함).
+      if (window.__sandleLiveDataStats) {
+        var s = window.__sandleLiveDataStats;
+        var p = document.createElement('div');
+        p.className = 'note';
+        p.textContent = '실제 데이터: 연도 ' + s.years + '개 · 회의 ' + s.meetings + '건 · Fragment ' + s.fragments + '건 (' + s.perYear.join(', ') + ')';
+        box.parentNode.insertBefore(p, box.nextSibling);
+      }
     } catch (e) {
       sum.className = 'summary ng'; sum.textContent = '러너 오류: ' + (e && e.message ? e.message : e);
     } finally { btn.disabled = false; }
