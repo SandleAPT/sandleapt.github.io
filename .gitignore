@@ -1,0 +1,27 @@
+# 이 저장소는 GitHub Pages로 공개된다. 실수로 올라가면 되돌릴 수 없다.
+# (공개 저장소에서 파일을 지워도 커밋 이력에는 남는다.)
+
+# 비공개·개인정보 자료 — 작업 중 임시로 두더라도 커밋되지 않게 한다
+비공개/
+산들마을-비공개/
+*.private.*
+_upload-tmp/
+.upload-tmp/
+
+# 자격증명
+*.key
+*.pem
+secrets.json
+.env
+.env.*
+
+# 편집기·OS
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# 로컬 점검 산출물
+node_modules/
+*.log
