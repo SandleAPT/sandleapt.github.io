@@ -46,3 +46,26 @@
   font-size: .8em; line-height: 1.6; opacity: .6;
 }
 .data-asof.stale { opacity: 1; color: #b3261e; font-weight: 600; }
+
+/* 사본이 얼마나 뒤처졌는지 확인 (4.6b) */
+.fresh-slot { margin: 6px auto 0; max-width: 560px; text-align: center; }
+.fresh-btn {
+  border: 1px solid var(--line, #ddd); background: transparent; color: inherit;
+  font: inherit; font-size: .78em; cursor: pointer;
+  padding: 4px 11px; border-radius: 999px; opacity: .65;
+}
+.fresh-btn:hover:not(:disabled) { opacity: 1; }
+.fresh-btn:disabled { opacity: .4; cursor: default; }
+
+.fresh-out {
+  margin-top: 8px; padding: 10px 12px; text-align: left;
+  border: 1px solid var(--line, #e3e0d8); border-radius: 10px;
+  background: var(--aw-soft, #f7f7f4); font-size: .84em; line-height: 1.65;
+}
+.fresh-out.bad { border-color: #e0b4b0; }
+.fresh-line { margin: 0 0 4px; }
+.fresh-line:last-child { margin-bottom: 0; }
+.fresh-line small { opacity: .65; }
+.fresh-list { margin: 6px 0 0; padding-left: 18px; }
+.fresh-list li { margin: 3px 0; }
+.fresh-list small { opacity: .6; margin-left: 4px; }

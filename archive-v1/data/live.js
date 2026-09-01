@@ -94,6 +94,9 @@
       if (!회의.length) return null;           // 못 읽으면 샘플을 그대로 둔다
       var 자료 = B.build(회의, window.TopicTaxonomy, 자동태그, Date.now());
       자료.기준 = B.기준문구 ? B.기준문구(기준시각, Date.now()) : null;
+      /* 사본에 무엇이 들어 있는지 — 클라우드와 대조하려면 필요하다(4.6b).
+         본문은 빼고 id·이름·날짜만 남긴다. 대조에 그 이상은 안 쓴다. */
+      window.SANDLE_ARCHIVE_COPY = 회의.map(function (m) { return { id: m.id, name: m.name, date: m.date }; });
       window.SANDLE_ARCHIVE_SAMPLE = 자료;
       window.SANDLE_ARCHIVE_LIVE = true;
       return 자료;
