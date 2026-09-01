@@ -1,1 +1,29 @@
 .search-b{max-width:980px;margin:0 auto}.search-b-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:4px 0 18px}.search-b-head h2{margin:0;font-size:29px;letter-spacing:-.035em}.search-b-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.search-b-kicker{margin:0 0 4px!important;color:var(--gold)!important;font-size:10px!important;font-weight:900;letter-spacing:.1em}.search-b-counts{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}.search-b-counts span{font-size:9.5px;border:1px solid var(--line);background:var(--paper);color:var(--muted);border-radius:999px;padding:4px 7px}.search-compare{display:flex;gap:5px;flex:0 0 auto;background:#eee9df;border-radius:11px;padding:4px}.search-compare button{border:0;background:transparent;color:#6b655b;border-radius:8px;padding:7px 10px;font-size:10.5px;font-weight:800;cursor:pointer}.search-compare button.active{background:#fff;color:var(--ink);box-shadow:0 1px 5px rgba(60,51,35,.08)}.search-b-section,.search-b-summary{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:13px}.search-b-section-head{display:flex;align-items:center;gap:10px;padding:14px 16px 11px;border-bottom:1px solid var(--line)}.search-b-section-head>span{display:grid;place-items:center;width:23px;height:23px;border-radius:8px;background:var(--gold-soft);color:#73520e;font-size:10px;font-weight:900}.search-b-section-head h3{margin:0;font-size:15px}.search-b-section-head small{display:block;color:var(--muted);font-size:10.5px;margin-top:1px}.search-b-current-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:9px}.search-b-current{width:100%;text-align:left;border:1px solid #ece6da;background:#fff;border-radius:13px;padding:13px 14px;color:inherit;cursor:pointer}.search-b-current:hover{border-color:#d9cfbd;background:#fffcf5}.search-b-current .meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}.search-b-current strong{display:block;font-size:13.5px}.search-b-current p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:4px 0 0;color:var(--muted);font-size:11.5px;line-height:1.45}.search-b-summary{background:#fffaf0}.search-b-summary ul{margin:0;padding:13px 21px 15px 37px}.search-b-summary li{font-size:12px;line-height:1.55;color:#4f4a42;margin:5px 0}.search-b-timeline{padding:10px 14px}.search-b-event{width:100%;display:grid;grid-template-columns:78px 1fr;gap:12px;text-align:left;border:0;border-bottom:1px solid #eee8dc;background:transparent;color:inherit;padding:10px 8px;cursor:pointer}.search-b-event:last-child{border-bottom:0}.search-b-event:hover{background:#fffcf5}.search-b-event time{font-size:10.5px;color:var(--muted);font-weight:800}.search-b-event b{display:block;font-size:12.5px}.search-b-event p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:2px 0 0;color:var(--muted);font-size:11px}.search-b-records{padding:7px}.search-b-record{width:100%;display:grid;grid-template-columns:82px 95px 1fr auto;gap:10px;align-items:center;text-align:left;border:0;border-bottom:1px solid #eee8dc;background:transparent;color:inherit;padding:10px 9px;cursor:pointer}.search-b-record:last-child{border-bottom:0}.search-b-record:hover{background:#fffcf5}.search-b-record .date{font-size:10.5px;color:var(--muted)}.search-b-record .kind{font-size:10.5px;font-weight:800;color:#625d54}.search-b-record .title{font-size:11.5px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.search-b-record .status{font-size:9.5px;border-radius:999px;padding:3px 7px;background:#f0ece4;color:#6b655c}.search-b-more{padding:9px 15px 12px;border-top:1px solid var(--line);color:var(--muted);font-size:10.5px}.search-b-more button,.search-b-footer button{border:0;background:transparent;color:#73520e;padding:0;font:inherit;font-weight:900;cursor:pointer}.search-b-more button:hover,.search-b-footer button:hover{text-decoration:underline}.search-b-footer{text-align:right;padding:4px 2px 0;font-size:11px}.search-b-empty{padding:13px 15px;color:var(--muted);font-size:11px;margin:0}.search-a-actions .search-mode-active:disabled{opacity:1;background:var(--gold-soft);color:#73520e;border-color:#e4ca82}@media(max-width:760px){.search-b-head{align-items:flex-start;flex-direction:column}.search-b-head h2{font-size:24px}.search-compare{width:100%}.search-compare button{flex:1}.search-b-current-grid{grid-template-columns:1fr}.search-b-event{grid-template-columns:62px 1fr}.search-b-record{grid-template-columns:65px 72px 1fr}.search-b-record .status{display:none}.search-b-section,.search-b-summary{border-radius:15px}}
+
+/* 주제 전환 줄 (2026-09-02, 사용자 요청)
+   뒤로 가지 않고 옆 주제로 바로 옮겨 다닌다.
+   전부 늘어놓되 지금 보는 것만 크게 — 어디에 있는지 한눈에 보이게. */
+.tswitch-bar{
+  display:flex; flex-wrap:wrap; gap:4px 6px; align-items:baseline;
+  margin:0 0 14px; padding:10px 12px;
+  background:var(--aw-soft,#f7f7f4); border:1px solid var(--line,#e3e0d8); border-radius:12px;
+}
+.tswitch{
+  border:0; background:transparent; cursor:pointer; padding:2px 5px; border-radius:7px;
+  font-size:.82em; line-height:1.5; color:inherit; opacity:.62;
+}
+.tswitch:hover{ opacity:1; background:#fff; }
+.tswitch i{ font-style:normal; font-size:.82em; opacity:.55; margin-left:2px; }
+/* 지금 보고 있는 주제 */
+.tswitch.on{
+  opacity:1; font-size:1.18em; font-weight:700;
+  color:var(--gold,#8a6a20); background:#fff;
+  box-shadow:inset 0 -2px 0 var(--gold,#b08d3f);
+}
+.tswitch.on i{ opacity:.8; font-weight:600; }
+
+@media (max-width:640px){
+  .tswitch-bar{ gap:3px 5px; padding:8px 10px; }
+  .tswitch{ font-size:.78em; }
+  .tswitch.on{ font-size:1.1em; }
+}
