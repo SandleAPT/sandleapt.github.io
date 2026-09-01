@@ -46,7 +46,14 @@
     try {
       var win = frame.contentWindow;
       // iframe의 상대 경로 기준은 about:blank라 부모의 절대 URL로 바꿔 싣는다.
-      var abs = function (rel) { return new URL(rel, location.href).href; };
+      // 캐시 무효화 쿼리를 붙이지 않으면 부모가 ?v=... 로 받은 최신 파일과 달리
+      // iframe은 브라우저 캐시의 옛 버전을 재사용해 수정이 반영되지 않는다.
+      var stamp = 'cb=' + Date.now();
+      var abs = function (rel) {
+        var u = new URL(rel, location.href);
+        u.search = u.search ? u.search + '&' + stamp : '?' + stamp;
+        return u.href;
+      };
       await loadInto(win, abs('../specs/assert.js'));
       await loadInto(win, abs('../specs/' + spec.name + '.spec.js'));
       var inner = win.SandleSpecs[spec.name];
