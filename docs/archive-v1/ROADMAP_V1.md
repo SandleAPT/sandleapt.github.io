@@ -211,6 +211,7 @@
 - 4.3a `done` — 공개 projection과 resident/private 발행 차단을 관리자 화면·저장 함수에 연결
 - 4.3b `decision_needed` — 실제 입주민·관리자 인증 주체와 방식
 - 4.3c `planned` — 인증 만료·회수·감사 로그
+- 4.3d `in_progress` — 브라우저 검증 러너(node 없는 환경 대응, 3·4단계 공용)
 - 검증: `docs/archive-v1/STAGE4_VALIDATION.md`
 ### 4.4 사용자 검토
 ### 4.5 피드백 반영 및 4단계 확정
