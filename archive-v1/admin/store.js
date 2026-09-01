@@ -13,7 +13,8 @@
       held:state.items.filter(x=>!x.published&&x.classificationHeld).length,
       relations:state.items.filter(x=>!x.published&&x.classificationApproved&&x.relation&&!x.relation.approved&&!x.relation.skipped).length,
       publish:state.items.filter(readyForPublish).length,
-      published:state.items.filter(x=>x.published).length
+      published:state.items.filter(x=>x.published).length,
+      meetingImports:state.items.filter(x=>x.importedMeeting).length
     };
   }
   function suggest(fields){
@@ -47,6 +48,17 @@
     };
     state.items.unshift(item);emit();return item;
   }
+  function addImportedDrafts(items){
+    const incoming=Array.isArray(items)?items:[];
+    let added=0,skipped=0;
+    incoming.slice().reverse().forEach(raw=>{
+      if(!raw||!raw.id) return;
+      if(find(raw.id)){skipped++;return;}
+      state.items.unshift(clone(raw));added++;
+    });
+    if(added) emit();
+    return {added,skipped,total:incoming.length};
+  }
   function updateClassification(id,values){
     const item=find(id);if(!item)return;
     item.suggestions=Object.assign({},item.suggestions,values||{});emit();
@@ -61,7 +73,7 @@
   function publish(id){const item=find(id);if(!item||!readyForPublish(item))return false;item.published=true;item.publishedAt=new Date().toISOString();emit();return true;}
   function reset(){state={items:clone(source.items||[])};emit();}
   window.SandleAdminStore={
-    data:source,getState,getCounts,find,readyForPublish,addDraft,updateClassification,approveClassification,
+    data:source,getState,getCounts,find,readyForPublish,addDraft,addImportedDrafts,updateClassification,approveClassification,
     holdClassification,resumeClassification,updateRelation,approveRelation,skipRelation,setVisibility,publish,reset,
     subscribe(fn){listeners.push(fn);return()=>{const i=listeners.indexOf(fn);if(i>=0)listeners.splice(i,1);};}
   };
