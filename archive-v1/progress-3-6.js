@@ -1,0 +1,9 @@
+(function(){
+const flow=document.querySelector('.flow-review');
+const hero=document.querySelector('.hero');
+if(!hero)return;
+const panel=document.createElement('section');
+panel.className='roadmap-status';
+panel.innerHTML=`<div class="roadmap-status-head"><div><strong>현재 작업 위치</strong><div class="roadmap-deferred">2단계는 실제로 써보면서 보완할 수 있게 열어두고, 지금은 이미 쌓인 회의록을 Archive에서 보기 좋게 정리하는 3단계를 보고 있어.</div></div><span>3.6 전체 검토</span></div><div class="roadmap-stage-row"><div class="roadmap-stage done"><b>1</b>탐색·검색</div><div class="roadmap-stage"><b>2</b>관리자 입력<br><small>review</small></div><div class="roadmap-stage next"><b>3</b>회의록 연결</div><div class="roadmap-stage"><b>4</b>저장·권한</div><div class="roadmap-stage"><b>5</b>다른 주제 검증</div><div class="roadmap-stage"><b>6</b>실제 이관</div><div class="roadmap-stage"><b>7</b>최종 통합</div></div><div class="roadmap-status-grid"><article class="roadmap-box"><h3>3단계에서 지금 볼 수 있는 것</h3><ul><li>실제 /minutes 연도별 회의록 읽기</li><li>회의 1건 → Document 변환</li><li>안건별 → Fragment 분해</li><li>논의·의결·후속조치 구분</li><li>기존 태그 우선 / 자동분류는 후보 표시</li></ul></article><article class="roadmap-box"><h3>원본은 그대로 유지</h3><ul><li>기존 회의 작성 화면 변경 없음</li><li>기존 클라우드 저장 방식 변경 없음</li><li>1페이지 회의록·PDF 출력 유지</li></ul><div class="roadmap-deferred">Archive는 회의록을 다시 만드는 게 아니라, 이미 있는 내용을 검색·주제·흐름에 맞게 재배치하는 층이야.</div></article><article class="roadmap-box next-box"><h3>직접 확인하기</h3><p><b>관리 도구 → 3. 회의록 → Archive</b></p><ul><li>연도·회의 선택</li><li>원본과 정리 결과 비교</li><li>안건별 펼쳐보기</li><li>분류 검토함으로 보내기</li></ul><a href="./admin/#meetingImport" style="display:inline-block;margin-top:8px;font-weight:900;color:#6e5011;text-decoration:none">3단계 화면 열기 →</a></article></div>`;
+(flow||hero).insertAdjacentElement('afterend',panel);
+})();
