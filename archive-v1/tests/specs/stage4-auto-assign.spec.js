@@ -30,42 +30,55 @@
       assert.ok(A, 'SandleAutoAssign 로드');
       var 판정 = function (fields) { return A.classify(fields, 분류표); };
 
-      // ── 단서가 여럿이면 당연히 자동 확정
-      var 주차 = 판정({ title: '주차장 차단기 교체 및 반사경 설치', documentType: '의결' });
-      assert.equal(주차.topic, '주차', '주제를 맞게 고른다');
-      assert.equal(주차.autoOk, true, '단서가 여럿이면 자동 확정');
-      assert.equal(주차.matched.length >= 2, true, '무엇이 걸렸는지 남긴다');
-      assert.equal(주차.why.length > 0, true, '판단 이유가 있다');
+      /* ── 제목이 먼저다. 제목에서 걸리면 본문은 보지 않는다. ──────────────
+       * 이 규칙이 이 모듈의 핵심이다. 실측(2026-09-01, 실제 안건 1,212건)에서
+       * 제목과 본문을 함께 채점했더니 61%가 사람에게 넘어와 자동화가 무의미했다.
+       * 본문에 논의 내용이 통째로 들어 있어 제목을 덮어버렸기 때문이다.
+       * 제목 우선으로 바꾸니 92.1%가 제목만으로 판정됐다.
+       */
+      var 덮어쓰기시도 = 판정({
+        title: '승강기 정기 점검 결과 보고',
+        note: '주차 차단기 하자 소송 판결 배당금 반사경 항소 관련 논의가 길게 이어짐'
+      });
+      assert.equal(덮어쓰기시도.topic, '승강기', '본문이 아무리 길어도 제목이 이긴다');
+      assert.equal(덮어쓰기시도.reason, 'title', '제목에서 판정했음을 남긴다');
+      assert.equal(덮어쓰기시도.autoOk, true, '제목에서 걸리면 자동 확정');
 
-      // ── 단서 하나뿐이어도 자동 확정한다
-      //    실제 제목 대부분이 키워드 하나만 걸린다. 이걸 사람에게 보내면
-      //    검토함이 1,000건이 되어 자동화한 의미가 없어진다.
-      var 하나 = 판정({ title: '승강기 정기 점검 결과 보고', documentType: '보고' });
-      assert.equal(하나.topic, '승강기', '단서 하나로도 주제 판정');
-      assert.equal(하나.autoOk, true, '단서 1개도 자동 확정(겹치지만 않으면)');
-      assert.equal(하나.confidence < 주차.confidence, true, '단서가 적으면 신뢰도는 낮게');
+      // 제목에서 여러 주제가 걸리는 것은 문제가 아니다. 대표 하나를 쓰고 나머지는 남긴다.
+      var 다중 = 판정({ title: '주차장 차단기 하자 소송 판결 관련' });
+      assert.equal(다중.autoOk, true, '여러 주제가 걸려도 자동 확정한다');
+      assert.equal(다중.alternatives.length > 0, true, '나머지 주제를 남겨 화면에서 바꿀 수 있게 한다');
+      assert.equal(/에도 해당/.test(다중.why), true, '다른 주제에도 해당함을 알린다');
+
+      // 대표 주제는 분류표 순서를 따른다 — 회의록 앱의 autoTags와 같은 답이 나와야 한다.
+      // 순서가 갈리면 같은 안건에 두 앱이 서로 다른 주제를 붙인다.
+      var 순서 = 분류표.TopicTaxonomy.defs.map(function (d) { return d.key; });
+      assert.equal(순서.indexOf(다중.topic) < 순서.indexOf(다중.alternatives[0].topic), true,
+        '대표 주제는 분류표에서 먼저 나오는 것');
+
+      // ── 제목에 단서가 없을 때만 본문을 본다. 그리고 자동 확정하지 않는다.
+      //    실측에서 「기타 안건」 하나가 다섯 주제에 동시에 걸렸다.
+      var 본문만 = 판정({ title: '기타 안건', note: '승강기 점검과 주차 차단기 건' });
+      assert.equal(본문만.reason, 'body-only', '본문으로 판정했음을 남긴다');
+      assert.equal(본문만.autoOk, false, '본문 판정은 사람이 확인한다');
+      assert.equal(본문만.confidence < A.AUTO_MIN_CONFIDENCE, true, '신뢰도가 기준 아래');
+      assert.equal(/믿기 어렵/.test(본문만.why), true, '왜 못 믿는지 설명한다');
 
       // ── 아무것도 안 걸리면 자동으로 넘기지 않는다
-      var 무 = 판정({ title: '가나다라 마바사', documentType: '' });
+      var 무 = 판정({ title: '가나다라 마바사', note: '' });
       assert.equal(무.autoOk, false, '단서 없으면 사람에게');
       assert.equal(무.reason, 'no-match', '이유가 no-match');
       assert.equal(무.topic, '기타', '기타로 두고 사람을 기다린다');
 
-      // ── 두 주제가 비슷하게 걸리면 사람이 본다 (가장 중요한 안전장치)
-      var 애매 = 판정({ title: '주차장 차단기 하자 소송 판결 관련', documentType: '' });
-      assert.equal(애매.autoOk, false, '두 주제가 겹치면 자동 확정 안 함');
-      assert.equal(애매.reason, 'ambiguous', '이유가 ambiguous');
-      assert.equal(애매.alternatives.length > 0, true, '경쟁 후보를 남긴다');
-      assert.equal(/둘 다/.test(애매.why), true, '왜 애매한지 사람 말로 설명');
+      // ── 걸린 주제를 모두 찾되 분류표 순서를 지킨다
+      var 훑기 = A.scanTopics('주차 차단기 소송 판결', 분류표.TopicTaxonomy.defs);
+      assert.equal(훑기.length, 2, '겹치는 주제를 모두 찾는다');
+      assert.equal(훑기[0].topic, '주차', '분류표 순서를 지킨다(점수순 아님)');
+      assert.equal(훑기[0].hits.length, 2, '무엇이 걸렸는지 남긴다');
 
-      // ── 모든 주제를 채점한다(첫 일치로 끝내지 않는다)
-      var 점수 = A.scoreTopics('주차 차단기 소송 판결', 분류표.TopicTaxonomy.defs);
-      assert.equal(점수.length, 2, '겹치는 주제를 모두 찾는다');
-      assert.equal(점수[0].score, 2, '일치 개수로 채점');
-
-      // 같은 단어가 여러 번 나와도 한 번만 센다 — 긴 문서가 무조건 이기면 안 된다.
-      var 반복 = A.scoreTopics('주차 주차 주차 주차', [{ key: '주차', kw: ['주차'] }]);
-      assert.equal(반복[0].score, 1, '중복 출현은 1로 센다');
+      // 같은 단어가 여러 번 나와도 한 번만 센다.
+      var 반복 = A.scanTopics('주차 주차 주차 주차', [{ key: '주차', kw: ['주차'] }]);
+      assert.equal(반복[0].hits.length, 1, '중복 출현은 1로 센다');
 
       // ── 관계: 원문이 실제로 가리킬 때만 만든다
       var 공고 = A.relate({ title: '공고 제2016-10호에 따른 후속 안내', documentType: '공고·안내' });

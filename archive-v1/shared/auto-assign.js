@@ -25,7 +25,6 @@
 
   // 자동 확정 기준. 이 아래는 사람이 본다.
   var AUTO_MIN_CONFIDENCE = 80;
-  var AMBIGUOUS_MARGIN = 1; // 1등과 2등의 일치 개수 차가 이 값 이하면 애매
 
   // TopicTaxonomy가 없을 때만 쓰는 최소 대비책. 정상 경로에서는 쓰이지 않는다.
   var FALLBACK_DEFS = [
@@ -42,16 +41,21 @@
     return (t && Array.isArray(t.defs) && t.defs.length) ? t.defs : FALLBACK_DEFS;
   }
 
-  function textOf(fields) {
-    return [fields.title, fields.note, fields.documentType, fields.summary, fields.body]
+  function bodyOf(fields) {
+    return [fields.note, fields.summary, fields.decision, fields.body, fields.documentType]
       .filter(Boolean).join(' ');
   }
 
   /*
-   * 주제 채점. 대소문자만 무시하고, 키워드가 몇 종류 걸렸는지 센다.
-   * 같은 키워드가 여러 번 나와도 1로 센다 — 긴 문서가 무조건 이기지 않게.
+   * 걸린 주제를 모두 찾는다. 순서는 분류표(DEFS) 순서를 그대로 지킨다.
+   *
+   * 왜 점수순으로 정렬하지 않는가:
+   *   회의록 앱의 `autoTags`(archive-topics.js)가 분류표 순서로 훑고 첫 번째를
+   *   대표 주제로 쓴다. Archive가 다른 순서를 쓰면 같은 안건에 두 앱이 서로 다른
+   *   주제를 붙이게 된다. 사용자가 v98에서 1,125건을 직접 검토한 결과가
+   *   그 순서 위에 쌓여 있으므로, 여기서는 그 규칙을 그대로 따른다.
    */
-  function scoreTopics(text, list) {
+  function scanTopics(text, list) {
     var low = String(text || '').toLowerCase();
     var out = [];
     for (var i = 0; i < list.length; i++) {
@@ -60,60 +64,64 @@
         var k = String(d.kw[j]).toLowerCase();
         if (k && low.indexOf(k) >= 0 && hits.indexOf(d.kw[j]) < 0) hits.push(d.kw[j]);
       }
-      if (hits.length) out.push({ topic: d.key, hits: hits, score: hits.length });
+      if (hits.length) out.push({ topic: d.key, hits: hits });
     }
-    out.sort(function (a, b) { return b.score - a.score || String(a.topic).localeCompare(String(b.topic), 'ko'); });
     return out;
   }
 
+  /*
+   * 분류. **제목을 먼저 보고, 제목에서 걸리면 본문은 아예 보지 않는다.**
+   *
+   * 실측으로 확인한 것(2026-09-01, 실제 안건 1,212건):
+   *   제목과 본문을 함께 채점했더니 61%가 '애매'로 떨어져 자동화한 의미가 없었다.
+   *   원인은 본문에 논의 내용이 통째로 들어 있어 제목을 덮어버린 것이었다.
+   *   실제로 「잡수입 보고의 건」이 경비·보안으로, 「주차장 운영규정(안)」이
+   *   장기수선으로 분류됐다.
+   *   제목 우선으로 바꾸니 92.1%가 제목만으로 판정되고, 사람이 볼 것은 7.9%가 됐다.
+   *
+   * 제목에서 여러 주제가 걸리는 것은 문제가 아니다(1,116건 중 402건).
+   * 「작은도서관 잡수입 지원」은 둘 다 맞다. 대표 주제만 첫 번째로 쓰고
+   * 나머지는 alternatives로 넘겨 화면에서 바꿀 수 있게 한다.
+   */
   function classify(fields, global) {
     fields = fields || {};
-    var ranked = scoreTopics(textOf(fields), defs(global));
-    var top = ranked[0], second = ranked[1];
+    var list = defs(global);
 
-    if (!top) {
+    var byTitle = scanTopics(fields.title, list);
+    if (byTitle.length) {
       return {
-        topic: '기타', confidence: 0, autoOk: false, reason: 'no-match',
-        why: '걸린 키워드가 없다. 사람이 정해야 한다.',
-        matched: [], alternatives: []
+        topic: byTitle[0].topic,
+        confidence: byTitle.length === 1 ? 92 : 88,
+        autoOk: true,
+        reason: 'title',
+        why: byTitle[0].hits.join('·') + ' 이(가) 안건명에 있어 ‘' + byTitle[0].topic + '’으로 봤다.'
+          + (byTitle.length > 1 ? ' (' + byTitle.slice(1).map(function (t) { return t.topic; }).join('·') + '에도 해당)' : ''),
+        matched: byTitle[0].hits,
+        alternatives: byTitle.slice(1, 4).map(function (t) { return { topic: t.topic, hits: t.hits }; })
       };
     }
 
-    /*
-     * 일치 개수를 신뢰도로 환산.
-     *
-     * 단서 1개(예: 제목이 "주차장 도색 공사")도 자동 확정한다. 실제 제목 대부분이
-     * 키워드 하나만 걸리는데, 이걸 전부 사람에게 보내면 검토함이 1,000건이 되어
-     * 자동화한 의미가 없어진다. 주제를 잘못 붙이는 것은 권한 문제가 아니라
-     * 나중에 고치면 되는 이름표 문제이므로, 여기서는 통과시키는 쪽이 낫다.
-     *
-     * 진짜 위험한 것은 단서가 적은 경우가 아니라 **두 주제가 맞붙는 경우**다.
-     * 그건 아래 ambiguous에서 걸러 사람에게 보낸다.
-     */
-    var base = [60, 82, 88, 93, 96][Math.min(top.score, 4)];
-    var ambiguous = !!second && (top.score - second.score) <= AMBIGUOUS_MARGIN;
-    var confidence = ambiguous ? Math.min(base, 70) : base;
-
-    var why, reason;
-    if (ambiguous) {
-      reason = 'ambiguous';
-      why = '‘' + top.topic + '’과 ‘' + second.topic + '’ 둘 다 비슷하게 걸렸다. 어느 쪽인지 사람이 봐야 한다.';
-    } else if (confidence < AUTO_MIN_CONFIDENCE) {
-      reason = 'weak';
-      why = '걸린 단서가 약해 확신하기 이르다.';
-    } else {
-      reason = 'ok';
-      why = top.hits.join('·') + ' 이(가) 걸려 ‘' + top.topic + '’으로 봤다.';
+    // 제목에 단서가 없을 때만 본문을 본다. 본문은 논의 내용이 섞여 있어 믿기 어려우므로
+    // 자동 확정하지 않는다. 실측에서 「기타 안건」 하나가 주차·경비·통신·승강기·지원사업
+    // 다섯 주제에 동시에 걸렸다.
+    var byBody = scanTopics(bodyOf(fields), list);
+    if (byBody.length) {
+      return {
+        topic: byBody[0].topic,
+        confidence: 65,
+        autoOk: false,
+        reason: 'body-only',
+        why: '안건명에는 단서가 없고 본문에서 ' + byBody.map(function (t) { return t.topic; }).slice(0, 4).join('·')
+          + ' 이(가) 걸렸다. 본문은 논의 내용이 섞여 있어 그대로 믿기 어렵다.',
+        matched: byBody[0].hits,
+        alternatives: byBody.slice(1, 4).map(function (t) { return { topic: t.topic, hits: t.hits }; })
+      };
     }
 
     return {
-      topic: top.topic,
-      confidence: confidence,
-      autoOk: reason === 'ok',
-      reason: reason,
-      why: why,
-      matched: top.hits,
-      alternatives: ranked.slice(1, 4).map(function (r) { return { topic: r.topic, hits: r.hits }; })
+      topic: '기타', confidence: 0, autoOk: false, reason: 'no-match',
+      why: '안건명에도 본문에도 걸린 단어가 없다. 사람이 정해야 한다.',
+      matched: [], alternatives: []
     };
   }
 
@@ -161,9 +169,8 @@
 
   return {
     AUTO_MIN_CONFIDENCE: AUTO_MIN_CONFIDENCE,
-    AMBIGUOUS_MARGIN: AMBIGUOUS_MARGIN,
     classify: classify,
     relate: relate,
-    scoreTopics: scoreTopics
+    scanTopics: scanTopics
   };
 });
