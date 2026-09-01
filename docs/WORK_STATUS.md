@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 15:29:00 KST
+마지막 갱신: 2026-09-01 15:32:08 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -186,7 +186,7 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 
 ## 최근 인계
 
-### 2026-09-01 15:29:00 KST — GPT — 4.3a 공개 projection·발행 차단 체크포인트
+### 2026-09-01 15:32:08 KST — GPT — 4.3a 공개 projection·발행 차단 체크포인트
 
 - 별도 `stage4/` 정책 모듈과 별도 Stage 4 화면·스타일·테스트 파일로 나눠 구현함.
 - 공개 포털·minutes·외부 원본 저장소의 역할을 관리 화면에서 확인할 수 있게 함.
@@ -197,6 +197,8 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 - 헤드리스 Chromium 부재로 브라우저 클릭 자동화는 실행하지 못했으며 이 제한을 `STAGE4_VALIDATION.md`에 기록함.
 - 기존 운영 루트, minutes 원본, Claude 예약 9건 변경 없음.
 - 실제 resident/admin 인증은 사용자 결정이 필요하므로 4.3b로 남김.
+- 구현·원격 반영 커밋: `6bb6e633900e8d6217fcc4a20bd0b8a86b7aa223`
+- 원격 반영 완료: `2026-09-01 15:32:08 KST`
 
 ### 2026-09-01 15:20:28 KST — GPT — 4.1~4.2 저장소·원본 참조 체크포인트
 
