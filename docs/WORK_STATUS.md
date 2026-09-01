@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 19:20:05 KST
+마지막 갱신: 2026-09-01 20:48:15 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -18,7 +18,7 @@
 ### ARCHIVE-20260901-01 — Sandle Archive v1
 
 - 담당: **Claude** (2026-09-01 17:06 KST 사용자 지시로 GPT → Claude 이관)
-- 상태: `in_progress` — 4.1~4.3a 검증 완료(GPT), 4.3b 실제 인증 결정 대기
+- 상태: `in_progress` — 4.1·4.2·4.3a(GPT), 4.3b·4.3d·4.3e·4.3g(Claude) 완료. 남은 것: 4.3c·4.3f·4.4·4.5·4.6
 - 마스터 계획: `docs/archive-v1/ROADMAP_V1.md`
 - 1단계: `done` — 임시 확정
 - 2단계: `review` — 직접 테스트 가능, 실사용 중 보완
@@ -93,8 +93,8 @@
 2. 검증을 다시 실행한다. **환경에 따라 경로가 다르다.**
    - node 있음: 기존 `node archive-v1/tests/*.test.js`
    - node 없음: 브라우저로 `/archive-v1/tests/browser/` 접속 → `전체 검증 실행` (**spec 7종 전부**, 실제 데이터 포함)
-3. `4.3b` 실제 인증은 사용자 결정 없이 임의 구현하지 않는다.
-4. 안전한 범위의 다음 후보: `4.6a` Archive 데이터 신선도 표시, `4.3f` node 테스트의 spec 재사용 통합, `4.4` 정책 화면 검토 대응.
+3. `4.3b` 인증 방식은 **결정·구현 완료**(비밀번호 재사용). 남은 인증 과제는 `4.3c`(시도 제한·감사 로그)와 resident/private 원본 전달 서버(저장소 결정 필요 — 사용자 확인 항목).
+4. 안전한 범위의 다음 후보: `4.4` 로그인 UI·등급별 화면 연결, `4.6a` 데이터 신선도 표시, `4.3f` node 테스트 spec 통합.
 5. `MINUTES-20260901-01`은 `done`으로 해제됨 — 입대의 데이터를 참조·분류해도 된다.
 
 ```bash
@@ -233,6 +233,18 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 ```
 
 ## 최근 인계
+
+### 2026-09-01 20:48:15 KST — Claude — 4.3b 인증·접근 판정 체크포인트
+
+- 사용자가 인증 방식을 결정함(회의록 비밀번호 재사용). 결정 내용은 「사용자 결정 기록」 표와 `docs/archive-v1/AUTH_V1.md`에 남김.
+- 세션 모듈(`shared/auth-session.js`)과 판정 모듈(`shared/access-control.js`)을 분리해 구현. 판정 규칙은 한 곳에만 둠.
+- 검증 spec 2종 추가, 배포본에서 **9/9 통과**(Stage 3 3종 + Stage 4 6종, 실제 데이터 213회의/1,125안건).
+- **검증이 결함을 잡음**: `currentRole()`이 캐시된 role을 무기한 믿어, 비밀번호를 회수해도 그 브라우저가 24시간 통과하는 상태였음. 재확인 주기 5분을 도입해 회수 반영을 최대 5분으로 줄임.
+- `stage4-auth-session`은 인증 키를 조작하므로(같은 origin이라 회의록 로그인까지 영향) 원래 값을 백업·복구하도록 만들고, 실행 후 상태가 보존되는 것을 확인함.
+- 새 파일: `archive-v1/shared/auth-session.js`, `access-control.js`, `tests/specs/stage4-access-control.spec.js`, `stage4-auth-session.spec.js`, `docs/archive-v1/AUTH_V1.md`
+- 수정: `archive-v1/tests/browser/index.html`, `docs/AI_WORKFLOW.md`(13절 결정 기록 규칙), `ROADMAP_V1.md`, `STAGE4_VALIDATION.md`, 이 문서
+- 운영 루트·minutes 원본·공개 범위 변경 없음. 정적 번들에는 여전히 `public`만 들어간다.
+- 커밋: `70a1deb`(설계·결정 기록), `cf78d5d`(구현·spec), `b9ddf42`(캐시 결함 수정)
 
 ### 2026-09-01 19:20:05 KST — Claude — 4.3g 실제 데이터 전량 검증 체크포인트
 
