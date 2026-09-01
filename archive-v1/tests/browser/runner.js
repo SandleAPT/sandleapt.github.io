@@ -6,11 +6,17 @@
   var ROOT = '../../';               // archive-v1/tests/browser/ 기준 → archive-v1/
   var loaded = {};                   // 같은 소스 모듈을 spec마다 다시 싣지 않는다
 
+  // 페이지를 열 때마다 새로 찍는 값. 같은 실행 안에서는 모듈을 한 번만 싣고,
+  // 새로고침하면 반드시 새 파일을 받는다.
+  // (2026-09-01: 이게 없어서 배포된 새 모듈을 두고 캐시된 옛 파일로 검증해
+  //  이미 고친 오류가 계속 실패로 나왔다. 격리 경로에만 캐시 무효화가 있었다.)
+  var STAMP = 'cb=' + Date.now();
+
   function loadScript(rel) {
     if (loaded[rel]) return loaded[rel];
     loaded[rel] = new Promise(function (resolve, reject) {
       var s = document.createElement('script');
-      s.src = ROOT + rel;
+      s.src = ROOT + rel + (rel.indexOf('?') >= 0 ? '&' : '?') + STAMP;
       s.onload = function () { resolve(rel); };
       s.onerror = function () { reject(new Error('모듈 로드 실패: ' + rel)); };
       document.head.appendChild(s);
