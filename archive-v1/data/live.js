@@ -20,6 +20,10 @@
     try {
       var idx = await fetch('/minutes/data-index.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; });
       if (idx && idx.years && idx.years.length) {
+        // 가장 마지막으로 저장된 회의록의 시각. 화면에 "언제까지의 자료인지" 적는 데 쓴다.
+        기준시각 = idx.years.reduce(function (m, y) {
+          return String(y.updatedAt || '') > m ? String(y.updatedAt) : m;
+        }, '');
         return idx.years.map(function (y) { return { year: y.year, file: y.file, v: y.updatedAt || '' }; });
       }
     } catch (e) {}
@@ -28,6 +32,9 @@
     for (var y = 2015; y <= new Date().getFullYear() + 1; y++) out.push({ year: String(y), file: 'data-' + y + '.json', v: '' });
     return out;
   }
+
+  // 사본이 언제 만들어졌는지. 화면에 "언제 기준 자료인지"를 적기 위해 들고 온다.
+  var 기준시각 = '';
 
   async function 회의불러오기() {
     var 연도 = await 연도목록();
@@ -86,6 +93,7 @@
       var 회의 = await 회의불러오기();
       if (!회의.length) return null;           // 못 읽으면 샘플을 그대로 둔다
       var 자료 = B.build(회의, window.TopicTaxonomy, 자동태그, Date.now());
+      자료.기준 = B.기준문구 ? B.기준문구(기준시각, Date.now()) : null;
       window.SANDLE_ARCHIVE_SAMPLE = 자료;
       window.SANDLE_ARCHIVE_LIVE = true;
       return 자료;

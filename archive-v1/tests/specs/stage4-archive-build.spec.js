@@ -110,6 +110,22 @@
       var 빈제목 = B.build([{ id: 'm_x', name: 'x', date: '2026-01-01', agendas: [{ id: 'z', title: '  ' }] }], 분류표, 자동태그, 지금);
       assert.equal(빈제목.통계.안건, 0, '제목 없는 안건은 뺀다');
 
+      /* 언제까지의 자료인지 (4.6a).
+       * 사본은 하루 한 번 만들어지므로 오늘 저장한 것은 아직 없다. 그 사실을 적어야
+       * "저장했는데 왜 안 보이지"에서 막히지 않는다. 문구가 비면 아무 말도 안 하게 된다. */
+      var 오늘 = new Date(2026, 8, 2, 12, 0, 0).getTime();       // 2026-09-02 정오(현지)
+      var 어제 = B.기준문구(new Date(2026, 8, 1, 9, 0, 0).toISOString(), 오늘);
+      assert.equal(어제.날짜, '2026년 9월 1일', '날짜를 사람 말로');
+      assert.equal(/어제/.test(어제.text), true, '하루 전은 어제');
+      assert.equal(어제.stale, false, '하루 늦는 것은 정상 — 사본이 하루 주기다');
+      assert.equal(B.기준문구(new Date(2026, 8, 2, 1, 0, 0).toISOString(), 오늘).text.indexOf('오늘') > 0, true, '같은 날은 오늘');
+      var 나흘 = B.기준문구(new Date(2026, 7, 29, 9, 0, 0).toISOString(), 오늘);
+      assert.equal(나흘.stale, true, '사흘 넘게 밀리면 사본 만들기가 멈춘 것으로 본다');
+      assert.equal(/4일 전/.test(나흘.text), true, '며칠 밀렸는지 숫자로');
+      // 값이 없거나 깨졌으면 아무 말도 하지 않는다 — 틀린 시각을 적는 것보다 낫다
+      assert.equal(B.기준문구('', 오늘).text, '', '값이 없으면 빈 문구');
+      assert.equal(B.기준문구('말이 안 되는 값', 오늘).text, '', '못 읽으면 빈 문구');
+
       // 빈 입력에도 죽지 않는다
       assert.equal(B.build(null, 분류표, 자동태그, 지금).통계.안건, 0, '회의가 없어도 동작');
       assert.equal(B.build([], null, null, 지금).topics.length >= 1, true, '분류표가 없어도 기타는 남는다');

@@ -125,6 +125,13 @@ if(window.SandleArchiveLive&&window.SandleArchiveLive.준비){
     DATA=자료;
     const 안내=document.querySelector('.search-help');
     if(안내)안내.textContent='회의 '+자료.통계.회의+'건 · 안건 '+자료.통계.안건+'건을 주제 '+자료.통계.주제+'개로 묶었어. 회의록 앱의 분류를 그대로 쓴다.';
+    /* 언제까지의 자료인지 (4.6a). 이 화면은 하루 한 번 만들어지는 사본을 읽으므로
+       오늘 저장한 회의록은 아직 없다. 안 적어두면 "저장했는데 왜 안 보이지"가 된다. */
+    const 기준=document.getElementById('dataAsOf');
+    if(기준&&자료.기준&&자료.기준.text){
+      기준.textContent=자료.기준.text+(자료.기준.stale?' — 사본이 며칠째 안 만들어졌어':' 반영돼 있어. 오늘 저장한 건 내일 보여.');
+      기준.className='data-asof'+(자료.기준.stale?' stale':'');
+    }
     const 부제=document.querySelector('.brand small');
     if(부제)부제.textContent='실제 회의록 '+자료.통계.회의+'건';
     if(!home.classList.contains('is-hidden')){renderAllTopics();renderRecent();}
