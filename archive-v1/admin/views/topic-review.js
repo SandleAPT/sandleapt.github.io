@@ -198,8 +198,24 @@
 
   function 서버() {
     const key = 수정용키();
+    const post = async (body, tries) => {
+      tries = tries || 0;
+      const r = await fetch(GAS, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(Object.assign({ adminKey: key, token: TOKEN }, body))
+      });
+      const x = await r.json();
+      // 연속 요청 시 Apps Script가 간헐적으로 거부한다. 잠깐 쉬고 다시.
+      if ((!x || !x.ok) && tries < 3 && !(x && (x.error === 'admin_required' || x.error === 'not found'))) {
+        await new Promise(s => setTimeout(s, 1200 * (tries + 1)));
+        return post(body, tries + 1);
+      }
+      return x;
+    };
     return {
       wait: ms => new Promise(r => setTimeout(r, ms)),
+      // 서버가 시트의 json 열만 고친다(GAS v3). 왕복 1회, date를 건드릴 여지가 없다.
+      setTags: (id, changes) => post({ action: 'setTags', id: id, tags: changes }),
       get: async id => {
         const x = await fetch(GAS + '?action=get&token=' + TOKEN + '&id=' + encodeURIComponent(id)).then(r => r.json());
         return (x && x.ok && x.item) ? x.item : null;
@@ -237,15 +253,15 @@
     btn.disabled = true;
     log.textContent = '저장 중…';
 
-    // 회의 하나에 읽기·저장·재조회 세 번을 왕복한다. Apps Script가 느릴 때는
-    // 한 번에 20초 넘게 걸려 회의당 1분 가까이 든다. 멈춘 것처럼 보이지 않게 미리 알린다.
+    // 회의당 약 3초(서버가 태그만 고치는 setTags 경로). Apps Script가 밀리면 더 걸린다.
     const 시작 = Date.now();
     const 경과 = () => Math.round((Date.now() - 시작) / 1000) + '초';
     let 결과;
     try {
       결과 = await W().writeAll(고침, 서버(), p => {
         log.textContent = '저장 중… 회의 ' + p.진행 + '/' + p.전체
-          + ' (' + 경과() + ' 지남) — 회의 하나에 1분까지 걸릴 수 있어. 창을 닫지 말아줘.';
+          + ' (' + 경과() + ' 지남)' + (p.방식 === 'setTags' ? '' : ' — 옛 방식(레코드 전체 저장)이라 느려')
+          + ' · 창을 닫지 말아줘.';
       });
     } catch (e) {
       log.textContent = '저장 실패: ' + (e && e.message ? e.message : e);

@@ -111,6 +111,50 @@
       var 결과4 = await W.writeAll({ 'm1#a': ['주차'] }, 서버4);
       assert.equal(결과4.성공.length, 0, '저장이 안 됐으면 성공으로 치지 않는다');
       assert.equal(/불일치/.test(결과4.실패[0].이유), true, '재조회 불일치를 잡는다');
+
+      /* ── setTags 경로 (GAS v3, 2026-09-02 배포) ────────────────────
+       * 서버가 시트의 json 열만 고친다. 브라우저가 레코드를 다시 만들지 않으므로
+       * date를 건드릴 여지가 아예 없다. 왕복도 3회에서 1회로 준다.
+       * api에 setTags가 있으면 이 길을 쓰고, 없으면 옛 길로 돌아간다.
+       */
+      var 부른것 = [];
+      var 새서버 = {
+        setTags: function (id, changes) {
+          부른것.push({ id: id, changes: changes });
+          return Promise.resolve({ ok: true, id: id, applied: Object.keys(changes), missing: [] });
+        }
+      };
+      var 결과5 = await W.writeAll({ 'm1#a': ['주차'], 'm1#b': ['조경·환경'], 'm2#c': ['장기수선'] }, 새서버);
+      assert.equal(결과5.방식, 'setTags', 'setTags가 있으면 그 길을 쓴다');
+      assert.equal(부른것.length, 2, '회의 단위로 한 번씩만 부른다');
+      assert.equal(Object.keys(부른것[0].changes).length, 2, '한 회의의 안건들을 한 번에 보낸다');
+      assert.equal(결과5.성공.length, 3, '안건 셋 모두 성공');
+      // 옛 길과 달리 레코드를 읽지도 저장하지도 않는다 — get/save가 없어도 된다.
+      assert.equal(새서버.get === undefined && 새서버.save === undefined, true, 'get/save 없이 동작한다');
+
+      // 서버가 거부하면 그 회의만 실패로 남는다
+      var 거부서버 = { setTags: function () { return Promise.resolve({ ok: false, error: 'admin_required' }); } };
+      var 결과6 = await W.writeAll({ 'm1#a': ['주차'] }, 거부서버);
+      assert.equal(결과6.성공.length, 0, '거부되면 성공 없음');
+      assert.equal(/admin_required/.test(결과6.실패[0].이유), true, '서버가 준 이유를 그대로 전한다');
+
+      // 못 찾은 안건은 missing으로 돌아온다
+      var 일부서버 = {
+        setTags: function (id, changes) {
+          var ks = Object.keys(changes);
+          return Promise.resolve({ ok: true, applied: [ks[0]], missing: ks.slice(1) });
+        }
+      };
+      var 결과7 = await W.writeAll({ 'm1#a': ['주차'], 'm1#b': ['조경·환경'] }, 일부서버);
+      assert.equal(결과7.성공.join(','), 'm1#a', '적용된 것만 성공');
+      assert.equal(결과7.못찾음.join(','), 'm1#b', '못 찾은 것은 따로 알린다');
+
+      // setTags가 없으면 옛 길로 돌아간다 — 서버 배포가 되돌려져도 동작해야 한다
+      var 옛서버 = 가짜서버({ m1: { id: 'm1', name: '회의1', date: '2026-06-24', json: json } });
+      var 결과8 = await W.writeAll({ 'm1#a': ['주차'] }, 옛서버);
+      assert.equal(결과8.방식, '전체쓰기', 'setTags가 없으면 옛 길');
+      assert.equal(결과8.성공.length, 1, '옛 길도 여전히 동작한다');
+      assert.equal(옛서버.기록[0].date, '2026-06-24', '옛 길에서도 date는 반드시 실린다');
     }
   };
 });

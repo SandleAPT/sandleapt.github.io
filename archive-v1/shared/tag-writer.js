@@ -89,7 +89,49 @@
   }
 
   /*
-   * 실제 쓰기. api = { get(id) -> item, save(record) -> {ok}, wait(ms) }
+   * 빠른 길 — 서버의 `setTags`(GAS v3, 2026-09-02 배포)를 쓴다.
+   * 서버가 시트의 json 열만 고치므로 왕복 1회로 끝나고, 브라우저가 레코드를
+   * 다시 만들지 않으니 `date`를 건드릴 여지가 아예 없다. 약 2.8초.
+   */
+  async function 서버가고치기(api, mid, changes) {
+    var res = await api.setTags(mid, changes);
+    if (!res) throw new Error('응답 없음');
+    if (!res.ok) throw new Error(res.error || '서버가 거부했다');
+    var applied = res.applied || [];
+    if (!applied.length) throw new Error('바꿀 안건을 하나도 못 찾았다');
+    return { applied: applied, missing: res.missing || [] };
+  }
+
+  /*
+   * 옛 길 — 서버에 `setTags`가 없을 때(배포 되돌림 등). 레코드 전체를 다시 쓴다.
+   * 위험한 경로라 규칙을 그대로 지킨다: date를 반드시 싣고, 재조회는 내용으로 대조한다.
+   */
+  async function 전체다시쓰기(api, mid, changes) {
+    var it = await api.get(mid);
+    if (!it || !it.json) throw new Error('레코드를 못 읽었다');
+
+    var r = applyTags(it.json, changes);
+    if (r.오류) throw new Error(r.오류);
+    if (!r.안전함) throw new Error('태그 말고 다른 곳이 바뀌었다 — 저장하지 않는다');
+    if (!r.applied.length) throw new Error('바꿀 안건을 하나도 못 찾았다');
+    if (!r.date) throw new Error('회의 날짜(meeting.date)가 없다 — 날짜가 지워질 수 있어 저장하지 않는다');
+
+    await api.save({ id: mid, name: it.name || '', date: r.date, json: r.json });
+    if (api.wait) await api.wait(400);
+
+    var back = await api.get(mid);
+    if (!back) throw new Error('재조회 실패');
+    // 문자열이 아니라 내용으로 대조한다
+    if (!deepEqual(JSON.parse(back.json), JSON.parse(r.json))) throw new Error('재조회 내용 불일치');
+    if (!같은날(back.date, r.date)) throw new Error('날짜가 달라졌다: ' + back.date);
+
+    return { applied: r.applied, missing: r.missing };
+  }
+
+  /*
+   * 실제 쓰기.
+   * api = { setTags(id, changes) -> {ok,applied,missing} }  ← 있으면 이걸 쓴다
+   *        또는 { get(id), save(record), wait(ms) }          ← 없으면 옛 길
    * 회의 하나가 실패해도 나머지는 계속한다. 성공한 회의의 줄 id를 돌려주므로
    * 화면은 그것만 지역 저장에서 지우면 된다.
    */
@@ -97,29 +139,15 @@
     var grouped = groupByMeeting(fixes);
     var 회의목록 = Object.keys(grouped);
     var 성공 = [], 실패 = [], 못찾음 = [];
+    var 방식 = (api && typeof api.setTags === 'function') ? 'setTags' : '전체쓰기';
 
     for (var i = 0; i < 회의목록.length; i++) {
       var mid = 회의목록[i];
-      if (onProgress) onProgress({ 진행: i + 1, 전체: 회의목록.length, 회의: mid });
+      if (onProgress) onProgress({ 진행: i + 1, 전체: 회의목록.length, 회의: mid, 방식: 방식 });
       try {
-        var it = await api.get(mid);
-        if (!it || !it.json) throw new Error('레코드를 못 읽었다');
-
-        var r = applyTags(it.json, grouped[mid]);
-        if (r.오류) throw new Error(r.오류);
-        if (!r.안전함) throw new Error('태그 말고 다른 곳이 바뀌었다 — 저장하지 않는다');
-        if (!r.applied.length) throw new Error('바꿀 안건을 하나도 못 찾았다');
-        if (!r.date) throw new Error('회의 날짜(meeting.date)가 없다 — 날짜가 지워질 수 있어 저장하지 않는다');
-
-        await api.save({ id: mid, name: it.name || '', date: r.date, json: r.json });
-        if (api.wait) await api.wait(400);
-
-        var back = await api.get(mid);
-        if (!back) throw new Error('재조회 실패');
-        // 문자열이 아니라 내용으로 대조한다
-        if (!deepEqual(JSON.parse(back.json), JSON.parse(r.json))) throw new Error('재조회 내용 불일치');
-        if (!같은날(back.date, r.date)) throw new Error('날짜가 달라졌다: ' + back.date);
-
+        var r = 방식 === 'setTags'
+          ? await 서버가고치기(api, mid, grouped[mid])
+          : await 전체다시쓰기(api, mid, grouped[mid]);
         r.applied.forEach(function (aid) { 성공.push(mid + '#' + aid); });
         r.missing.forEach(function (aid) { 못찾음.push(mid + '#' + aid); });
       } catch (e) {
@@ -129,7 +157,7 @@
       }
       if (api.wait) await api.wait(200);
     }
-    return { 성공: 성공, 실패: 실패, 못찾음: 못찾음, 회의수: 회의목록.length };
+    return { 성공: 성공, 실패: 실패, 못찾음: 못찾음, 회의수: 회의목록.length, 방식: 방식 };
   }
 
   return {
