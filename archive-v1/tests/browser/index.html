@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archive v1 검증 러너</title>
+<link rel="stylesheet" href="../../assets/test-runner.css?v=20260901-1730">
+</head>
+<body>
+<div class="wrap">
+  <h1>Sandle Archive v1 — 브라우저 검증 러너</h1>
+  <p class="lead">
+    Node.js가 없는 환경에서 <code>archive-v1/tests/specs/*.spec.js</code>를 그대로 실행합니다.
+    케이스는 <code>node archive-v1/tests/*.test.js</code>와 동일하며, spec 파일 하나만 고치면 두 경로에 함께 반영됩니다.
+  </p>
+
+  <div class="bar">
+    <button class="run" id="runBtn" type="button">전체 검증 실행</button>
+    <span class="summary" id="summary"></span>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <p class="note">
+    이 러너는 정적 파일만 읽습니다. 클라우드 저장소나 관리자 비밀번호를 쓰지 않으며 어떤 데이터도 수정하지 않습니다.<br>
+    Stage 3(회의록 변환) spec은 실제 <code>/minutes/</code> 데이터를 읽어야 해서 별도 소번호로 추가할 예정입니다.
+  </p>
+</div>
+
+<!-- 단언 유틸 → spec 정의 → 러너 순서로 싣는다. 소스 모듈은 spec의 deps를 보고 러너가 동적으로 싣는다. -->
+<script src="../specs/assert.js?v=20260901-1730"></script>
+<script src="../specs/stage4-source-reference.spec.js?v=20260901-1730"></script>
+<script src="../specs/stage4-visibility.spec.js?v=20260901-1730"></script>
+<script src="../specs/stage4-publish-guard.spec.js?v=20260901-1730"></script>
+<script src="../specs/stage4-admin-integration.spec.js?v=20260901-1730"></script>
+<script src="./runner.js?v=20260901-1730"></script>
+<script>
+(function () {
+  var SPECS = ['stage4-source-reference', 'stage4-visibility', 'stage4-publish-guard', 'stage4-admin-integration'];
+  var btn = document.getElementById('runBtn');
+  var box = document.getElementById('result');
+  var sum = document.getElementById('summary');
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+
+  function render(rows, done, total) {
+    box.innerHTML = rows.map(function (r) {
+      return '<div class="row' + (r.ok ? '' : ' fail') + '">' +
+        '<div class="mark">' + (r.ok ? '✅' : '❌') + '</div>' +
+        '<div><div class="name">' + esc(r.title) + '</div>' +
+        '<div class="sub">' + esc(r.name) + '</div>' +
+        (r.error ? '<div class="err">' + esc(r.error) + '</div>' : '') + '</div>' +
+        '<div class="ms">' + r.ms + 'ms</div></div>';
+    }).join('');
+    var ng = rows.filter(function (r) { return !r.ok; }).length;
+    sum.className = 'summary ' + (ng ? 'ng' : 'ok');
+    sum.textContent = done < total ? ('실행 중… ' + done + '/' + total)
+      : (ng ? (rows.length - ng) + '/' + rows.length + ' 통과 · 실패 ' + ng + '건' : rows.length + '/' + rows.length + ' 통과');
+  }
+
+  btn.onclick = async function () {
+    btn.disabled = true; box.innerHTML = ''; sum.textContent = '준비 중…'; sum.className = 'summary';
+    try {
+      var rows = await window.SandleTestRunner.runAll(SPECS, function (partial, done, total) { render(partial, done, total); });
+      render(rows, rows.length, rows.length);
+      // 자동화(Claude Code 등)에서 결과를 읽어갈 수 있도록 전역에 남긴다.
+      window.__sandleTestResult = { at: new Date().toISOString(), rows: rows, failed: rows.filter(function (r) { return !r.ok; }).length };
+    } catch (e) {
+      sum.className = 'summary ng'; sum.textContent = '러너 오류: ' + (e && e.message ? e.message : e);
+    } finally { btn.disabled = false; }
+  };
+})();
+</script>
+</body>
+</html>

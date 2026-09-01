@@ -1,0 +1,25 @@
+/* Archive v1 브라우저 검증 러너 화면 (4.3d) */
+:root { --ok: #2f6b3a; --ng: #a3352c; --line: #ddd8cc; --ink: #2b2a26; --muted: #6f6c63; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 24px 18px 48px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif; color: var(--ink); background: #faf9f5; line-height: 1.6; }
+.wrap { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 20px; margin: 0 0 6px; }
+.lead { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
+.lead code { background: #f0eee7; padding: 1px 5px; border-radius: 5px; font-size: 12px; }
+.bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+button { font: inherit; padding: 9px 16px; border: 1px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; }
+button.run { background: #c8a94b; border-color: #b9993c; color: #fff; font-weight: 700; }
+button[disabled] { opacity: .55; cursor: default; }
+.summary { font-weight: 700; }
+.summary.ok { color: var(--ok); }
+.summary.ng { color: var(--ng); }
+.result { border: 1px solid var(--line); border-radius: 12px; background: #fff; overflow: hidden; }
+.row { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; padding: 11px 14px; border-top: 1px solid #eee9dd; align-items: start; }
+.row:first-child { border-top: 0; }
+.mark { font-size: 16px; line-height: 1.4; }
+.row .name { font-weight: 600; }
+.row .sub { color: var(--muted); font-size: 12px; }
+.row .ms { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.row.fail { background: #fdf4f3; }
+.row .err { color: var(--ng); font-size: 13px; margin-top: 4px; white-space: pre-wrap; word-break: break-all; }
+.note { margin-top: 18px; font-size: 13px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 12px; }
