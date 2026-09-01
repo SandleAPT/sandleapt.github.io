@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 11:15:10 KST
+마지막 갱신: 2026-09-01 11:23:29 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다.
 
@@ -17,15 +17,20 @@
 - GPT 원칙: Claude가 완료 또는 담당 해제를 기록하기 전에는 이 9건을 수정하지 않는다.
 - 다음 행동: Claude가 재개 시 실제 수정 경로를 확인해 이 항목에 추가하고, 9건 처리를 이어서 완료한다.
 
-### ARCHIVE-20260901-01 — Sandle Archive v1 데이터 구조 설계
+### ARCHIVE-20260901-01 — Sandle Archive v1
 
 - 담당: GPT
-- 상태: `review` / Golden Sample UI 및 작성 흐름 사용자 검토 대기
-- 범위: 차세대 통합 아카이브의 데이터 모델·분류체계·관계·샘플링/이관·저장 방식·미리보기 UI·지속 업데이트 흐름 설계
+- 상태: `review` / 번호제 Roadmap 사용자 확인 대기
+- 마스터 계획: `docs/archive-v1/ROADMAP_V1.md`
+- 현재 큰 단계: `1. Archive 탐색·검색 화면 방향 확정`
+- 완료 번호: `1.1 Golden Sample 주제 화면 제작`
+- 다음 번호: `1.2 Archive 첫 화면 제작`
+- 1단계 완료 전 2단계 본작업 시작 금지
 - 수정 영역: `docs/archive-v1/`, `archive-v1/`
 - 운영 루트 `index.html` 변경: 없음
 - 미리보기: `https://sandleapt.github.io/archive-v1/`
 - 작성 완료:
+  - `docs/archive-v1/ROADMAP_V1.md`
   - `docs/archive-v1/README.md`
   - `docs/archive-v1/DATA_MODEL_V1.md`
   - `docs/archive-v1/TAXONOMY_V1.md`
@@ -37,24 +42,34 @@
   - `archive-v1/assets/archive.css`
   - `archive-v1/data/sample.js`
   - `archive-v1/app.js`
-- 핵심 이관 원칙:
+- 핵심 진행 원칙:
+  - 큰 단계 `1, 2, 3...`와 작은 작업 `1.1, 1.2, 1.3...`으로 관리
+  - 사용자 피드백 수정도 새 소번호로 기록
+  - 각 큰 단계는 사용자 승인 후 다음 단계로 이동
   - 전체 10년치 일괄 변환 금지
-  - 단일 주제 Golden Sample → 사용자 승인 → 다른 성격의 소수 주제 추가 검증 → 검색 프로토타입 승인 → 본 이관
   - 본 이관은 기본 12 작업 포인트 이하의 작은 배치로 이어달리기식 진행
-  - 전체 본 이관은 Gate 3 승인 전 시작하지 않음
 - 저장 원칙:
   - GitHub: 코드·메타데이터·검색 텍스트·관계 인덱스 중심
   - Google Drive 등 외부 저장소: 원본 PDF·사진·영상·대용량 파일 중심
-  - GitHub Pages 용량 한계를 고려해 원본 바이너리 신규 누적은 기본 금지
 - 작성/운영 원칙:
   - `입력은 한 번, 노출은 여러 곳`
   - 기존 `minutes`를 초기 회의 작성 원본으로 유지하고 Archive 변환 adapter를 둔다.
-  - 회의 저장 후 Document/Fragment/분류/관계/검색 인덱스를 생성·갱신하는 구조를 목표로 한다.
-  - 계약·운영규정·공고 등은 별도 `새 자료 등록` 흐름을 두고 자동 분류 후보를 관리자 검토 후 발행한다.
-  - 브라우저 공개 코드에 GitHub PAT/Drive 쓰기 토큰 등 비밀값을 넣지 않는다.
-- 다음 행동: 사용자가 `/archive-v1/` Golden Sample의 정보 배치와 `AUTHORING_V1.md`의 작성 흐름을 검토한다. 승인 전 실제 10년치 본 이관은 시작하지 않는다.
+  - 계약·운영규정·공고 등은 AI 등록 → 관리자 검토 → 발행 흐름을 기본으로 한다.
+  - 공개등급은 `public / resident / private`를 사용한다.
+- 다음 행동: 사용자가 번호제 Roadmap을 확인한 뒤 `1.2 Archive 첫 화면 제작`부터 진행한다.
 
 ## 인계 로그
+
+### 2026-09-01 11:23:29 KST — GPT
+
+- 사용자가 전체 Archive 작업을 `1 → 1.1 → 1.2 → ... → 사용자 확인 → 2` 방식으로 관리하고 싶다고 요청함.
+- `docs/archive-v1/ROADMAP_V1.md`를 새로 만들어 1~7단계 마스터 계획과 각 단계의 사용자 확인 지점을 번호로 정의함.
+- 현재 위치를 `1.1 완료`, 다음 작업을 `1.2 Archive 첫 화면 제작`으로 고정함.
+- 사용자 피드백으로 수정이 생기면 기존 번호를 덮어쓰지 않고 다음 소번호를 추가하도록 규칙화함.
+- `docs/AI_WORKFLOW.md`에 GPT/Claude 모두 Roadmap 번호를 확인하고 `현재/완료/다음 번호`를 인계하도록 추가함.
+- `docs/archive-v1/README.md`에서 Roadmap을 전체 작업 순서의 단일 기준으로 지정함.
+- 운영 루트와 Claude 예약 9건은 수정하지 않음.
+- 관련 커밋: `0b7e214be52f55252b2145734d8f10891510681a`, `872048d680527a5e2fb7097a58a116e0998c400a`, `8c6bdf49a0deef1288a1e8d3902e9382e99f3bde`
 
 ### 2026-09-01 11:15:10 KST — GPT
 
