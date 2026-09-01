@@ -74,17 +74,30 @@
 ## 다음 AI가 바로 할 일
 
 1. 최신 main에서 `AGENTS.md`, `docs/AI_WORKFLOW.md`, 이 문서, Roadmap과 Stage 4 검증 문서를 읽는다.
-2. Stage 3·4 테스트를 다시 실행한다.
+2. 검증을 다시 실행한다. **환경에 따라 경로가 다르다.**
+   - node 있음: 기존 `node archive-v1/tests/*.test.js`
+   - node 없음: 브라우저로 `/archive-v1/tests/browser/` 접속 → `전체 검증 실행` (Stage 4만 이식됨)
 3. `4.3b` 실제 인증은 사용자 결정 없이 임의 구현하지 않는다.
-4. 안전한 범위에서는 4.4 정책 화면 사용자 검토 대응이나 이전 완료 단계 피드백을 새 소번호로 반영한다.
-5. `MINUTES-20260901-01` 예약 9건은 담당 해제 전까지 수정하지 않는다.
+4. 안전한 범위의 다음 후보: `4.3e` Stage 3 spec 브라우저 이식, `4.3f` node 테스트의 spec 재사용 통합, `4.4` 정책 화면 검토 대응.
+5. `MINUTES-20260901-01`은 `done`으로 해제됨 — 입대의 데이터를 참조·분류해도 된다.
 
 ```bash
+# node가 있는 환경
 node archive-v1/tests/stage3-source.test.js
 node archive-v1/tests/stage3-adapter.test.js
 SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test.js
 for test in archive-v1/tests/stage4-*.test.js; do node "$test" || exit 1; done
 ```
+
+```text
+# node가 없는 환경 (Stage 4)
+https://sandleapt.github.io/archive-v1/tests/browser/  →  [전체 검증 실행]
+결과: window.__sandleTestResult = {at, rows, failed}
+```
+
+### 주의 — Stage 3 live-data 검증 대상이 늘어났다
+
+`MINUTES-20260901-01` 작업으로 `SandleAPT/minutes`의 연도 샤드가 **2016~2019년까지 확장**됐다(입대의 게시판 전수 이관). 기존 검증 기록의 "회의 213건 / 안건 1,125건"은 그 이전 기준이므로, 다음에 `stage3-live-data`를 돌리면 **건수가 늘어난 채로 통과**하는 것이 정상이다. 건수 불일치를 회귀로 오판하지 말 것.
 
 ## 이전 체크포인트 참고 — 3.7 검증 보완·인계
 
@@ -199,6 +212,20 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 ```
 
 ## 최근 인계
+
+### 2026-09-01 17:34:20 KST — Claude — 4.3d 브라우저 검증 러너 체크포인트
+
+- 사용자 지시로 ARCHIVE-20260901-01 담당이 GPT → Claude로 넘어옴. `MINUTES-20260901-01` 예약 9건은 완료 처리하고 잠금 해제함.
+- **인계된 검증 명령이 이 환경에서 실행 불가**임을 확인함: 사용자 PC에 Node.js 없음. 이 상태로는 자동 검증 없이 `done` 판정을 할 수 없어 먼저 검증 경로를 만듦.
+- 케이스를 UMD spec 모듈로 분리하고 브라우저 러너를 추가함. 기능·스타일·테스트·문서를 각각 다른 파일로 나눔.
+- **기존 node 테스트 파일은 수정하지 않음.** node로 회귀 확인이 불가능한 환경에서 건드리면 위험하다고 판단함.
+- 검증: 실제 배포본 `/archive-v1/tests/browser/`에서 Stage 4 spec 4종 전부 통과(4/4, 실패 0).
+- 러너 신뢰성도 별도 확인함 — 정책을 일부러 되돌려 회귀를 만들었을 때 실패로 잡히고, 원복 후 다시 통과함.
+- 새 파일: `archive-v1/tests/specs/assert.js`, `stage4-source-reference.spec.js`, `stage4-visibility.spec.js`, `stage4-publish-guard.spec.js`, `stage4-admin-integration.spec.js`, `archive-v1/tests/browser/runner.js`, `archive-v1/tests/browser/index.html`, `archive-v1/assets/test-runner.css`
+- 수정: `docs/archive-v1/ROADMAP_V1.md`, `docs/archive-v1/STAGE4_VALIDATION.md`, `docs/WORK_STATUS.md`
+- 운영 루트·minutes 원본·기존 node 테스트 변경 없음. 공개 범위 변경 없음.
+- 남은 위험: Stage 3 spec 미이식(4.3e), 케이스가 spec과 node 테스트 두 곳에 존재(4.3f).
+- 체크포인트 커밋: `6374951`(러너), 문서 커밋은 이 인계와 함께 반영.
 
 ### 2026-09-01 15:32:08 KST — GPT — 4.3a 공개 projection·발행 차단 체크포인트
 

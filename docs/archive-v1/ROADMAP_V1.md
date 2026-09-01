@@ -211,7 +211,9 @@
 - 4.3a `done` — 공개 projection과 resident/private 발행 차단을 관리자 화면·저장 함수에 연결
 - 4.3b `decision_needed` — 실제 입주민·관리자 인증 주체와 방식
 - 4.3c `planned` — 인증 만료·회수·감사 로그
-- 4.3d `in_progress` — 브라우저 검증 러너(node 없는 환경 대응, 3·4단계 공용)
+- 4.3d `done` — 브라우저 검증 러너: Stage 4 spec 4종 UMD 분리 + `/archive-v1/tests/browser/` 러너. 실제 배포본에서 4/4 통과, 회귀 감지 확인. 기존 node 테스트 미변경. (2026-09-01 17:34:20 KST)
+- 4.3e `planned` — Stage 3 spec을 브라우저 러너로 이식(fixture·실제 `/minutes/` 데이터 fetch)
+- 4.3f `planned` — node 환경에서 기존 `*.test.js`가 spec을 재사용하도록 통합(케이스 이중 관리 해소)
 - 검증: `docs/archive-v1/STAGE4_VALIDATION.md`
 ### 4.4 사용자 검토
 ### 4.5 피드백 반영 및 4단계 확정

@@ -40,6 +40,71 @@ Playwright 패키지는 있었지만 실행 가능한 Chromium이 설치돼 있�
 
 공개 배포 후 사용자가 직접 확인할 경로는 `/archive-v1/admin/#storagePolicy`와 `/archive-v1/admin/#publish`다.
 
+---
+
+# 4.3d 브라우저 검증 러너 (Claude)
+
+- 검증·원격 반영 완료: `2026-09-01 17:34:20 KST`
+- 캐시 버전: `20260901-1730`
+- 담당: Claude (2026-09-01 17:06 KST 사용자 지시로 ARCHIVE 담당 이관)
+- 운영 루트 변경: 없음 / minutes 원본 변경: 없음 / 기존 node 테스트 파일 변경: 없음
+
+## 배경 — 인계된 검증 명령을 실행할 수 없었다
+
+담당이 Claude로 넘어온 작업 환경(사용자 Windows PC)에 **Node.js가 없다**(`node -v` 실패). `archive-v1/tests/*.test.js`는 `node:assert/strict`·`fs`·`path`·`vm`을 쓰는 CommonJS라 브라우저에서 그대로 돌릴 수 없다. 이 상태로는 VALIDATION_POLICY 3항(자동 검증)을 충족할 수 없어 어떤 단계도 정직하게 `done`으로 올릴 수 없었다.
+
+기존 node 테스트는 **수정하지 않았다.** node로 회귀를 확인할 수 없는 환경에서 그 파일을 건드리는 것 자체가 위험하기 때문이다.
+
+## 구현
+
+케이스 정의를 UMD spec 모듈로 분리하고, 같은 spec을 브라우저에서 실행하는 러너를 추가했다.
+
+- `archive-v1/tests/specs/assert.js` — 공용 단언(equal·deepEqual·ok·match·isNull)
+- `archive-v1/tests/specs/stage4-source-reference.spec.js`
+- `archive-v1/tests/specs/stage4-visibility.spec.js`
+- `archive-v1/tests/specs/stage4-publish-guard.spec.js`
+- `archive-v1/tests/specs/stage4-admin-integration.spec.js`
+- `archive-v1/tests/browser/runner.js` — 실행 엔진(의존 모듈 동적 로드, 직렬 실행)
+- `archive-v1/tests/browser/index.html` — 결과 화면
+- `archive-v1/assets/test-runner.css` — 스타일 분리
+
+spec은 런타임에 의존하지 않는다. 파일 읽기처럼 런타임이 다른 동작은 `ctx.readText`로 위임한다(브라우저 fetch / node fs).
+
+## 검증 결과 — 실제 배포본에서 실행
+
+`https://sandleapt.github.io/archive-v1/tests/browser/`
+
+- `stage4-source-reference`: 통과 (215ms)
+- `stage4-visibility`: 통과 (218ms)
+- `stage4-publish-guard`: 통과 (222ms)
+- `stage4-admin-integration`: 통과 (630ms)
+- 합계 4/4 통과, 실패 0
+
+### 러너 자체의 신뢰성 확인
+
+통과만 하는 러너는 검증 도구가 아니므로 회귀 감지 능력을 따로 확인했다.
+
+`SandleVisibilityPolicy.targetFor`를 "미지 등급도 공개"로 되돌려 놓고 같은 spec을 실행했더니 다음과 같이 실패로 잡혔다.
+
+```text
+❌ stage4-visibility — resident는 공개 번들 대상 아님 — 기대 false, 실제 true
+```
+
+원복 후 다시 통과하는 것까지 확인했다.
+
+## 남은 위험
+
+- Stage 3 spec(`stage3-source`·`stage3-adapter`·`stage3-live-data`)은 아직 브라우저 러너에 없다. fixture와 실제 `/minutes/` 데이터를 읽어야 해서 범위가 크므로 다음 소번호로 분리했다. 그때까지 Stage 3 회귀는 node 환경(GPT)에서만 확인 가능하다.
+- 케이스가 spec과 기존 node 테스트 두 곳에 존재한다. 한쪽만 고치면 갈라진다. node가 있는 환경에서 기존 `*.test.js`가 spec을 `require`하도록 통합하는 작업을 남겨 둔다(아래 인계 참조).
+
+## 다른 AI가 재현하는 방법
+
+```text
+브라우저: https://sandleapt.github.io/archive-v1/tests/browser/ → [전체 검증 실행]
+결과는 window.__sandleTestResult 에도 남는다({at, rows, failed}).
+node 환경: 기존 node archive-v1/tests/*.test.js 를 그대로 사용(케이스 동일).
+```
+
 ## 아직 확정하지 않은 것
 
 - 입주민 인증 주체와 로그인 방식
