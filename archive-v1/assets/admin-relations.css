@@ -1,0 +1,43 @@
+/* admin-relations.css — 2.4 관계 검토 화면 전용
+ *
+ * 별도 파일로 둔 이유: admin-workspace.css는 한 줄이 매우 길어 편집 사고가 나기 쉽다.
+ * 이 화면에서만 쓰는 규칙은 여기 모은다.
+ */
+
+/* 이 화면이 무엇을 하는 곳인지 보여주는 예시 블록 */
+.aw-explain { background: var(--aw-soft, #f7f7f4); }
+.aw-chain { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 0; }
+.aw-chain li {
+  position: relative; padding: 10px 0 10px 26px;
+  border-left: 2px solid var(--line, #ddd);
+}
+.aw-chain li::before {
+  content: ''; position: absolute; left: -6px; top: 16px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold, #b08d3f); border: 2px solid var(--bg, #fff);
+}
+.aw-chain li:last-child { border-left-color: transparent; }
+.aw-chain li b { display: inline-block; min-width: 76px; font-variant-numeric: tabular-nums; }
+.aw-chain li small { display: block; margin-top: 2px; margin-left: 76px; opacity: .75; }
+.aw-chain li em { font-style: normal; font-weight: 700; color: var(--gold, #b08d3f); }
+.aw-chain-note { margin: 12px 0 0; opacity: .8; }
+
+/* 고른 값이 무슨 뜻인지 바로 아래에 풀어 쓴다 */
+.aw-field-help { display: block; margin-top: 4px; font-size: .86em; line-height: 1.45; opacity: .78; }
+/* 근거가 약할수록 눈에 띄게 — inferred를 무심코 고르지 않도록 */
+.aw-field-help[data-tone='low'] { color: #b3261e; opacity: 1; font-weight: 600; }
+.aw-field-help[data-tone='warn'] { color: #8a6d1f; opacity: 1; }
+
+/* 저장하면 무슨 뜻이 되는지 한 문장으로 */
+.aw-relation-sentence {
+  margin: 10px 0 0; padding: 9px 12px;
+  background: var(--aw-soft, #f7f7f4);
+  border-left: 3px solid var(--gold, #b08d3f);
+  border-radius: 0 8px 8px 0;
+  font-size: .92em; line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .aw-chain li b { min-width: 0; display: block; }
+  .aw-chain li small { margin-left: 0; }
+}
