@@ -193,14 +193,20 @@
 
 # 4. 저장소·원본·권한 구조 확정
 
-상태: `in_progress` — 4.1 시작 대기
+상태: `in_progress` — 4.1~4.2 완료, 4.3 준비
 
-### 4.1 GitHub / Google Drive 역할 분리
+### 4.1 GitHub / Google Drive 역할 분리 — `done`
 - GitHub: HTML/CSS/JS, 메타데이터, 검색 텍스트, taxonomy, relation, 검색 인덱스
 - 외부 저장소: PDF, HWP/DOCX/XLSX, 사진, 영상·음성, 대용량 스캔
 
-### 4.2 외부 원본 참조 형식
-### 4.3 public / resident / private 실제 권한 처리
+### 4.2 외부 원본 참조 형식 — `done`
+
+- provider에 종속되지 않는 `SourceReference v1`
+- public 원본만 공개 참조로 투영
+- resident/private 외부 `file_id`는 공개 번들에서 제거
+- 설계: `docs/archive-v1/STORAGE_AND_ACCESS_V1.md`
+
+### 4.3 public / resident / private 실제 권한 처리 — `in_progress`
 ### 4.4 사용자 검토
 ### 4.5 피드백 반영 및 4단계 확정
 
@@ -263,8 +269,9 @@
 - 1단계: `done` — 임시 확정
 - 2단계: `review` — 직접 테스트 가능, 실사용과 함께 보완
 - 3단계: `done` — 검증·인계 체크포인트 배포 완료
-- 현재: `4.1 GitHub / 외부 원본 저장소 역할 분리`
-- 다음: 4.1 설계·검증 기능 묶음 체크포인트
+- 완료: `4.1 저장소 역할 분리`, `4.2 SourceReference v1`
+- 현재: `4.3 public / resident / private 실제 권한 처리`
+- 다음: 공개 번들 제외 정책을 관리자 화면과 발행 흐름에 연결
 - 검색 A/B 최종 선택은 보류
 - Claude 예약 업무는 별도 작업으로 유지하며 수정하지 않음
 

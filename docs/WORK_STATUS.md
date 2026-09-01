@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 15:15:51 KST
+마지막 갱신: 2026-09-01 15:20:28 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -18,14 +18,15 @@
 ### ARCHIVE-20260901-01 — Sandle Archive v1
 
 - 담당: GPT
-- 상태: `in_progress` — 3단계 완료, 4.1 시작 대기
+- 상태: `in_progress` — 4.1~4.2 검증 완료, 4.3 준비
 - 마스터 계획: `docs/archive-v1/ROADMAP_V1.md`
 - 1단계: `done` — 임시 확정
 - 2단계: `review` — 직접 테스트 가능, 실사용 중 보완
 - 3단계: `done` — 검증·인계 체크포인트 배포 완료
-- 현재: `4.1 GitHub / 외부 원본 저장소 역할 분리`
+- 완료: `4.1 저장소 역할 분리`, `4.2 SourceReference v1`
+- 현재: `4.3 public / resident / private 실제 권한 처리`
 - 마지막 검증 완료: 실제 회의 213건 / 안건 1,125건 전체 변환
-- 다음: 4.1 설계·검증 기능 묶음 체크포인트
+- 다음: 공개 번들 제외 정책을 관리자 화면과 발행 흐름에 연결
 - 공개 미리보기: `https://sandleapt.github.io/archive-v1/`
 - 3단계 직접 보기: `https://sandleapt.github.io/archive-v1/admin/#meetingImport`
 - 운영 루트 `index.html` 변경: 없음
@@ -158,6 +159,19 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 ```
 
 ## 최근 인계
+
+### 2026-09-01 15:20:28 KST — GPT — 4.1~4.2 저장소·원본 참조 체크포인트
+
+- 운영 루트 변경 없이 Archive 전용 저장·권한 구조 작업을 시작함.
+- GitHub 포털, minutes 원본, 외부 원본 저장소의 역할을 분리해 문서화함.
+- provider에 종속되지 않는 `SourceReference v1`을 구현함.
+- 공개 번들은 허용 필드만 새로 만드는 projection 방식으로 구현함.
+- resident/private 자료와 외부 `file_id`가 공개 번들에 들어가지 않도록 기본 정책을 구현함.
+- visibility 누락·오류는 public이 아닌 `private`로 처리함.
+- 자동검증: `stage4-source-reference`, `stage4-visibility` 통과.
+- 새 파일: `archive-v1/admin/stage4/source-reference.js`, `visibility-policy.js`, Stage 4 테스트 2개, `STORAGE_AND_ACCESS_V1.md`.
+- 기존 운영 루트, minutes 원본, Claude 예약 9건 변경 없음.
+- 다음: 4.3 정책을 관리자 공개등급·발행 흐름에 연결.
 
 ### 2026-09-01 14:37:11 KST — GPT — 3단계 자율 검증 체크포인트
 
