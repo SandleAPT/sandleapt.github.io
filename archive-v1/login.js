@@ -15,6 +15,16 @@
  */
 (function () {
   'use strict';
+  /* signIn이 돌려주는 {ok, role}에서 역할만 꺼낸다.
+     이 한 줄이 따로 나와 있는 이유: 응답을 그냥 참/거짓으로 봤다가 **틀린 비밀번호에도
+     로그인된 것처럼 그려진 적이 있다**(2026-09-02, 검증에서 잡음). 검사로 묶어 둔다. */
+  function 역할(res) {
+    if (!res) return '';
+    if (typeof res === 'string') return res;          // 옛 형태도 받아준다
+    return res.ok ? String(res.role || '') : '';
+  }
+  window.SandleLogin = { 역할: 역할 };
+
   var S = window.SandleAuthSession, A = window.SandleAccessControl;
   if (!S || !A) return;
 
@@ -67,7 +77,12 @@
       var pw = (자리.querySelector('#loginPw') || {}).value || '';
       if (!pw) return;
       자리.querySelector('button[type=submit]').disabled = true;
-      S.signIn(pw).then(function (role) {
+      /* signIn은 역할 문자열이 아니라 {ok, role}을 돌려준다.
+         돌려받은 값을 그냥 참/거짓으로 보면 **틀린 비밀번호에도 객체가 참이라 로그인된
+         것처럼 그려진다.** 2026-09-02 실제로 그렇게 만들었다가 검증에서 잡혔다.
+         그래서 ok와 role을 모두 확인한다. */
+      S.signIn(pw).then(function (res) {
+        var role = 역할(res);
         if (role) 그리기(role);
         else 그리기('', '비밀번호가 맞지 않아. 회의록 앱에서 쓰는 것과 같은 비밀번호야.');
       }).catch(function () {
@@ -81,6 +96,6 @@
   // 처음 열 때: 저장된 키가 있으면 서버에 다시 물어 확인한다(만료·회수 반영).
   그리기('');
   if (S.savedKey && S.savedKey() && !(S.expired && S.expired())) {
-    S.currentRole().then(function (role) { if (role) 그리기(role); }).catch(function () {});
+    S.currentRole().then(function (r) { var role = 역할(r); if (role) 그리기(role); }).catch(function () {});
   }
 })();
