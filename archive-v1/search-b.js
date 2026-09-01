@@ -1,5 +1,7 @@
 (function(){
-const DATA=window.SANDLE_ARCHIVE_SAMPLE||{topics:[]};
+// 실제 회의록 자료는 나중에 들어온다(data/live.js). 로드 시점의 값을 붙잡아 두면
+// 검색만 옛 샘플로 돌아 "자료가 없어"라고 답한다. 쓸 때마다 전역을 다시 읽는다.
+function 자료(){ return window.SANDLE_ARCHIVE_SAMPLE||{topics:[]}; }
 const LAYOUTS=window.SANDLE_SEARCH_LAYOUTS||{};
 const form=document.getElementById('searchForm');
 const input=document.getElementById('searchInput');
@@ -9,7 +11,7 @@ const detailDialog=document.getElementById('detailDialog');
 const detailContent=document.getElementById('detailContent');
 let mode=(LAYOUTS.defaultMode||'B').toUpperCase();
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function topicByQuery(q){q=(q||'').trim().toLowerCase();if(!q)return null;return DATA.topics.find(t=>[t.label].concat(t.aliases||[]).some(v=>String(v).toLowerCase().includes(q)||q.includes(String(v).toLowerCase())));}
+function topicByQuery(q){q=(q||'').trim().toLowerCase();if(!q)return null;return (자료().topics||[]).find(t=>[t.label].concat(t.aliases||[]).some(v=>String(v).toLowerCase().includes(q)||q.includes(String(v).toLowerCase())));}
 function tagClass(tag){return tag==='rule'?'rule':tag==='contract'?'contract':tag==='current'?'current':'history';}
 function showHome(){home.classList.remove('is-hidden');view.classList.add('is-hidden');view.innerHTML='';input.value='';try{history.replaceState(null,'',location.pathname);}catch(e){}window.scrollTo({top:0,behavior:'smooth'});}
 function openTopic(t){const buttons=[...document.querySelectorAll('#allTopics .topic-text-btn')];const b=buttons.find(x=>x.textContent.trim()===String(t.label).trim());if(b){b.click();return;}location.hash='#topic-'+encodeURIComponent(t.id);location.reload();}
