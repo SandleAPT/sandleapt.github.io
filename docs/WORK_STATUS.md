@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 10:58:52 KST
+마지막 갱신: 2026-09-01 11:11:08 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다.
 
@@ -20,25 +20,44 @@
 ### ARCHIVE-20260901-01 — Sandle Archive v1 데이터 구조 설계
 
 - 담당: GPT
-- 상태: `in_progress` / Gate 0 사용자 검토 대기
-- 범위: 차세대 통합 아카이브의 데이터 모델·분류체계·관계·샘플링/이관 방식 설계
-- 수정 영역: `docs/archive-v1/`
-- 운영 사이트 변경: 없음
-- 현재 사이트의 `index.html` 및 운영 UI는 이번 설계 단계에서 수정하지 않는다.
+- 상태: `review` / Golden Sample UI 사용자 검토 대기
+- 범위: 차세대 통합 아카이브의 데이터 모델·분류체계·관계·샘플링/이관·저장 방식·미리보기 UI 설계
+- 수정 영역: `docs/archive-v1/`, `archive-v1/`
+- 운영 루트 `index.html` 변경: 없음
+- 미리보기: `https://sandleapt.github.io/archive-v1/`
 - 작성 완료:
   - `docs/archive-v1/README.md`
   - `docs/archive-v1/DATA_MODEL_V1.md`
   - `docs/archive-v1/TAXONOMY_V1.md`
   - `docs/archive-v1/MIGRATION_V1.md`
   - `docs/archive-v1/BATCH_TEMPLATE.md`
+  - `docs/archive-v1/STORAGE_V1.md`
+  - `archive-v1/index.html`
+  - `archive-v1/assets/archive.css`
+  - `archive-v1/data/sample.js`
+  - `archive-v1/app.js`
 - 핵심 이관 원칙:
   - 전체 10년치 일괄 변환 금지
   - 단일 주제 Golden Sample → 사용자 승인 → 다른 성격의 소수 주제 추가 검증 → 검색 프로토타입 승인 → 본 이관
   - 본 이관은 기본 12 작업 포인트 이하의 작은 배치로 이어달리기식 진행
   - 전체 본 이관은 Gate 3 승인 전 시작하지 않음
-- 다음 행동: 사용자가 `MIGRATION_V1.md` 방향을 검토한다. 승인 또는 수정 반영 후 `SEARCH_V1.md`와 `STORAGE_V1.md`를 설계한다. 실제 Golden Sample 생성은 사용자 승인 후 시작한다.
+- 저장 원칙:
+  - GitHub: 코드·메타데이터·검색 텍스트·관계 인덱스 중심
+  - Google Drive 등 외부 저장소: 원본 PDF·사진·영상·대용량 파일 중심
+  - GitHub Pages 용량 한계를 고려해 원본 바이너리 신규 누적은 기본 금지
+- 다음 행동: 사용자가 `/archive-v1/` Golden Sample을 보고 정보 순서·표현·밀도·검색 구조를 피드백한다. 승인 전 실제 10년치 본 이관은 시작하지 않는다.
 
 ## 인계 로그
+
+### 2026-09-01 11:11:08 KST — GPT
+
+- 사용자가 실제 화면으로 구조를 확인할 수 있도록 `archive-v1/` Golden Sample UI를 배포함.
+- 헬스장·GX, 작은도서관 예시를 넣고 주차·선거는 다음 샘플 후보로 비워 둠.
+- 현재 기준 → 과거 흐름 → 관련 기록 순서의 주제 페이지 구조를 시험할 수 있게 함.
+- GitHub Pages 용량을 아끼기 위해 원본 PDF·사진·영상은 Google Drive 등 외부 저장소에 두고, GitHub에는 메타데이터·검색 텍스트·관계만 두는 `STORAGE_V1.md`를 작성함.
+- 2026-09-01 확인 GitHub API repository size: `SandleAPT/sandleapt.github.io` 약 168KB, `SandleAPT/minutes` 약 6.5MB 수준.
+- 운영 루트 `index.html`과 Claude 예약 9건은 수정하지 않음.
+- 관련 커밋: `7c355bffaffc6e5d8f35a6166bd91e95cc9974c1`, `6739a218203539db5c029a2a1c4f27c5205c74d0`, `1dc98bee79658e090ad319784e5a00ea37544c41`, `728a28d2c5bb990db678c880d57f43f95540376a`, `53f4620c042d0e91a8c25c5e1b53fbc98f313f20`, `aeb792ccf61886457088fafd4266c53ac99ecf2b`
 
 ### 2026-09-01 10:58:52 KST — GPT
 
