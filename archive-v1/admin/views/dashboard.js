@@ -4,9 +4,9 @@
   window.SandleAdminViews.dashboard=function(root,store){
     const c=store.getCounts();
     root.innerHTML=`
-      <section class="aw-page-head"><div><p class="admin-kicker">CURRENT · STAGE 3</p><h1>지금 있는 자료를 더 보기 좋게</h1><p>새 입력 시스템을 하나 더 만드는 것보다, 이미 쌓인 회의록과 규정·계약을 Archive에서 찾기 쉽게 재배치하는 게 현재 목표야. 2단계 관리 기능은 써보면서 보완하고, 지금은 실제 회의록 변환 흐름을 먼저 확인해.</p></div><button class="aw-ghost" data-reset>2단계 샘플 초기화</button></section>
+      <section class="aw-page-head"><div><p class="admin-kicker">STAGE 3 VERIFIED · NEXT 4.1</p><h1>지금 있는 자료를 더 보기 좋게</h1><p>실제 회의 213건과 안건 1,125건의 변환 검증을 마쳤어. 다음은 공개 메타데이터와 원본 저장소, resident/private 권한 경계를 분리하는 단계야. 2단계 관리 기능은 사용자 피드백이 오면 관련 번호를 다시 열어 보완해.</p></div><button class="aw-ghost" data-reset>2단계 샘플 초기화</button></section>
       <section class="aw-panel">
-        <div class="aw-panel-head"><div><p class="admin-kicker">STAGE 3 · MAIN</p><h2>회의록 → Archive 정리</h2><p>`/minutes/`에 이미 저장된 회의록을 읽고, 회의 전체는 Document로 두고 안건은 Fragment로 나눠 검색·주제별 화면에서 다시 쓰는 흐름이야.</p></div><span>원본 수정 없음</span></div>
+        <div class="aw-panel-head"><div><p class="admin-kicker">STAGE 3 · VERIFIED</p><h2>회의록 → Archive 정리</h2><p>`/minutes/`에 이미 저장된 회의록을 읽고, 회의 전체는 Document로 두고 안건은 Fragment로 나눠 검색·주제별 화면에서 다시 쓰는 흐름이야.</p></div><span>검증 완료 · 원본 수정 없음</span></div>
         <div class="aw-flow">
           <button data-go="meeting"><b>1</b><span>기존 작성</span><small>지금 쓰는 회의록 유지</small></button><i>→</i>
           <button data-go="meetingImport"><b>2</b><span>자동 읽기</span><small>실제 저장 회의 선택</small></button><i>→</i>
@@ -16,7 +16,7 @@
         <div class="aw-split-note"><strong>핵심</strong><span>회의록 원문·PDF를 Archive 때문에 줄이거나 다시 작성하지 않아. 기존 회의록은 그대로 두고 그 내용을 찾기 쉬운 인덱스와 연결 구조만 덧붙여.</span><button data-go="meetingImport">3단계 직접 보기</button></div>
       </section>
       <section class="aw-stat-grid">
-        <button class="aw-stat" data-go="meetingImport"><span>3단계</span><b>LIVE</b><small>실제 minutes 연도별 데이터 읽기</small></button>
+        <button class="aw-stat" data-go="meetingImport"><span>3단계</span><b>PASS</b><small>213회의 · 1,125안건 검증</small></button>
         <button class="aw-stat" data-go="classification"><span>분류 검토</span><b>${c.classification}</b><small>회의 안건·일반 자료 함께 확인</small></button>
         <button class="aw-stat" data-go="relations"><span>관계 검토</span><b>${c.relations}</b><small>근거 있는 연결만 확인</small></button>
         <button class="aw-stat" data-go="publish"><span>발행 대기</span><b>${c.publish}</b><small>현재는 메모리 프로토타입</small></button>

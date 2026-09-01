@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 14:22:30 KST
+마지막 갱신: 2026-09-01 15:15:51 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -18,12 +18,14 @@
 ### ARCHIVE-20260901-01 — Sandle Archive v1
 
 - 담당: GPT
-- 상태: `review`
+- 상태: `in_progress` — 3단계 완료, 4.1 시작 대기
 - 마스터 계획: `docs/archive-v1/ROADMAP_V1.md`
 - 1단계: `done` — 임시 확정
 - 2단계: `review` — 직접 테스트 가능, 실사용 중 보완
-- 현재: `3.6 사용자 전체 검토`
-- 다음: `3.7 피드백 반영 및 3단계 확정`
+- 3단계: `done` — 검증·인계 체크포인트 배포 완료
+- 현재: `4.1 GitHub / 외부 원본 저장소 역할 분리`
+- 마지막 검증 완료: 실제 회의 213건 / 안건 1,125건 전체 변환
+- 다음: 4.1 설계·검증 기능 묶음 체크포인트
 - 공개 미리보기: `https://sandleapt.github.io/archive-v1/`
 - 3단계 직접 보기: `https://sandleapt.github.io/archive-v1/admin/#meetingImport`
 - 운영 루트 `index.html` 변경: 없음
@@ -32,18 +34,39 @@
 
 ## 작업 원칙
 
-- 사용자가 큰 단계 전체 진행을 승인하면 소단계마다 컨펌을 요구하지 않고 다음 사용자 검토 지점까지 이어서 구현한다.
-- `done`은 코드가 생긴 시점이 아니라 사용자가 확인한 뒤 사용한다.
+- 담당 AI가 각 단계의 기능·데이터·호환성을 직접 검증하고 보완한 뒤 사용자 중간 컨펌 없이 다음 단계로 진행한다.
+- `done`은 코드가 생긴 시점이 아니라 자동 검증·실제 데이터 검증·인계 기록까지 끝난 뒤 사용한다.
 - 사용자가 실제로 눌러볼 수 없는 상태를 `구현 완료`라고 과장하지 않는다.
-- 앞 단계가 review여도 사용자가 실제 사용하며 보완하기로 하고 다음 단계 진행을 승인하면 다음 단계로 갈 수 있다.
+- 사용자 피드백은 담당 AI가 관련 Roadmap 단계와 영향 범위를 판단해 새 소번호로 반영한다.
 - 보안·권한·데이터 모델 변경, 원본 훼손 가능성처럼 되돌리기 어려운 결정만 중간 확인한다.
+- 소단계 또는 검증 가능한 기능 묶음마다 `WORK_STATUS`·설계·검증 기록을 갱신하고 체크포인트 커밋을 남긴다.
+- 다른 AI에게 이어달라고 할 때는 `docs/CONTINUE_ARCHIVE_PROMPT.md`의 프롬프트를 사용한다.
 - 전체 10년치 일괄 변환 금지, 본 이관은 작은 배치로 진행한다.
 - 입력은 한 번, 노출은 여러 곳.
 - UI 구성과 데이터 구조를 분리한다.
 
-## 현재 체크포인트 — 3.6 전체 검토
+## 현재 체크포인트 — 3.7 검증 보완·인계
 
 사용자 목표는 **현재 만들어진 회의록을 다시 작성하는 것이 아니라 더 보기 편하게 정리하는 것**으로 잡았다.
+
+사용자는 단계마다 직접 확인하는 방식 대신 담당 AI가 스스로 검증·보완하며 진행하고, 나중에 결과를 본 뒤 수정 요청을 하면 관련 단계를 찾아 반영하는 방식으로 변경했다. 긴 작업이 중간에 끊겨도 다른 AI가 이어갈 수 있도록 기능 묶음마다 체크포인트를 먼저 남긴다.
+
+### 이번 체크포인트에서 검증된 것
+
+- fixture source 로드와 연도 캐시
+- 회의 → Document / 안건 → Fragment 변환
+- 표결, 의결, 후속조치, 분류 검토 Draft 생성
+- 실제 공개 회의 213건 / 안건 1,125건 전체 변환
+- JSON 파싱 오류 0건
+- Fragment ID 중복 0건
+- 기존 minutes 원본 변경 없음
+
+### 검증 중 발견해 보완한 것
+
+- 과거 분류명 `미화` → `청소·미화`
+- 과거 분류명 `소송` → `하자·소송`
+- `저수조·청소`, `기타`는 최신 taxonomy 키워드로 다시 후보 생성
+- 자동 보완된 주제는 확정 저장 태그가 아닌 `inferred`로 표시
 
 ### 3단계에서 직접 테스트 가능한 것
 
@@ -100,6 +123,14 @@
 - `archive-v1/assets/admin-stage3.css`
 - `archive-v1/progress-3-6.js`
 - `docs/archive-v1/MEETING_ADAPTER_V1.md`
+- `archive-v1/tests/fixtures/stage3-meetings.json`
+- `archive-v1/tests/stage3-source.test.js`
+- `archive-v1/tests/stage3-adapter.test.js`
+- `archive-v1/tests/stage3-live-data.test.js`
+- `archive-v1/progress-3-7.js`
+- `docs/archive-v1/VALIDATION_POLICY.md`
+- `docs/archive-v1/STAGE3_VALIDATION.md`
+- `docs/CONTINUE_ARCHIVE_PROMPT.md`
 
 수정:
 - `archive-v1/admin/index.html`
@@ -110,8 +141,37 @@
 - `archive-v1/admin/views/meeting.js`
 - `archive-v1/index.html`
 - `docs/archive-v1/ROADMAP_V1.md`
+- `AGENTS.md`
+- `docs/AI_WORKFLOW.md`
+
+## 다음 AI가 바로 할 일
+
+1. 최신 main에서 이 문서와 `docs/CONTINUE_ARCHIVE_PROMPT.md`를 읽는다.
+2. 아래 검증을 다시 실행해 3단계 체크포인트가 유지되는지 확인한다.
+3. 3.7 상태가 `done`인지 확인하고, 완료돼 있으면 4.1 저장소 역할 분리 설계부터 시작한다.
+4. `MINUTES-20260901-01` 예약 9건은 담당 해제 전까지 수정하지 않는다.
+
+```bash
+node archive-v1/tests/stage3-source.test.js
+node archive-v1/tests/stage3-adapter.test.js
+SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test.js
+```
 
 ## 최근 인계
+
+### 2026-09-01 14:37:11 KST — GPT — 3단계 자율 검증 체크포인트
+
+- 단계별 사용자 승인 대기 대신 담당 AI 자율 검증·보완 후 진행하는 규칙으로 전환함.
+- 긴 작업 중단에 대비해 기능 묶음마다 중간 체크포인트를 남기는 규칙을 추가함.
+- 다른 AI용 이어하기 프롬프트를 `docs/CONTINUE_ARCHIVE_PROMPT.md`에 추가함.
+- 실제 회의 213건, 안건 1,125건 전체 변환을 검증함.
+- 과거 분류명과 `기타` 정규화 문제를 보완함.
+- 자동 검증 fixture와 3개 검증 스크립트를 별도 파일로 추가함.
+- 기존 minutes 원본, 운영 루트, Claude 예약 9건은 수정하지 않음.
+- 코드·규칙 체크포인트 커밋: `bba7a5d40f53eab88833184cbf0b9d0f6e2f66d6`
+- UI·진행상태 체크포인트는 이 인계 직후 main에 반영함.
+- 3단계 완료 시각: `2026-09-01 15:15:51 KST`
+- 다음: 4.1 저장소 역할 분리 설계.
 
 ### 2026-09-01 14:22:30 KST — GPT — 3.1~3.5 프로토타입 구현 / 3.6 사용자 검토 대기
 
