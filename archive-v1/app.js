@@ -11,7 +11,7 @@ const detailContent=document.getElementById('detailContent');
 const detailClose=document.getElementById('detailClose');
 const PREVIEW={current:3,timeline:4,records:6};
 const expanded={};
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));}
 function topicById(id){return DATA.topics.find(t=>t.id===id);}
 function topicByQuery(q){q=(q||'').trim().toLowerCase();if(!q)return null;return DATA.topics.find(t=>[t.label].concat(t.aliases||[]).some(v=>String(v).toLowerCase().includes(q)||q.includes(String(v).toLowerCase())));} 
 function tagClass(tag){return tag==='current'?'current':tag==='rule'?'rule':tag==='contract'?'contract':'history';}
@@ -60,10 +60,11 @@ function render(t,doScroll=true){
 }
 function renderAllTopics(){
   allTopics.innerHTML='';
-  DATA.topics.filter(t=>t.visibility!=='private').sort(topicSort).forEach(t=>{
-    const b=document.createElement('button');b.type='button';b.className='discover-row';
-    b.innerHTML=`<span class="discover-dot"></span><span class="discover-copy"><b>${esc(t.label)}</b><small>${esc(t.description)}</small></span><span class="discover-arrow">›</span>`;
+  const topics=DATA.topics.filter(t=>t.visibility!=='private').sort(topicSort);
+  topics.forEach((t,i)=>{
+    const b=document.createElement('button');b.type='button';b.className='topic-text-btn';b.textContent=t.label;b.title=t.description||t.label;
     b.onclick=()=>render(t);allTopics.appendChild(b);
+    if(i<topics.length-1){const sep=document.createElement('span');sep.className='topic-sep';sep.textContent='·';sep.setAttribute('aria-hidden','true');allTopics.appendChild(sep);}
   });
 }
 function renderRecent(){
