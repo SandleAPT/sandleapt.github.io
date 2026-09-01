@@ -3,10 +3,8 @@ const DATA=window.SANDLE_ARCHIVE_SAMPLE||{topics:[],recentRecords:[]};
 const home=document.getElementById('homeView');
 const view=document.getElementById('topicView');
 const input=document.getElementById('searchInput');
-const quick=document.getElementById('quickTopics');
 const form=document.getElementById('searchForm');
-const randomTopics=document.getElementById('randomTopics');
-const shuffleTopics=document.getElementById('shuffleTopics');
+const allTopics=document.getElementById('allTopics');
 const recentRecords=document.getElementById('recentRecords');
 const detailDialog=document.getElementById('detailDialog');
 const detailContent=document.getElementById('detailContent');
@@ -17,14 +15,13 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;',
 function topicById(id){return DATA.topics.find(t=>t.id===id);}
 function topicByQuery(q){q=(q||'').trim().toLowerCase();if(!q)return null;return DATA.topics.find(t=>[t.label].concat(t.aliases||[]).some(v=>String(v).toLowerCase().includes(q)||q.includes(String(v).toLowerCase())));} 
 function tagClass(tag){return tag==='current'?'current':tag==='rule'?'rule':tag==='contract'?'contract':'history';}
-function shuffle(items){const a=items.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function topicSort(a,b){return String(a.label||'').localeCompare(String(b.label||''),'ko',{sensitivity:'base'});}
 function stateFor(topicId){return expanded[topicId]||(expanded[topicId]={current:false,timeline:false,records:false});}
 function showHome(){
   home.classList.remove('is-hidden');
   view.classList.add('is-hidden');
   view.innerHTML='';
   input.value='';
-  document.querySelectorAll('.quick button').forEach(b=>b.classList.remove('active'));
   try{history.replaceState(null,'',location.pathname);}catch(e){}
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -45,7 +42,6 @@ function attachTopicInteractions(t){
 function render(t,doScroll=true){
   home.classList.add('is-hidden');
   view.classList.remove('is-hidden');
-  document.querySelectorAll('.quick button').forEach(b=>b.classList.toggle('active',b.dataset.id===t.id));
   input.value=t.label;
   const countHtml=Object.entries(t.counts||{}).map(([k,v])=>`<span class="count">${esc(k)} ${esc(v)}</span>`).join('');
   const back=`<button type="button" class="home-link">← 첫 화면으로</button>`;
@@ -62,13 +58,12 @@ function render(t,doScroll=true){
   try{history.replaceState(null,'','#topic-'+encodeURIComponent(t.id));}catch(e){}
   if(doScroll)view.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function renderRandomTopics(){
-  randomTopics.innerHTML='';
-  const candidates=DATA.topics.filter(t=>t.visibility!=='private');
-  shuffle(candidates).slice(0,5).forEach(t=>{
+function renderAllTopics(){
+  allTopics.innerHTML='';
+  DATA.topics.filter(t=>t.visibility!=='private').sort(topicSort).forEach(t=>{
     const b=document.createElement('button');b.type='button';b.className='discover-row';
     b.innerHTML=`<span class="discover-dot"></span><span class="discover-copy"><b>${esc(t.label)}</b><small>${esc(t.description)}</small></span><span class="discover-arrow">›</span>`;
-    b.onclick=()=>render(t);randomTopics.appendChild(b);
+    b.onclick=()=>render(t);allTopics.appendChild(b);
   });
 }
 function renderRecent(){
@@ -78,9 +73,6 @@ function renderRecent(){
     b.innerHTML=`<span class="recent-date">${esc(r.date)}</span><span class="recent-copy"><b>${esc(r.title)}</b><small>${esc(r.kind)} · ${esc(r.status)}</small></span><span class="recent-arrow">›</span>`;
     const t=topicById(r.topicId);b.onclick=()=>{if(t)render(t);};recentRecords.appendChild(b);
   });
-}
-function renderShortcuts(){
-  DATA.topics.forEach(t=>{const b=document.createElement('button');b.type='button';b.textContent=t.label;b.dataset.id=t.id;b.onclick=()=>render(t);quick.appendChild(b);});
 }
 form.addEventListener('submit',e=>{
   e.preventDefault();
@@ -94,10 +86,9 @@ form.addEventListener('submit',e=>{
     attachHomeButton();view.scrollIntoView({behavior:'smooth',block:'start'});
   }
 });
-shuffleTopics.onclick=renderRandomTopics;
 detailClose.onclick=closeDetail;
 detailDialog.addEventListener('click',e=>{if(e.target===detailDialog)closeDetail();});
-renderRandomTopics();renderRecent();renderShortcuts();
+renderAllTopics();renderRecent();
 const hash=(location.hash||'').replace(/^#topic-/,'');
 const initial=hash&&topicById(decodeURIComponent(hash));
 if(initial)render(initial);else showHome();
