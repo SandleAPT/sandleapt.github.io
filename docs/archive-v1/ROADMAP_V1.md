@@ -209,7 +209,7 @@
 ### 4.3 public / resident / private 실제 권한 처리 — `in_progress`
 
 - 4.3a `done` — 공개 projection과 resident/private 발행 차단을 관리자 화면·저장 함수에 연결
-- 4.3b `decision_needed` — 실제 입주민·관리자 인증 주체와 방식
+- 4.3b `in_progress` — 실제 입주민·관리자 인증. **사용자 결정 완료(2026-09-01 19:45 KST): 회의록 앱의 열람용/수정용 비밀번호를 그대로 재사용**(별도 회원제 없음). 설계: `docs/archive-v1/AUTH_V1.md`
 - 4.3c `planned` — 인증 만료·회수·감사 로그
 - 4.3d `done` — 브라우저 검증 러너: Stage 4 spec 4종 UMD 분리 + `/archive-v1/tests/browser/` 러너. 실제 배포본에서 4/4 통과, 회귀 감지 확인. 기존 node 테스트 미변경. (2026-09-01 17:34:20 KST)
 - 4.3e `done` — Stage 3 spec(`stage3-source`·`stage3-adapter`) 브라우저 이식. iframe 격리·setup 단계 추가, 배포본에서 6/6 통과. 격리 해제 시 2회차 실패로 격리 필요성 실증. (2026-09-01 18:22:40 KST)
