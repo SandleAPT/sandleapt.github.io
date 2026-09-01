@@ -14,28 +14,27 @@
       relations:state.items.filter(x=>!x.published&&x.classificationApproved&&x.relation&&!x.relation.approved&&!x.relation.skipped).length,
       publish:state.items.filter(readyForPublish).length,
       published:state.items.filter(x=>x.published).length,
+      // 사람이 보지 않고 자동으로 정해진 것. 언제든 꺼내 볼 수 있어야 한다.
+      autoAssigned:state.items.filter(x=>!x.published&&x.autoAssigned).length,
       meetingImports:state.items.filter(x=>x.importedMeeting).length
     };
   }
+  // 분류·관계 자동 판정은 shared/auto-assign.js 한 곳에서만 한다.
+  // 여기서 규칙을 또 쓰면 두 곳이 갈라진다.
   function suggest(fields){
+    const A=window.SandleAutoAssign;
     const text=((fields.title||'')+' '+(fields.note||'')+' '+(fields.documentType||'')).toLowerCase();
-    let topic='기타', confidence=62;
-    if(text.includes('주차')){topic='주차';confidence=91;}
-    else if(text.includes('도서관')||text.includes('책')){topic='작은도서관';confidence=90;}
-    else if(text.includes('선거')||text.includes('선관위')||text.includes('동대표')){topic='선거 · 선관위';confidence=89;}
-    else if(text.includes('하자')||text.includes('판결')){topic='하자판결금';confidence=87;}
-    else if(text.includes('헬스')||text.includes('gx')||text.includes('체육')||text.includes('보험')){topic='헬스장 · GX';confidence=84;}
-    else if(text.includes('규약')||text.includes('계약')){topic='규약 · 계약';confidence=78;}
-    else if(text.includes('관리비')||text.includes('잡수입')||text.includes('회계')){topic='재정 · 회계';confidence=82;}
     let organization='관리주체 확인 필요';
     if(text.includes('관리사무소'))organization='관리사무소';
     if(text.includes('입주자대표'))organization='입주자대표회의';
     const temporalStatus=(fields.documentType==='계약'||fields.documentType==='운영규정'||fields.documentType==='관리규약'||fields.documentType==='보험증권')?'current':'unknown';
-    let relation=null;
-    if(fields.documentType==='보험증권') relation={target:'관련 운영·계약 기록 확인 필요',type:'contract_for',evidence:'inferred',approved:false,skipped:false};
-    else if(fields.documentType==='운영규정'||fields.documentType==='관리규약') relation={target:'이전 버전 또는 근거 기록 확인 필요',type:'supersedes',evidence:'inferred',approved:false,skipped:false};
-    else if(fields.documentType==='공고·안내'||fields.documentType==='공문') relation={target:'근거 회의·결정 확인 필요',type:'follow_up_to',evidence:'inferred',approved:false,skipped:false};
-    return {topic,organization,temporalStatus,confidence,relation};
+    // 모듈이 없으면 자동 확정하지 않는다(사람이 다 본다). 조용히 통과시키지 않는다.
+    if(!A) return {topic:'기타',organization,temporalStatus,confidence:0,autoOk:false,
+      reason:'module-missing',why:'자동 판정 모듈을 불러오지 못했다. 직접 정해야 한다.',matched:[],alternatives:[],relation:null};
+    const c=A.classify(fields);
+    return {topic:c.topic,organization,temporalStatus,confidence:c.confidence,
+      autoOk:c.autoOk,reason:c.reason,why:c.why,matched:c.matched,alternatives:c.alternatives,
+      relation:A.relate(fields)};
   }
   function addDraft(fields){
     const s=suggest(fields);
@@ -43,8 +42,12 @@
       id:'draft-'+Date.now(),sample:false,
       title:fields.title,documentType:fields.documentType,date:fields.date,scope:fields.scope,
       source:fields.source||'',note:fields.note||'',visibility:fields.visibility||'private',
-      suggestions:{topic:s.topic,organization:s.organization,temporalStatus:s.temporalStatus,confidence:s.confidence},
-      classificationApproved:false,classificationHeld:false,relation:s.relation,published:false
+      suggestions:{topic:s.topic,organization:s.organization,temporalStatus:s.temporalStatus,
+        confidence:s.confidence,reason:s.reason,why:s.why,matched:s.matched,alternatives:s.alternatives},
+      // 확신이 서면 자동 확정하고, 애매하면 사람에게 보낸다.
+      // 자동으로 정해진 것은 autoAssigned로 표시해 나중에 찾아서 바꿀 수 있게 한다.
+      classificationApproved:!!s.autoOk,autoAssigned:!!s.autoOk,
+      classificationHeld:false,relation:s.relation,published:false
     };
     state.items.unshift(item);emit();return item;
   }
@@ -63,7 +66,10 @@
     const item=find(id);if(!item)return;
     item.suggestions=Object.assign({},item.suggestions,values||{});emit();
   }
-  function approveClassification(id){const item=find(id);if(!item)return;item.classificationApproved=true;item.classificationHeld=false;emit();}
+  function approveClassification(id){const item=find(id);if(!item)return;item.classificationApproved=true;item.classificationHeld=false;item.autoAssigned=false;emit();}
+  // 자동으로 정해진 분류를 사람이 다시 보겠다고 꺼내는 경우.
+  // 자동 판정이 틀렸을 때 되돌릴 길이 없으면 '자동으로 해준다'가 위험해진다.
+  function reopenClassification(id){const item=find(id);if(!item)return;item.classificationApproved=false;item.autoAssigned=false;item.classificationHeld=false;emit();}
   function holdClassification(id){const item=find(id);if(!item)return;item.classificationHeld=true;emit();}
   function resumeClassification(id){const item=find(id);if(!item)return;item.classificationHeld=false;emit();}
   function updateRelation(id,values){const item=find(id);if(!item||!item.relation)return;item.relation=Object.assign({},item.relation,values||{});emit();}
@@ -79,7 +85,7 @@
   function reset(){state={items:clone(source.items||[])};emit();}
   window.SandleAdminStore={
     data:source,getState,getCounts,find,readyForPublish,addDraft,addImportedDrafts,updateClassification,approveClassification,
-    holdClassification,resumeClassification,updateRelation,approveRelation,skipRelation,setVisibility,publish,reset,
+    holdClassification,resumeClassification,reopenClassification,updateRelation,approveRelation,skipRelation,setVisibility,publish,reset,
     subscribe(fn){listeners.push(fn);return()=>{const i=listeners.indexOf(fn);if(i>=0)listeners.splice(i,1);};}
   };
 })();

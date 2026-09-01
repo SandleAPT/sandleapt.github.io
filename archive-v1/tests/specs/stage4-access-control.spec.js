@@ -50,6 +50,43 @@
       assert.equal(ac.filterVisible(records, 'edit').length, 5, '수정용은 전부');
       assert.equal(ac.filterVisible(null, 'edit').length, 0, '배열이 아니면 빈 목록');
 
+      /*
+       * 연결 유출 방지 (사용자 요구 2026-09-01):
+       * 공개 권한으로 보는 사람에게는 비공개·내부공개 기록과의 연결이 아예 보이면 안 된다.
+       * 등급만 가리고 연결을 남기면 "무엇이 감춰져 있는지"가 제목째 새어 나간다.
+       */
+      var 등급 = { pub: 'public', res: 'resident', priv: 'private' };
+      var 찾기 = function (targetId) { return 등급[targetId]; };
+      var 연결 = [
+        { target: 'pub', type: 'based_on' },
+        { target: 'res', type: 'follow_up_to' },
+        { target: 'priv', type: 'supersedes' },
+        { target: '없는id', type: 'related_to' }   // 못 찾으면 private 취급
+      ];
+      assert.equal(ac.filterRelations(연결, '', 찾기).length, 1, '비로그인에게는 공개 연결만');
+      assert.equal(ac.filterRelations(연결, '', 찾기)[0].target, 'pub', '남는 것은 공개 상대');
+      assert.equal(ac.filterRelations(연결, 'view', 찾기).length, 2, '열람용은 내부공개까지');
+      assert.equal(ac.filterRelations(연결, 'edit', 찾기).length, 4, '수정용은 전부');
+      assert.equal(ac.filterRelations(연결, 'edit', null).length, 0, '조회 함수 없으면 전부 차단');
+
+      // 기록 단위 투영 — 원본을 건드리지 않아야 관리 화면이 계속 전체를 본다.
+      var 원본 = { id: 'x', visibility: 'public', relations: 연결.slice() };
+      var 공개본 = ac.projectRecord(원본, '', 찾기);
+      assert.equal(공개본.relations.length, 1, '투영본에는 공개 연결만');
+      assert.equal(원본.relations.length, 4, '원본은 그대로');
+      assert.equal(ac.projectRecord({ id: 'y', visibility: 'private' }, '', 찾기), null, '못 보는 기록은 통째로 없음');
+      assert.equal(ac.projectRecord(null, 'edit', 찾기), null, '빈 기록은 null');
+
+      // 단일 relation 형태(현재 관리 화면 자료구조)도 같이 처리해야 한다.
+      var 단일 = ac.projectRecord({ id: 'z', visibility: 'public', relation: { target: 'priv' } }, '', 찾기);
+      assert.equal(단일.relation, null, '못 보는 상대와의 단일 연결은 제거');
+
+      // 화면에 쓰는 이름
+      assert.equal(ac.levelName('public'), '공개', 'public 이름');
+      assert.equal(ac.levelName('resident'), '내부공개', 'resident 이름');
+      assert.equal(ac.levelName('private'), '비공개', 'private 이름');
+      assert.equal(ac.levelName('이상한값'), '비공개', '모르는 등급 이름도 비공개');
+
       // 안내 문구
       assert.equal(ac.requirementOf('resident').needs, 'view', 'resident는 열람용 필요');
       assert.equal(ac.requirementOf('private').needs, 'edit', 'private는 수정용 필요');
