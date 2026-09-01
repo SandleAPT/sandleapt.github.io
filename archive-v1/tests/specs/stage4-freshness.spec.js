@@ -32,8 +32,13 @@
       // ── 시스템 레코드는 회의가 아니다 ──
       assert.equal(F.회의인가('m_2026_06'), true, '회의');
       assert.equal(F.회의인가('t_2016_03'), true, '임차 회의도 회의');
+      /* 네 종류를 모두 건다. 2026-09-02에 앞의 둘만 걸렀다가 공고·점검 5건을
+         "빠진 회의"로 내놨다. 기준은 minutes의 isSysRecord / isSystemRecord와 같아야 한다. */
       assert.equal(F.회의인가('topic_summaries'), false, '주제 요약은 회의가 아니다');
       assert.equal(F.회의인가('roster_history_v1'), false, '명단 이력도 아니다');
+      assert.equal(F.회의인가('notices_v1'), false, '공고 보관함도 아니다');
+      assert.equal(F.회의인가('notices_v1_p3'), false, '공고 조각도 아니다');
+      assert.equal(F.회의인가('checks_v1'), false, '절차 점검도 아니다');
       assert.equal(F.회의인가(''), false, '빈 id는 세지 않는다');
 
       // ── 대조 ──
@@ -43,7 +48,9 @@
         { id: 'a', name: '1월 회의', date: '2026-01-10', updatedAt: '2026-01-11T00:00:00Z' },
         { id: 'b', name: '2월 회의', date: '2026-02-10', updatedAt: '2026-02-11T00:00:00Z' },
         { id: 'c', name: '3월 회의', date: '2026-03-10', updatedAt: '2026-03-11T00:00:00Z' },
-        { id: 'topic_summaries', name: '주제요약', date: '', updatedAt: '2026-09-01T00:00:00Z' }
+        { id: 'topic_summaries', name: '주제요약', date: '', updatedAt: '2026-09-01T00:00:00Z' },
+        { id: 'notices_v1_p2', name: '공고·기록 (시스템)', date: '', updatedAt: '2026-09-01T00:00:00Z' },
+        { id: 'checks_v1', name: '절차 점검 기록 (시스템)', date: '', updatedAt: '2026-09-01T00:00:00Z' }
       ];
       var r = F.비교(사본, 클라우드);
       assert.equal(r.클라우드건수, 3, '시스템 레코드를 뺀 회의 수');
@@ -78,7 +85,7 @@
         return Promise.resolve({ ok: true, json: function () { return Promise.resolve({ ok: true, items: 클라우드 }); } });
       };
       return F.클라우드목록(가짜, { url: 'https://example.test/exec', token: 'TOK123' }).then(function (items) {
-        assert.equal(items.length, 4, '목록을 그대로 돌려준다');
+        assert.equal(items.length, 6, '목록은 거르지 않고 그대로 돌려준다 — 거르는 것은 비교()의 몫');
         assert.equal(부른주소.indexOf('action=list') > 0, true, 'list 액션 — 본문은 받지 않는다');
         assert.equal(부른주소.indexOf('token=TOK123') > 0, true, '토큰을 붙인다');
 

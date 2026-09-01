@@ -63,12 +63,19 @@
   }
 
   /*
-   * 시스템 레코드는 회의가 아니다(주제 요약·명단 이력 등). 세면 건수가 안 맞는다.
-   * 기준은 회의록 앱과 같다 — id 접두어로 가른다.
+   * 시스템 레코드는 회의가 아니다(주제 요약·명단 이력·공고 보관함·절차 점검).
+   * 회의로 세면 건수가 안 맞아 **늘 "뒤처졌다"고 나오고**, 열리지도 않는 링크를 준다.
+   *
+   * 이 정규식은 회의록 앱과 **글자 그대로 같아야 한다.** 기준은 두 곳에 이미 있다:
+   *   minutes/assets/js/app/cloud.js `isSysRecord`
+   *   minutes/scripts/build-data.mjs `isSystemRecord`
+   * 2026-09-02에 이것을 확인하지 않고 문서(DATA.md §2, 낡은 상태)만 보고 두 종류만 걸렀다가,
+   * 공고·점검 5건을 "빠진 회의"로 내놨다. 종류가 늘면 세 곳을 함께 고칠 것.
    */
+  var 시스템 = /^(topic_summaries|roster_history|notices_v1|checks_v1)/;
   function 회의인가(id) {
     var s = String(id || '');
-    return !!s && s.indexOf('topic_summaries') !== 0 && s.indexOf('roster_history') !== 0;
+    return !!s && !시스템.test(s);
   }
 
   /*
