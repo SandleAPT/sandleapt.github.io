@@ -11,6 +11,7 @@
   const U = () => window.SandleAdminUI;
   const M = () => window.SandleTopicReview;
   const A = () => window.SandleAutoAssign;
+  const W = () => window.SandleTagWriter;
   const 저장키 = 'sandle_topic_fixes';
 
   let 안건 = null, 줄 = [], 조건 = { 상태: '전체', 주제: '전체', 검색: '' }, 보여줄수 = 200;
@@ -77,6 +78,9 @@
   }
 
   function 그리기(root) {
+    const 고침 = 고친것();
+    const 고친수 = Object.keys(고침).length;
+    const 회의수 = Object.keys(W().groupByMeeting(고침)).length;
     const 전체수 = M().countByStatus(줄);
     const 걸러진 = M().filterRows(줄, 조건);
     const 주제목록 = M().countByTopic(줄);
@@ -109,6 +113,11 @@
       <button class="aw-ghost small" data-reset>고친 것 모두 되돌리기</button>
     </div>
   </div>
+  ${고친수 ? `<div class="tr-save">
+    <div><b>고친 것 ${고친수}건</b><small>회의 ${회의수}건을 다시 저장한다. 저장하면 회의록 앱에도 바로 반영된다.</small></div>
+    <button class="aw-primary" data-save>회의록에 저장</button>
+  </div>` : ''}
+  <div class="tr-savelog" data-savelog hidden></div>
   <p class="tr-note">${걸러진.length}건 중 ${보일것.length}건 표시${
       조건.상태 !== '전체' ? ` · <b>${S[조건.상태] ? S[조건.상태].hint : ''}</b>` : ''}</p>
   <div class="tr-rows">
@@ -160,12 +169,95 @@
     root.querySelectorAll('[data-undo]').forEach(b => b.onclick = () => {
       고침저장(b.dataset.undo, null); 다시계산(); 그리기(root); U().toast('자동 판정으로 되돌렸어.');
     });
+    const saveBtn = root.querySelector('[data-save]');
+    if (saveBtn) saveBtn.onclick = () => 저장하기(root, saveBtn);
     const reset = root.querySelector('[data-reset]');
     if (reset) reset.onclick = () => {
       if (!confirm('직접 고친 주제를 모두 자동 판정으로 되돌릴까?')) return;
       try { localStorage.removeItem(저장키); } catch (e) {}
       다시계산(); 그리기(root); U().toast('모두 되돌렸어.');
     };
+  }
+
+  /* ── 회의록에 저장 ─────────────────────────────────────────
+   * 저장 단위가 회의 레코드 하나라, 안건 태그만 바꿔도 회의 전체를 다시 쓴다.
+   * 규칙과 검증은 shared/tag-writer.js에 있고 여기서는 키·네트워크만 잇는다.
+   */
+  const GAS = 'https://script.google.com/macros/s/AKfycbyhpE-DB5WAAEx7uqTCPwU-e0sPKuupkYN3YoQWALiFWe0IHFNh1y91e1VNtDmMxxoxLA/exec';
+  const TOKEN = 'ITDXaUBDTmrz6DbQ3tv9R';
+
+  function 수정용키() {
+    const S = window.SandleAuthSession;
+    if (S && S.savedKey) { if (S.expired && S.expired()) return ''; return S.savedKey() || ''; }
+    try {
+      const at = Number(localStorage.getItem('sandle_admin_unlock_at') || 0);
+      if (!at || Date.now() - at > 24 * 60 * 60 * 1000) return '';
+      return localStorage.getItem('sandle_admin_key') || '';
+    } catch (e) { return ''; }
+  }
+
+  function 서버() {
+    const key = 수정용키();
+    return {
+      wait: ms => new Promise(r => setTimeout(r, ms)),
+      get: async id => {
+        const x = await fetch(GAS + '?action=get&token=' + TOKEN + '&id=' + encodeURIComponent(id)).then(r => r.json());
+        return (x && x.ok && x.item) ? x.item : null;
+      },
+      save: async (rec, tries) => {
+        tries = tries || 0;
+        const r = await fetch(GAS, {
+          method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'save', record: rec, adminKey: key, token: TOKEN })
+        });
+        const x = await r.json();
+        if (!x || !x.ok) {
+          // 연속 저장 시 Apps Script가 간헐적으로 거부한다. 잠깐 쉬고 다시.
+          if (tries < 3) { await new Promise(s => setTimeout(s, 1200 * (tries + 1))); return 서버().save(rec, tries + 1); }
+          throw new Error((x && x.error) || '저장 거부');
+        }
+        return x;
+      }
+    };
+  }
+
+  async function 저장하기(root, btn) {
+    const 고침 = 고친것();
+    const 회의 = Object.keys(W().groupByMeeting(고침));
+    if (!회의.length) return;
+    if (!수정용키()) {
+      U().toast('수정용 비밀번호가 필요해. 회의록 앱 관리자 메뉴에서 먼저 확인해줘.');
+      return;
+    }
+    if (!confirm('고친 주제 ' + Object.keys(고침).length + '건을 회의록에 저장할까?\n'
+      + '회의 ' + 회의.length + '건을 다시 저장한다. 회의록 앱에도 바로 반영된다.')) return;
+
+    const log = root.querySelector('[data-savelog]');
+    log.hidden = false;
+    btn.disabled = true;
+    log.textContent = '저장 중…';
+
+    let 결과;
+    try {
+      결과 = await W().writeAll(고침, 서버(), p => { log.textContent = '저장 중… 회의 ' + p.진행 + '/' + p.전체; });
+    } catch (e) {
+      log.textContent = '저장 실패: ' + (e && e.message ? e.message : e);
+      btn.disabled = false;
+      return;
+    }
+
+    // 저장된 것만 지역 저장에서 지운다. 실패한 것은 남겨 다시 시도할 수 있게 한다.
+    결과.성공.forEach(id => 고침저장(id, null));
+    안건 = null;                     // 회의록에서 다시 읽어 '이미 정해둠'으로 보이게 한다
+    U().toast('저장 ' + 결과.성공.length + '건' + (결과.실패.length ? ', 실패 ' + 결과.실패.length + '건' : ''));
+    await window.SandleAdminViews.topicReview(root);
+    const 새log = root.querySelector('[data-savelog]');
+    if (새log) {
+      새log.hidden = false;
+      새log.innerHTML = '<b>저장 ' + 결과.성공.length + '건</b>'
+        + (결과.실패.length ? '<br>실패 ' + 결과.실패.length + '건 — ' + 결과.실패.slice(0, 5).map(f => U().esc(f.줄 + ': ' + f.이유)).join('<br>') : '')
+        + (결과.못찾음.length ? '<br>안건을 못 찾음 ' + 결과.못찾음.length + '건' : '');
+    }
   }
 
   // 이미 붙어 있는 것은 빼고 보여준다.

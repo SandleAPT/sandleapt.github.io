@@ -15,6 +15,20 @@
 .tr-tools input { min-width: 180px; }
 .tr-note { margin: 0 0 10px; font-size: .88em; opacity: .8; }
 
+/* 저장 막대 — 고친 것이 있을 때만 나온다 */
+.tr-save {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 0 0 10px; padding: 10px 14px;
+  background: var(--aw-soft, #f7f7f4);
+  border: 1px solid var(--gold, #b08d3f); border-radius: 10px;
+}
+.tr-save b { display: block; }
+.tr-save small { display: block; font-size: .85em; opacity: .75; margin-top: 2px; }
+.tr-savelog {
+  margin: 0 0 10px; padding: 9px 12px; font-size: .88em; line-height: 1.6;
+  border: 1px solid var(--line, #ddd); border-radius: 10px;
+}
+
 .tr-rows { display: grid; gap: 4px; }
 .tr-row {
   display: grid; grid-template-columns: 92px 1fr 230px; gap: 12px; align-items: start;
