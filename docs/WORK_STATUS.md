@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 18:22:40 KST
+마지막 갱신: 2026-09-01 19:20:05 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -76,9 +76,9 @@
 1. 최신 main에서 `AGENTS.md`, `docs/AI_WORKFLOW.md`, 이 문서, Roadmap과 Stage 4 검증 문서를 읽는다.
 2. 검증을 다시 실행한다. **환경에 따라 경로가 다르다.**
    - node 있음: 기존 `node archive-v1/tests/*.test.js`
-   - node 없음: 브라우저로 `/archive-v1/tests/browser/` 접속 → `전체 검증 실행` (Stage 3 fixture + Stage 4, 6종)
+   - node 없음: 브라우저로 `/archive-v1/tests/browser/` 접속 → `전체 검증 실행` (**spec 7종 전부**, 실제 데이터 포함)
 3. `4.3b` 실제 인증은 사용자 결정 없이 임의 구현하지 않는다.
-4. 안전한 범위의 다음 후보: `4.3g` live-data spec 이식, `4.3f` node 테스트의 spec 재사용 통합, `4.4` 정책 화면 검토 대응.
+4. 안전한 범위의 다음 후보: `4.6a` Archive 데이터 신선도 표시, `4.3f` node 테스트의 spec 재사용 통합, `4.4` 정책 화면 검토 대응.
 5. `MINUTES-20260901-01`은 `done`으로 해제됨 — 입대의 데이터를 참조·분류해도 된다.
 
 ```bash
@@ -95,9 +95,14 @@ https://sandleapt.github.io/archive-v1/tests/browser/  →  [전체 검증 실�
 결과: window.__sandleTestResult = {at, rows, failed}
 ```
 
-### 주의 — Stage 3 live-data 검증 대상이 늘어났다
+### 주의 — Archive가 보는 데이터는 클라우드보다 뒤처진다 (2026-09-01 실측)
 
-`MINUTES-20260901-01` 작업으로 `SandleAPT/minutes`의 연도 샤드가 **2016~2019년까지 확장**됐다(입대의 게시판 전수 이관). 기존 검증 기록의 "회의 213건 / 안건 1,125건"은 그 이전 기준이므로, 다음에 `stage3-live-data`를 돌리면 **건수가 늘어난 채로 통과**하는 것이 정상이다. 건수 불일치를 회귀로 오판하지 말 것.
+Archive Stage 3은 `/minutes/data-YYYY.json` **정적 샤드**를 읽는다. 이 파일은 minutes 봇이 주기적으로 클라우드에서 다시 만들기 때문에 항상 한 주기 뒤처질 수 있다.
+
+- 2026-09-01 19:20 KST 실측: 클라우드 회의록 **224건** / 정적 샤드 **213건**
+- 샤드 생성 시각 `2026-09-01 07:18 KST`, 차이 11건은 그 이후 적재된 입대의 1기(`m_2016_*`·`m_2017_02·04·05·05s`·`m_2018_04`)
+- **데이터 손실이 아니라 재발행 지연이다.** 다음 재발행 후 `stage3-live-data`가 224건으로 늘어난 채 통과하는 것이 정상이며, 건수 변화를 회귀로 오판하지 말 것.
+- 후속 검토는 `4.6 Archive 데이터 신선도`로 등록됨.
 
 ## 이전 체크포인트 참고 — 3.7 검증 보완·인계
 
@@ -212,6 +217,17 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 ```
 
 ## 최근 인계
+
+### 2026-09-01 19:20:05 KST — Claude — 4.3g 실제 데이터 전량 검증 체크포인트
+
+- `stage3-live-data` spec을 브라우저로 이식해 **7/7 통과**(회의 213건 · Fragment 1,125건 · 안건수 불일치 0 · ID 중복 0).
+- 건수를 고정하지 않고 구조 불변조건만 검사하도록 바꿈. 회의록이 계속 늘어나기 때문.
+- **발견: Archive가 읽는 정적 샤드가 클라우드보다 뒤처진다.** 클라우드 224건 / 정적 샤드 213건이며 차이 11건은 전부 07:18 KST 이후 적재된 입대의 1기 회의록이다. 손실이 아니라 봇 재발행 지연 — 다음 재발행 후 224건으로 늘어난 채 통과하는 것이 정상이다. 후속 검토를 `4.6`으로 등록함.
+- 러너 보완 2건: 격리 iframe의 경로 해석(`ctx.origin` 제공), 격리 로드 캐시 무효화(옛 spec 재사용으로 수정이 반영되지 않던 문제).
+- 새 파일: `archive-v1/tests/specs/stage3-live-data.spec.js`
+- 수정: `archive-v1/tests/browser/runner.js`, `index.html`, `docs/archive-v1/ROADMAP_V1.md`, `STAGE4_VALIDATION.md`, `docs/WORK_STATUS.md`
+- 운영 루트·minutes 원본·기존 node 테스트 변경 없음. 공개 범위 변경 없음.
+- 커밋: `94b26d4`(spec), `096c18a`(경로 해석), `9a06ea2`(캐시 무효화), 문서는 이 인계와 함께 반영.
 
 ### 2026-09-01 18:22:40 KST — Claude — 4.3e Stage 3 spec 이식 체크포인트
 

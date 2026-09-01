@@ -134,6 +134,51 @@ spec은 런타임에 의존하지 않는다. 파일 읽기처럼 런타임이 �
 
 격리를 끄면 spec이 심어 둔 fetch 스텁이 부모 창에 남아 다음 실행의 파일 읽기를 망가뜨린다. 격리 설계가 필요했음이 확인됐다.
 
+---
+
+# 4.3g 실제 데이터 전량 변환 spec 이식 (Claude)
+
+- 검증·원격 반영 완료: `2026-09-01 19:20:05 KST`
+- 캐시 버전: `20260901-1915`
+- 운영 루트 변경: 없음 / minutes 원본 변경: 없음 (읽기만) / 기존 node 테스트 변경: 없음
+
+## 구현
+
+`archive-v1/tests/specs/stage3-live-data.spec.js` — 같은 origin의 `/minutes/data-index.json`으로 연도를 찾아 모든 샤드를 변환한다. 실제 taxonomy(`/minutes/assets/js/app/topic-defs.js`)를 그대로 실어, minutes의 분류 규칙이 바뀌면 이 spec이 먼저 깨지도록 했다.
+
+건수는 **고정하지 않는다.** 회의록이 계속 늘어나므로 구조 불변조건만 본다.
+
+- 안건 수 == Fragment 수 (누락·중복 없음)
+- Fragment ID 중복 0건
+- 회의 1건 이상
+
+## 검증 결과 — 실제 배포본
+
+`https://sandleapt.github.io/archive-v1/tests/browser/` → **7/7 통과, 실패 0**
+
+- `stage3-source` 880ms · `stage3-adapter` 494ms · `stage3-live-data` 3,523ms
+- `stage4-source-reference` 6ms · `stage4-visibility` 4ms · `stage4-publish-guard` 4ms · `stage4-admin-integration` 218ms
+- 실제 데이터: **11개 연도 · 회의 213건 · Fragment 1,125건** (안건 수 불일치 0, ID 중복 0)
+
+## 발견 — Archive가 읽는 정적 샤드는 클라우드보다 뒤처진다
+
+검증 중 클라우드 회의록(224건)과 정적 샤드(213건)의 **11건 차이**를 확인했다.
+
+- 정적 샤드 생성 시각: `2026-08-31T22:18:45Z` = `2026-09-01 07:18 KST`
+- 누락된 11건: `m_2016_05·06·07·10·11·12`, `m_2017_02·04·05·05s`, `m_2018_04`
+- 전부 그 시각 **이후**에 적재된 입대의 제1기(2016~2018) 회의록이다.
+
+즉 데이터 손실이 아니라 **재발행 지연**이다. Archive Stage 3은 `/minutes/data-YYYY.json` 정적 샤드를 읽고, 이 파일들은 minutes 저장소의 봇이 주기적으로 클라우드에서 다시 만든다. 따라서 Archive가 보는 회의록은 항상 클라우드보다 한 주기 뒤처질 수 있다.
+
+이 성질을 모르면 나중에 "Archive에 최근 회의가 안 보인다"를 버그로 오진하기 쉽다. 다음 재발행 이후 `stage3-live-data`를 다시 돌리면 **224건으로 늘어난 채 통과하는 것이 정상**이다.
+
+후속 검토 항목은 `4.6`으로 남겼다.
+
+## 러너 보완 두 가지
+
+- **격리 컨텍스트의 경로 해석**: iframe의 `location`은 `about:blank`라 `new URL(rel, location.href)`가 `Invalid base URL`로 실패했다. 러너가 `ctx.origin`·`ctx.resolve`를 넘기도록 고쳤다.
+- **격리 로드의 캐시 무효화**: 부모 페이지는 `?v=…`로 최신 파일을 받는데 iframe은 쿼리 없이 로드해 브라우저 캐시의 옛 spec을 재사용했다. 수정이 반영되지 않아 같은 실패가 반복됐다. iframe 로드에도 캐시 무효화 쿼리를 붙였다.
+
 ## 작업 중 발생한 사고 — 파일 인코딩 손상
 
 러너 페이지의 캐시 버전을 바꾸려고 PowerShell `(Get-Content -Raw) | Set-Content -Encoding utf8`을 썼다가 **한글이 전부 깨진 채로 커밋·푸시**됐다(커밋 `4badffe`). Windows PowerShell 5.1의 `Get-Content`가 UTF-8 파일을 ANSI로 읽어 깨진 문자열을 다시 저장했기 때문이다.

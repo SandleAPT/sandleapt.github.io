@@ -213,7 +213,15 @@
 - 4.3c `planned` — 인증 만료·회수·감사 로그
 - 4.3d `done` — 브라우저 검증 러너: Stage 4 spec 4종 UMD 분리 + `/archive-v1/tests/browser/` 러너. 실제 배포본에서 4/4 통과, 회귀 감지 확인. 기존 node 테스트 미변경. (2026-09-01 17:34:20 KST)
 - 4.3e `done` — Stage 3 spec(`stage3-source`·`stage3-adapter`) 브라우저 이식. iframe 격리·setup 단계 추가, 배포본에서 6/6 통과. 격리 해제 시 2회차 실패로 격리 필요성 실증. (2026-09-01 18:22:40 KST)
-- 4.3g `planned` — `stage3-live-data` 이식(실제 `/minutes/` 연도 샤드 fetch, 건수 기준은 입대의 이관 후로 갱신 필요)
+- 4.3g `done` — `stage3-live-data` 브라우저 이식. 배포본에서 7/7 통과(회의 213건·Fragment 1,125건, 안건수 불일치 0·ID 중복 0). 건수는 고정하지 않고 구조 불변조건만 검사. (2026-09-01 19:20:05 KST)
+### 4.6 Archive 데이터 신선도 — `planned`
+
+`stage3-live-data` 검증 중 발견: Archive는 `/minutes/data-YYYY.json` **정적 샤드**를 읽는데 이 파일은 minutes 봇이 주기적으로 재발행하므로 클라우드보다 뒤처진다. 2026-09-01 기준 클라우드 224건 / 정적 샤드 213건(입대의 1기 11건 미반영, 샤드 생성 07:18 KST).
+
+- 4.6a `planned` — 재발행 주기 확인과 Archive 화면의 '기준 시각' 표시
+- 4.6b `planned` — 신선도 차이가 큰 경우의 안내 또는 강제 갱신 경로 검토
+
+※ 데이터 손실이 아니라 지연이다. 다음 재발행 후 건수가 늘어난 채 통과하는 것이 정상이며 회귀로 오판하지 않는다.
 - 4.3f `planned` — node 환경에서 기존 `*.test.js`가 spec을 재사용하도록 통합(케이스 이중 관리 해소)
 - 검증: `docs/archive-v1/STAGE4_VALIDATION.md`
 ### 4.4 사용자 검토
