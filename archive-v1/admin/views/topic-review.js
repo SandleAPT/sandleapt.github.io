@@ -62,7 +62,9 @@
     const 걸러진 = M().filterRows(줄, 조건);
     const 주제목록 = M().countByTopic(줄);
     const S = M().STATUS;
-    const 순서 = ['no-match', 'body-only', 'title-multi', 'title', 'fixed'];
+    // 화면 칩 순서 = 확인이 급한 순서. manual(이미 정해둠)을 빼면 그 줄들이
+    // 어느 칩에도 안 잡혀 사라진 것처럼 보인다.
+    const 순서 = ['no-match', 'body-only', 'title-multi', 'title', 'manual', 'fixed'];
     const 칩 = ['전체'].concat(순서).map(k => {
       const 수 = k === '전체' ? 전체수.전체 : (전체수[k] || 0);
       const 이름 = k === '전체' ? '전체' : S[k].label;
