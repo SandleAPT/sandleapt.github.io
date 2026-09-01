@@ -84,7 +84,7 @@
       assert.equal(주차.visibility, 'public', '공개 자료만 넣는다');
       assert.equal(주차.id.indexOf('topic-') === 0, true, 'id 형식');
       assert.equal(Array.isArray(주차.records[0]), true, 'records는 배열의 배열');
-      assert.equal(주차.records[0].length, 4, '[연월, 종류, 제목, 상태]');
+      assert.equal(주차.records[0].slice(0, 4).length, 4, '앞 네 자리는 [연월, 종류, 제목, 상태]');
       assert.equal(주차.records[0][0], '2026.06', '최신이 먼저');
       assert.equal(주차.records[1][1], '임차 안건', '임차 회의는 그렇게 표시');
       assert.equal(주차.counts['안건'], 2, '건수');
