@@ -79,6 +79,25 @@
   }
 
   /*
+   * 날짜를 `YYYY-MM-DD`로 맞춘다.
+   *
+   * 클라우드 목록의 date는 늘 `2026-08-26` 모양이 아니다. **구글시트가 그 칸을 Date 객체로
+   * 돌려주면** GAS의 `String(...)`이 `Wed Aug 26 2026 00:00:00 GMT+0900 (한국 표준시)`가 된다.
+   * 그대로 화면에 뿌리면 그 긴 글자가 회의 이름 옆에 붙는다(2026-09-02 눌러 보고 발견).
+   * 이 프로젝트에서 시트의 Date 때문에 틀린 것이 세 번째다 — 날짜는 항상 정리해서 쓴다.
+   */
+  function 날짜정리(v) {
+    var s = String(v == null ? '' : v).trim();
+    if (!s) return '';
+    var m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return m[0];
+    var d = new Date(s);
+    if (isNaN(d)) return '';        // 못 읽으면 빈 값 — 이상한 글자를 보여주느니 안 보여준다
+    var p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  /*
    * 사본과 클라우드를 대조한다.
    * 사본에 **없는** 것만 본다. 반대(사본에만 있는 것)는 삭제된 회의라 여기서 다루지 않는다.
    */
@@ -91,7 +110,7 @@
         return {
           id: String(it.id),
           이름: String(it.name || it.id),
-          날짜: String(it.date || ''),
+          날짜: 날짜정리(it.date),
           원문: '/minutes/?open=' + encodeURIComponent(String(it.id))
         };
       })
@@ -132,6 +151,6 @@
 
   return {
     설정: 설정, 설정뽑기: 설정뽑기, 클라우드목록: 클라우드목록,
-    회의인가: 회의인가, 비교: 비교, 문구: 문구, 멈춤안내: 멈춤안내
+    회의인가: 회의인가, 날짜정리: 날짜정리, 비교: 비교, 문구: 문구, 멈춤안내: 멈춤안내
   };
 });
