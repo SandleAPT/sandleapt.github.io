@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 17:06:10 KST
+마지막 갱신: 2026-09-01 18:22:40 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -76,9 +76,9 @@
 1. 최신 main에서 `AGENTS.md`, `docs/AI_WORKFLOW.md`, 이 문서, Roadmap과 Stage 4 검증 문서를 읽는다.
 2. 검증을 다시 실행한다. **환경에 따라 경로가 다르다.**
    - node 있음: 기존 `node archive-v1/tests/*.test.js`
-   - node 없음: 브라우저로 `/archive-v1/tests/browser/` 접속 → `전체 검증 실행` (Stage 4만 이식됨)
+   - node 없음: 브라우저로 `/archive-v1/tests/browser/` 접속 → `전체 검증 실행` (Stage 3 fixture + Stage 4, 6종)
 3. `4.3b` 실제 인증은 사용자 결정 없이 임의 구현하지 않는다.
-4. 안전한 범위의 다음 후보: `4.3e` Stage 3 spec 브라우저 이식, `4.3f` node 테스트의 spec 재사용 통합, `4.4` 정책 화면 검토 대응.
+4. 안전한 범위의 다음 후보: `4.3g` live-data spec 이식, `4.3f` node 테스트의 spec 재사용 통합, `4.4` 정책 화면 검토 대응.
 5. `MINUTES-20260901-01`은 `done`으로 해제됨 — 입대의 데이터를 참조·분류해도 된다.
 
 ```bash
@@ -212,6 +212,18 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 ```
 
 ## 최근 인계
+
+### 2026-09-01 18:22:40 KST — Claude — 4.3e Stage 3 spec 이식 체크포인트
+
+- `stage3-source`, `stage3-adapter` spec을 추가해 브라우저 러너에서 **6/6 통과**(실패 0).
+- 러너에 **iframe 격리 실행**과 **setup 단계**를 추가함. spec이 fetch 스텁·모듈 내부 캐시·전역 스텁을 건드려도 서로 오염되지 않는다.
+- 격리 필요성을 실증함: 격리를 끄고 같은 spec을 두 번 돌리면 2회차가 `r.text is not a function`으로 실패한다.
+- **사고 있었음** — 러너 페이지 캐시 버전을 PowerShell로 바꾸다 한글이 전부 깨진 채 커밋·푸시됨(`4badffe`). `git checkout`으로 복구 후 편집 도구로 다시 수정해 `459240f`로 정상화함. 재발 방지 규칙을 `docs/AI_WORKFLOW.md` 12절에 추가함.
+- 새 파일: `archive-v1/tests/specs/stage3-source.spec.js`, `stage3-adapter.spec.js`
+- 수정: `archive-v1/tests/browser/runner.js`, `archive-v1/tests/browser/index.html`, `docs/AI_WORKFLOW.md`, `docs/archive-v1/ROADMAP_V1.md`, `docs/archive-v1/STAGE4_VALIDATION.md`
+- 운영 루트·minutes 원본·기존 node 테스트 변경 없음. 공개 범위 변경 없음.
+- 남은 위험: `stage3-live-data` 미이식(4.3g), 케이스 이중 관리(4.3f).
+- 커밋: `4badffe`(spec 추가, 인코딩 손상), `459240f`(복구·등록), 문서는 이 인계와 함께 반영.
 
 ### 2026-09-01 17:34:20 KST — Claude — 4.3d 브라우저 검증 러너 체크포인트
 

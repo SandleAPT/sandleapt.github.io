@@ -132,6 +132,15 @@ Archive v1의 마스터 순서는 `docs/archive-v1/ROADMAP_V1.md`를 따른다.
 - `data:` 데이터 추가·정리
 - `fix:` 오류 수정
 
+## 12. 한글 파일 수정 시 인코딩 주의 (2026-09-01 추가)
+
+이 저장소의 문서·화면 파일에는 한글이 많다. **Windows PowerShell의 텍스트 파이프라인으로 이런 파일을 수정하지 않는다.**
+
+- `Get-Content -Raw`는 UTF-8 파일을 ANSI로 읽어 한글을 깨뜨린다. 그 결과를 `Set-Content -Encoding utf8`로 저장하면 깨진 상태가 그대로 파일에 박힌다.
+- 실제로 2026-09-01 `archive-v1/tests/browser/index.html`이 이 방식으로 손상돼 커밋됐다(`4badffe` → `459240f`에서 복구).
+- 파일 내용 수정은 편집 도구(Edit/Write)나 `[IO.File]::ReadAllText/WriteAllText`에 인코딩을 명시하는 방식으로 한다.
+- 수정 후에는 한글이 포함된 줄을 한 번 확인한다. 예: `Select-String -Path <파일> -Pattern "검증"`.
+
 ## 11. 작업 종료 및 인계
 
 작업을 마치거나 중단할 때 `docs/WORK_STATUS.md`에 아래를 남긴다.

@@ -94,8 +94,51 @@ spec은 런타임에 의존하지 않는다. 파일 읽기처럼 런타임이 �
 
 ## 남은 위험
 
-- Stage 3 spec(`stage3-source`·`stage3-adapter`·`stage3-live-data`)은 아직 브라우저 러너에 없다. fixture와 실제 `/minutes/` 데이터를 읽어야 해서 범위가 크므로 다음 소번호로 분리했다. 그때까지 Stage 3 회귀는 node 환경(GPT)에서만 확인 가능하다.
-- 케이스가 spec과 기존 node 테스트 두 곳에 존재한다. 한쪽만 고치면 갈라진다. node가 있는 환경에서 기존 `*.test.js`가 spec을 `require`하도록 통합하는 작업을 남겨 둔다(아래 인계 참조).
+- 케이스가 spec과 기존 node 테스트 두 곳에 존재한다. 한쪽만 고치면 갈라진다. node가 있는 환경에서 기존 `*.test.js`가 spec을 `require`하도록 통합하는 작업을 남겨 둔다(4.3f).
+
+---
+
+# 4.3e Stage 3 spec 브라우저 이식 (Claude)
+
+- 검증·원격 반영 완료: `2026-09-01 18:22:40 KST`
+- 캐시 버전: `20260901-1815`
+- 운영 루트 변경: 없음 / minutes 원본 변경: 없음 / 기존 node 테스트 변경: 없음
+
+## 구현
+
+- `archive-v1/tests/specs/stage3-source.spec.js` — 인덱스·연도 로드, 연도 캐시 재사용
+- `archive-v1/tests/specs/stage3-adapter.spec.js` — Document/Fragment 변환, 주제 출처(stored/inferred), 표결 요약, draft 중복 방지
+- 러너에 **iframe 격리 실행**(`isolate: true`)과 **setup 단계**를 추가했다.
+  - 격리: spec이 `fetch`를 스텁으로 바꾸거나 모듈 내부 캐시를 채우면 같은 페이지의 다음 실행이 오염된다. 빈 iframe에 필요한 스크립트만 새로 실어 매번 깨끗한 컨텍스트에서 돌린다.
+  - setup: 대상 모듈이 로드 시점에 전역(`TopicTaxonomy` 등)을 참조하므로, deps보다 먼저 스텁을 깔 자리가 필요했다.
+
+## 검증 결과 — 실제 배포본
+
+`https://sandleapt.github.io/archive-v1/tests/browser/` → 6/6 통과, 실패 0
+
+- `stage3-source` 통과 (456ms, 격리)
+- `stage3-adapter` 통과 (279ms, 격리)
+- `stage4-source-reference` 통과 (5ms)
+- `stage4-visibility` 통과 (6ms)
+- `stage4-publish-guard` 통과 (3ms)
+- `stage4-admin-integration` 통과 (213ms)
+
+### 격리가 실제로 필요한지 확인
+
+같은 spec을 연속 실행해 비교했다.
+
+| 조건 | 1회차 | 2회차 |
+|---|---|---|
+| `isolate: true` (현재) | 통과 | 통과 |
+| `isolate` 강제 해제 | 통과 | **실패** — `r.text is not a function` |
+
+격리를 끄면 spec이 심어 둔 fetch 스텁이 부모 창에 남아 다음 실행의 파일 읽기를 망가뜨린다. 격리 설계가 필요했음이 확인됐다.
+
+## 작업 중 발생한 사고 — 파일 인코딩 손상
+
+러너 페이지의 캐시 버전을 바꾸려고 PowerShell `(Get-Content -Raw) | Set-Content -Encoding utf8`을 썼다가 **한글이 전부 깨진 채로 커밋·푸시**됐다(커밋 `4badffe`). Windows PowerShell 5.1의 `Get-Content`가 UTF-8 파일을 ANSI로 읽어 깨진 문자열을 다시 저장했기 때문이다.
+
+`git checkout <직전 커밋> -- <파일>`로 복구한 뒤 편집 도구로 다시 수정해 `459240f`로 정상화했다. 한글이 들어간 파일은 PowerShell 텍스트 파이프라인으로 수정하지 않는다(`docs/AI_WORKFLOW.md` 12절에 규칙으로 추가).
 
 ## 다른 AI가 재현하는 방법
 

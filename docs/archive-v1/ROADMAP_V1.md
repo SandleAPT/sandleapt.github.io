@@ -212,7 +212,8 @@
 - 4.3b `decision_needed` — 실제 입주민·관리자 인증 주체와 방식
 - 4.3c `planned` — 인증 만료·회수·감사 로그
 - 4.3d `done` — 브라우저 검증 러너: Stage 4 spec 4종 UMD 분리 + `/archive-v1/tests/browser/` 러너. 실제 배포본에서 4/4 통과, 회귀 감지 확인. 기존 node 테스트 미변경. (2026-09-01 17:34:20 KST)
-- 4.3e `planned` — Stage 3 spec을 브라우저 러너로 이식(fixture·실제 `/minutes/` 데이터 fetch)
+- 4.3e `done` — Stage 3 spec(`stage3-source`·`stage3-adapter`) 브라우저 이식. iframe 격리·setup 단계 추가, 배포본에서 6/6 통과. 격리 해제 시 2회차 실패로 격리 필요성 실증. (2026-09-01 18:22:40 KST)
+- 4.3g `planned` — `stage3-live-data` 이식(실제 `/minutes/` 연도 샤드 fetch, 건수 기준은 입대의 이관 후로 갱신 필요)
 - 4.3f `planned` — node 환경에서 기존 `*.test.js`가 spec을 재사용하도록 통합(케이스 이중 관리 해소)
 - 검증: `docs/archive-v1/STAGE4_VALIDATION.md`
 ### 4.4 사용자 검토
