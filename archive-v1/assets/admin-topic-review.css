@@ -1,0 +1,52 @@
+/* admin-topic-review.css — 2.4 주제 훑어보기 전용
+ * 1,200줄을 훑는 화면이라 한 줄이 낮고 조용해야 한다. 눈에 띄어야 할 것은
+ * 확인이 급한 줄(못 찾음·본문으로 짐작)뿐이다.
+ */
+
+.tr-bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.tr-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.tr-chip {
+  border: 1px solid var(--line, #ddd); background: transparent; cursor: pointer;
+  border-radius: 999px; padding: 5px 11px; font-size: .88em; line-height: 1.3;
+}
+.tr-chip b { font-variant-numeric: tabular-nums; margin-left: 3px; }
+.tr-chip.on { background: var(--gold, #b08d3f); border-color: var(--gold, #b08d3f); color: #fff; }
+.tr-tools { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.tr-tools input { min-width: 180px; }
+.tr-note { margin: 0 0 10px; font-size: .88em; opacity: .8; }
+
+.tr-rows { display: grid; gap: 4px; }
+.tr-row {
+  display: grid; grid-template-columns: 92px 1fr 230px; gap: 12px; align-items: start;
+  padding: 9px 10px; border: 1px solid var(--line, #ddd); border-radius: 10px;
+}
+/* 확인이 급한 줄만 배경으로 드러낸다 */
+.tr-row:has(.tr-badge.low) { background: #fdf3f2; border-color: #f0cfcb; }
+.tr-row:has(.tr-badge.warn) { background: #fdf9ef; border-color: #ecdcb8; }
+
+.tr-badge {
+  display: inline-block; text-align: center; align-self: start;
+  font-size: .76em; padding: 3px 7px; border-radius: 999px; white-space: nowrap;
+  border: 1px solid var(--line, #ddd);
+}
+.tr-badge.low { background: #b3261e; border-color: #b3261e; color: #fff; font-weight: 700; }
+.tr-badge.warn { background: #8a6d1f; border-color: #8a6d1f; color: #fff; }
+.tr-badge.ok { background: transparent; opacity: .75; }
+.tr-badge.good { background: transparent; opacity: .55; }
+
+.tr-main b { display: block; font-weight: 600; line-height: 1.4; }
+.tr-main small { display: block; font-size: .82em; opacity: .65; margin-top: 1px; }
+.tr-note-text { margin: 4px 0 0; font-size: .86em; opacity: .8; line-height: 1.5; }
+.tr-why { margin: 3px 0 0; font-size: .8em; opacity: .6; }
+
+.tr-pick { display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
+.tr-pick select { width: 100%; }
+.tr-alt { font-size: .78em; opacity: .65; }
+
+.tr-more { margin-top: 12px; text-align: center; }
+
+@media (max-width: 760px) {
+  .tr-row { grid-template-columns: 1fr; gap: 6px; }
+  .tr-badge { justify-self: start; }
+  .tr-pick { flex-direction: row; align-items: center; }
+}

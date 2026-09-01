@@ -8,7 +8,7 @@
   const previewClose=document.getElementById('adminPreviewClose');
   if(!store||!root||!nav)return;
   let current='dashboard';
-  const titles={dashboard:'현재 작업 홈',meetingImport:'3. 회의록 → Archive',storagePolicy:'4. 저장 · 권한',register:'2.2 새 자료 등록',visibility:'2.3 공개 등급',classification:'2.4 분류 검토',relations:'2.4 관계 검토',publish:'발행 대기',meeting:'기존 회의 작성'};
+  const titles={dashboard:'현재 작업 홈',meetingImport:'3. 회의록 → Archive',storagePolicy:'4. 저장 · 권한',register:'2.2 새 자료 등록',visibility:'2.3 공개 등급',classification:'2.4 분류 검토',topicReview:'2.4 주제 훑어보기',relations:'2.4 관계 검토',publish:'발행 대기',meeting:'기존 회의 작성'};
   function updateBadges(){
     const c=store.getCounts();
     const map={classification:c.classification,relations:c.relations,publish:c.publish};
