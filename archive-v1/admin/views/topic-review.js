@@ -16,11 +16,16 @@
   let 안건 = null, 줄 = [], 조건 = { 상태: '전체', 주제: '전체', 검색: '' }, 보여줄수 = 200;
 
   function 고친것() {
-    try { return JSON.parse(localStorage.getItem(저장키) || '{}'); } catch (e) { return {}; }
+    let m;
+    try { m = JSON.parse(localStorage.getItem(저장키) || '{}'); } catch (e) { return {}; }
+    // 처음 만들 때는 주제를 하나만 저장했다. 남아 있으면 배열로 올린다.
+    Object.keys(m).forEach(k => { if (typeof m[k] === 'string') m[k] = [m[k]]; });
+    return m;
   }
-  function 고침저장(id, 주제) {
+  function 고침저장(id, 주제들) {
     const m = 고친것();
-    if (주제) m[id] = 주제; else delete m[id];
+    const v = (주제들 || []).filter(Boolean);
+    if (v.length) m[id] = v; else delete m[id];
     try { localStorage.setItem(저장키, JSON.stringify(m)); } catch (e) {}
   }
 
@@ -39,7 +44,9 @@
           id: it.id + '#' + (a.id || i),
           회의id: it.id, 회의명, 날짜,
           title: a.title || '',
-          note: [a.summary, a.decision, a.result].filter(Boolean).join(' ')
+          note: [a.summary, a.decision, a.result].filter(Boolean).join(' '),
+          // 회의록에서 이미 사람이 붙여둔 태그. 자동 판정보다 우선한다.
+          tags: Array.isArray(a.tags) ? a.tags.filter(Boolean) : []
         }));
       });
     }
@@ -94,7 +101,10 @@
           <p class="tr-why">${U().esc(r.why)}</p>
         </div>
         <div class="tr-pick">
-          <select data-set="${U().esc(r.id)}">${주제선택지(r.주제)}</select>
+          <div class="tr-tags">
+            ${r.주제들.map(t => `<span class="tr-tag">${U().esc(t)}<button data-del="${U().esc(r.id)}|${U().esc(t)}" aria-label="${U().esc(t)} 빼기">×</button></span>`).join('')}
+          </div>
+          <select data-add="${U().esc(r.id)}"><option value="">＋ 주제 더하기</option>${더할주제(r.주제들)}</select>
           ${r.고쳐짐 ? `<button class="aw-ghost small" data-undo="${U().esc(r.id)}">되돌리기</button>`
         : (r.후보.length ? `<span class="tr-alt">또는 ${r.후보.map(t => U().esc(t)).join(' · ')}</span>` : '')}
         </div>
@@ -113,8 +123,18 @@
       q.oninput = () => { clearTimeout(t); t = setTimeout(() => { 조건.검색 = q.value; 보여줄수 = 200; 그리기(root); const n = root.querySelector('[data-q]'); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }, 250); };
     }
     const more = root.querySelector('[data-more]'); if (more) more.onclick = () => { 보여줄수 += 300; 그리기(root); };
-    root.querySelectorAll('[data-set]').forEach(s => s.onchange = () => {
-      고침저장(s.dataset.set, s.value); 다시계산(); 그리기(root); U().toast('주제를 바꿨어. 이 브라우저에만 저장돼.');
+    root.querySelectorAll('[data-add]').forEach(s => s.onchange = () => {
+      if (!s.value) return;
+      const 줄하나 = 줄.find(x => x.id === s.dataset.add);
+      고침저장(s.dataset.add, (줄하나 ? 줄하나.주제들 : []).concat([s.value]));
+      다시계산(); 그리기(root); U().toast('주제를 더했어. 아직 이 브라우저에만 저장돼.');
+    });
+    root.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+      const [id, 주제] = b.dataset.del.split('|');
+      const 줄하나 = 줄.find(x => x.id === id);
+      const 남은 = (줄하나 ? 줄하나.주제들 : []).filter(t => t !== 주제);
+      if (!남은.length) { U().toast('주제를 모두 없앨 수는 없어. 다른 주제를 먼저 더해줘.'); return; }
+      고침저장(id, 남은); 다시계산(); 그리기(root); U().toast('주제를 뺐어. 아직 이 브라우저에만 저장돼.');
     });
     root.querySelectorAll('[data-undo]').forEach(b => b.onclick = () => {
       고침저장(b.dataset.undo, null); 다시계산(); 그리기(root); U().toast('자동 판정으로 되돌렸어.');
@@ -127,10 +147,11 @@
     };
   }
 
-  function 주제선택지(선택) {
+  // 이미 붙어 있는 것은 빼고 보여준다.
+  function 더할주제(붙은것) {
     const keys = (window.TopicTaxonomy && window.TopicTaxonomy.defs || []).map(d => d.key).concat(['기타']);
-    if (keys.indexOf(선택) < 0) keys.unshift(선택);
-    return keys.map(k => `<option${k === 선택 ? ' selected' : ''}>${U().esc(k)}</option>`).join('');
+    return keys.filter(k => 붙은것.indexOf(k) < 0)
+      .map(k => `<option>${U().esc(k)}</option>`).join('');
   }
 
   window.SandleAdminViews = window.SandleAdminViews || {};

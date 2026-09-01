@@ -40,8 +40,21 @@
 .tr-why { margin: 3px 0 0; font-size: .8em; opacity: .6; }
 
 .tr-pick { display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
-.tr-pick select { width: 100%; }
+.tr-pick select { width: 100%; font-size: .88em; }
 .tr-alt { font-size: .78em; opacity: .65; }
+
+/* 주제는 여러 개가 붙는다(회의록 앱과 같은 방식) */
+.tr-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.tr-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: var(--aw-soft, #f2efe8); border: 1px solid var(--line, #ddd);
+  border-radius: 999px; padding: 2px 4px 2px 9px; font-size: .82em; line-height: 1.5;
+}
+.tr-tag button {
+  border: 0; background: transparent; cursor: pointer; padding: 0 3px;
+  font-size: 1.05em; line-height: 1; opacity: .5;
+}
+.tr-tag button:hover { opacity: 1; color: #b3261e; }
 
 .tr-more { margin-top: 12px; text-align: center; }
 
