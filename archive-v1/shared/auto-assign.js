@@ -147,7 +147,10 @@
   ];
 
   function relate(fields) {
-    var text = textOf(fields);
+    fields = fields || {};
+    // 관계는 제목이든 본문이든 원문이 상대를 가리키기만 하면 된다.
+    // 분류와 달리 제목 우선이 아니다 — 참조는 대개 본문에 적힌다.
+    var text = [fields.title, bodyOf(fields)].filter(Boolean).join(' ');
     for (var i = 0; i < REFERENCE_RULES.length; i++) {
       var r = REFERENCE_RULES[i], m = text.match(r.re);
       if (m) {
