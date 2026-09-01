@@ -1,0 +1,13 @@
+# Claude 작업 시작 안내
+
+이 저장소에서는 모델 간 교대 작업을 한다.
+
+작업 전 반드시 아래 순서로 읽는다.
+
+1. `AGENTS.md`
+2. `docs/AI_WORKFLOW.md`
+3. `docs/WORK_STATUS.md`
+4. 현재 작업에 해당하는 설계 문서
+
+`docs/WORK_STATUS.md`에서 다른 작업자가 `reserved` 또는 `in_progress`로 잡아둔 영역은 건드리지 않는다.
+작업을 마치면 같은 파일에 완료 내용과 다음 작업자를 위한 인계사항을 남긴다.
