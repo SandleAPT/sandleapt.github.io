@@ -21,7 +21,27 @@
   var verifiedRole = '', verifiedAt = 0;
   var RECHECK = 5 * 60 * 1000;
 
+  var DEV_KEY = 'sandle_device_tag';
+
   function now() { return Date.now(); }
+
+  /*
+   * 기기 표시 (4.3c) — 인증 기록에서 같은 기기를 묶어 보기 위한 무작위 값.
+   *
+   * 사람을 가리키는 값이 아니다. 무작위로 만들고 이 기기에만 둔다.
+   * 서버는 요청한 쪽의 IP를 알 수 없어서(Apps Script 한계) 이것이라도 없으면
+   * 기록이 전부 "누군가"가 되어 실패가 한 곳에서 몰려 오는 것인지 알 수 없다.
+   * **믿을 수 있는 값이 아니다** — 기기가 스스로 말하는 것이라 바꿔 보낼 수 있다.
+   * 그래서 신원 확인에는 쓰지 않고, 기록을 읽을 때 참고로만 쓴다.
+   */
+  function deviceTag() {
+    var t = read(DEV_KEY);
+    if (!t) {
+      t = 'd' + Math.random().toString(36).slice(2, 8);
+      write(DEV_KEY, t);
+    }
+    return t;
+  }
 
   function read(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
   function write(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* 사파리 프라이빗 등 */ } }
@@ -55,7 +75,7 @@
     return fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'verify', adminKey: key, token: TOKEN })
+      body: JSON.stringify({ action: 'verify', adminKey: key, token: TOKEN, dev: deviceTag() })
     })
       .then(function (r) { return r.json(); })
       .then(function (x) {
@@ -98,11 +118,30 @@
     return Math.max(0, TTL - (now() - at));
   }
 
+  /*
+   * 인증 기록 읽기 (4.3c). 수정용 키만 통과한다 — 서버가 판정한다.
+   * 서버에 아직 이 기능이 없으면(`unknown action`) 그대로 알린다. 빈 목록으로 두면
+   * "기록이 없다"처럼 보여서 실제로 아무 일도 없었던 것과 구분되지 않는다.
+   */
+  function authLog(limit) {
+    var k = savedKey();
+    if (!k) return Promise.resolve({ ok: false, error: 'no_key' });
+    return fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'authLog', adminKey: k, token: TOKEN, limit: limit || 30, dev: deviceTag() })
+    })
+      .then(function (r) { return r.json(); })
+      .catch(function () { return { ok: false, error: 'network' }; });
+  }
+
   window.SandleAuthSession = {
     TTL: TTL,
     RECHECK: RECHECK,
     signIn: signIn,
     verify: verify,
+    authLog: authLog,
+    deviceTag: deviceTag,
     currentRole: currentRole,
     cachedRole: cachedRole,
     savedKey: savedKey,

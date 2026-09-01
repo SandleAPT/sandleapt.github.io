@@ -56,7 +56,9 @@
         '</div>' +
         /* 지금은 로그인해도 보이는 자료가 늘지 않는다. 숨기지 않고 적는다. */
         '<p class="login-note">아직 <b>내부공개·비공개 자료를 내려주는 경로가 없어서</b>, 로그인해도 지금 보이는 회의록은 같아. ' +
-        '그 자료를 붙이는 일은 따로 남아 있어(4.1 외부 저장소).</p>';
+        '그 자료를 붙이는 일은 따로 남아 있어(4.1 외부 저장소).</p>' +
+        /* 인증 기록은 관리자만. 입주민에게 접근 기록을 보여주지 않는다(서버도 같은 판정을 한다). */
+        (role === 'edit' ? '<div class="login-audit"><button type="button" class="fresh-btn" data-audit>인증 기록 보기</button></div>' : '');
     } else {
       자리.innerHTML =
         '<form class="login-box" data-login>' +
@@ -91,6 +93,49 @@
     };
     var out = 자리.querySelector('[data-logout]');
     if (out) out.onclick = function () { S.forget(); 그리기(''); };
+
+    var a = 자리.querySelector('[data-audit]');
+    if (a) a.onclick = function () { 기록보기(a); };
+  }
+
+  // 인증 기록 (4.3c). 판정은 서버가 한다 — 여기서 role을 보고 숨기는 것은 화면 정리일 뿐이다.
+  function 기록보기(btn) {
+    btn.disabled = true; btn.textContent = '불러오는 중…';
+    S.authLog(50).then(function (res) {
+      btn.disabled = false; btn.textContent = '다시 불러오기';
+      var 통 = 자리.querySelector('.login-audit');
+      var 옛 = 통.querySelector('.audit-out'); if (옛) 옛.remove();
+      var box = document.createElement('div');
+      box.className = 'audit-out';
+
+      if (!res || !res.ok) {
+        var 왜 = (res && res.error) || '알 수 없음';
+        box.innerHTML = '<p class="fresh-line">' + esc(
+          왜 === 'unknown action' ? '서버에 아직 기록 기능이 안 올라갔어. Apps Script 코드를 새 버전으로 배포하면 그때부터 쌓여.' :
+          왜 === 'admin_required' ? '수정용 비밀번호가 필요해.' :
+          '기록을 못 불러왔어 — ' + 왜) + '</p>';
+        통.appendChild(box); return;
+      }
+
+      var rows = res.items || [];
+      var L = window.SandleAuthLog;
+      var html = '';
+      if (L) html += L.요약(rows).문구.map(function (t) { return '<p class="fresh-line">' + esc(t) + '</p>'; }).join('');
+      if (rows.length) {
+        html += '<table class="audit-tb"><tbody>' + rows.map(function (r) {
+          var 나쁨 = L ? !L.정상인가(r) : false;
+          var d = new Date(String(r.at || ''));
+          var 때 = isNaN(d) ? String(r.at || '') :
+            (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+          return '<tr' + (나쁨 ? ' class="bad"' : '') + '><td>' + esc(때) + '</td><td>' +
+            esc(L ? L.뜻(r) : (r.result || '')) + '</td><td>' + esc(r.action || '') + '</td><td>' + esc(r.dev || '') + '</td></tr>';
+        }).join('') + '</tbody></table>';
+      }
+      box.innerHTML = html;
+      통.appendChild(box);
+    }).catch(function () {
+      btn.disabled = false; btn.textContent = '다시 불러오기';
+    });
   }
 
   // 처음 열 때: 저장된 키가 있으면 서버에 다시 물어 확인한다(만료·회수 반영).

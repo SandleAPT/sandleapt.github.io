@@ -69,3 +69,16 @@
 .fresh-list { margin: 6px 0 0; padding-left: 18px; }
 .fresh-list li { margin: 3px 0; }
 .fresh-list small { opacity: .6; margin-left: 4px; }
+
+/* 인증 기록 (4.3c) — 관리자에게만 보인다 */
+.login-audit { margin-top: 8px; text-align: center; }
+.audit-out {
+  margin-top: 8px; padding: 10px 12px; text-align: left;
+  border: 1px solid var(--line, #e3e0d8); border-radius: 10px;
+  background: var(--aw-soft, #f7f7f4); font-size: .82em; line-height: 1.6;
+}
+.audit-tb { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: .95em; }
+.audit-tb td { padding: 3px 6px 3px 0; border-top: 1px solid var(--line, #eceae4); vertical-align: top; }
+.audit-tb td:first-child { white-space: nowrap; opacity: .65; }
+.audit-tb td:last-child { text-align: right; opacity: .5; font-size: .92em; }
+.audit-tb tr.bad td { color: #b3261e; }
