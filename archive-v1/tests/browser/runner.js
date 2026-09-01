@@ -51,7 +51,8 @@
       await loadInto(win, abs('../specs/' + spec.name + '.spec.js'));
       var inner = win.SandleSpecs[spec.name];
       if (!inner) throw new Error('격리 컨텍스트에서 spec을 찾지 못함: ' + spec.name);
-      var ctx = { assert: win.SandleSpecs.assert, global: win, readText: readText };
+      // 격리 iframe의 location은 about:blank라 상대 경로를 풀 수 없다. 기준 정보를 ctx로 넘긴다.
+      var ctx = { assert: win.SandleSpecs.assert, global: win, readText: readText, origin: location.origin, resolve: abs };
       // setup은 deps보다 먼저 돈다. 대상 모듈이 로드 시점에 전역 스텁을 읽는 경우가 있어서다.
       if (inner.setup) await inner.setup(ctx);
       for (var j = 0; j < (inner.deps || []).length; j++) await loadInto(win, abs(ROOT + inner.deps[j]));
@@ -68,7 +69,10 @@
       if (spec.isolate) {
         await runInFrame(spec);
       } else {
-        var ctx = { assert: window.SandleSpecs.assert, global: window, readText: readText };
+        var ctx = {
+          assert: window.SandleSpecs.assert, global: window, readText: readText,
+          origin: location.origin, resolve: function (rel) { return new URL(rel, location.href).href; }
+        };
         if (spec.setup) await spec.setup(ctx);
         for (var i = 0; i < (spec.deps || []).length; i++) await loadScript(spec.deps[i]);
         await spec.run(ctx);

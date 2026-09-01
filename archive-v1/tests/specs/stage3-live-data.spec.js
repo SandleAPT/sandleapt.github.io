@@ -21,9 +21,11 @@
     setup: async function (ctx) {
       var g = ctx.global;
       g.SandleMeetingSource = { bodyLabel: function (b) { return b === '임차' ? '임차인대표회의' : '입주자대표회의'; } };
+      // 격리 iframe의 location은 about:blank라 ctx.origin(부모 기준)을 쓴다.
+      var origin = ctx.origin || location.origin;
       await new Promise(function (resolve, reject) {
         var s = g.document.createElement('script');
-        s.src = new URL('/minutes/assets/js/app/topic-defs.js', location.origin).href + '?cb=' + Date.now();
+        s.src = origin + '/minutes/assets/js/app/topic-defs.js?cb=' + Date.now();
         s.onload = resolve;
         s.onerror = function () { reject(new Error('minutes topic-defs.js 로드 실패')); };
         g.document.head.appendChild(s);
@@ -35,8 +37,9 @@
       var adapter = g.SandleMeetingAdapter;
       assert.ok(adapter, 'SandleMeetingAdapter 로드');
 
+      var origin = ctx.origin || location.origin;
       var getJson = function (url) {
-        return fetch(url + '?cb=' + Date.now()).then(function (r) {
+        return fetch(origin + url + '?cb=' + Date.now()).then(function (r) {
           if (!r.ok) throw new Error('불러오기 실패(' + r.status + '): ' + url);
           return r.json();
         });
