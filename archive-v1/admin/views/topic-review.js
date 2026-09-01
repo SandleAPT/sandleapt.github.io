@@ -237,24 +237,41 @@
     btn.disabled = true;
     log.textContent = '저장 중…';
 
+    // 회의 하나에 읽기·저장·재조회 세 번을 왕복한다. Apps Script가 느릴 때는
+    // 한 번에 20초 넘게 걸려 회의당 1분 가까이 든다. 멈춘 것처럼 보이지 않게 미리 알린다.
+    const 시작 = Date.now();
+    const 경과 = () => Math.round((Date.now() - 시작) / 1000) + '초';
     let 결과;
     try {
-      결과 = await W().writeAll(고침, 서버(), p => { log.textContent = '저장 중… 회의 ' + p.진행 + '/' + p.전체; });
+      결과 = await W().writeAll(고침, 서버(), p => {
+        log.textContent = '저장 중… 회의 ' + p.진행 + '/' + p.전체
+          + ' (' + 경과() + ' 지남) — 회의 하나에 1분까지 걸릴 수 있어. 창을 닫지 말아줘.';
+      });
     } catch (e) {
       log.textContent = '저장 실패: ' + (e && e.message ? e.message : e);
       btn.disabled = false;
       return;
     }
 
-    // 저장된 것만 지역 저장에서 지운다. 실패한 것은 남겨 다시 시도할 수 있게 한다.
-    결과.성공.forEach(id => 고침저장(id, null));
-    안건 = null;                     // 회의록에서 다시 읽어 '이미 정해둠'으로 보이게 한다
+    /* 저장된 것만 지역 저장에서 지우고, 화면의 안건에도 바로 반영한다.
+     *
+     * 다시 읽어오지 않는 이유: 이 화면은 `/minutes/data-YYYY.json` **정적 사본**을 읽는데
+     * 그 파일은 하루 한 번 다시 만들어진다. 방금 클라우드에 저장한 값이 사본에는 아직 없어
+     * 다시 읽으면 옛 값이 돌아온다(4.6 데이터 신선도). 그래서 저장한 값을 그대로 반영한다.
+     * 사본은 다음 재발행 때 따라온다. */
+    결과.성공.forEach(id => {
+      const tags = (고침[id] || []).slice();
+      고침저장(id, null);
+      const a = (안건 || []).filter(x => x.id === id)[0];
+      if (a) a.tags = tags;          // 다음 그리기에서 '이미 정해둠'으로 보인다
+    });
+    다시계산();
     U().toast('저장 ' + 결과.성공.length + '건' + (결과.실패.length ? ', 실패 ' + 결과.실패.length + '건' : ''));
-    await window.SandleAdminViews.topicReview(root);
+    그리기(root);
     const 새log = root.querySelector('[data-savelog]');
     if (새log) {
       새log.hidden = false;
-      새log.innerHTML = '<b>저장 ' + 결과.성공.length + '건</b>'
+      새log.innerHTML = '<b>저장 ' + 결과.성공.length + '건</b> <small>(' + 경과() + ' 걸림)</small>'
         + (결과.실패.length ? '<br>실패 ' + 결과.실패.length + '건 — ' + 결과.실패.slice(0, 5).map(f => U().esc(f.줄 + ': ' + f.이유)).join('<br>') : '')
         + (결과.못찾음.length ? '<br>안건을 못 찾음 ' + 결과.못찾음.length + '건' : '');
     }
