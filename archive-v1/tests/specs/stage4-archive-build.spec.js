@@ -1,0 +1,100 @@
+'use strict';
+// 공개 화면 자료 만들기 — 실제 회의록을 화면이 쓰는 모양으로 바꾼다.
+// 모양이 어긋나면 화면이 조용히 비어 버리므로, 여기서 구조를 고정한다.
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else { root.SandleSpecs = root.SandleSpecs || {}; root.SandleSpecs['stage4-archive-build'] = factory(); }
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  var 분류표 = {
+    defs: [
+      { key: '주차', kw: ['주차', '차단기'] },
+      { key: '하자·소송', kw: ['하자', '소송'] },
+      { key: '승강기', kw: ['승강기'] }
+    ],
+    // 회의록 앱과 같은 규칙: 저장된 태그가 있으면 그것을 쓰고, 옛 이름은 바꾼다.
+    resolveStored: function (a, autoTags) {
+      var raw = (a.tags && a.tags.length) ? a.tags : [];
+      if (!raw.length) return null;
+      return raw.map(function (t) { return t === '소송' ? '하자·소송' : t; });
+    }
+  };
+  function 자동태그(a) {
+    var t = String(a.title || '');
+    var out = [];
+    분류표.defs.forEach(function (d) {
+      if (d.kw.some(function (k) { return t.indexOf(k) >= 0; })) out.push(d.key);
+    });
+    return out.length ? out : ['기타'];
+  }
+
+  return {
+    name: 'stage4-archive-build',
+    title: '공개 화면 자료 만들기',
+    deps: ['shared/archive-build.js'],
+    run: function (ctx) {
+      var assert = ctx.assert, B = ctx.global.SandleArchiveBuild;
+      assert.ok(B, 'SandleArchiveBuild 로드');
+
+      var 지금 = new Date('2026-09-02').getTime();
+      assert.equal(B.연월('2026-06-24'), '2026.06', '연월 표기');
+      assert.equal(B.연월(''), '', '빈 날짜는 빈 값');
+      assert.equal(B.상태('2026-06-24', 지금), '최근', '2년 안은 최근');
+      assert.equal(B.상태('2016-06-24', 지금), '과거', '2년 넘으면 과거');
+
+      var 회의 = [
+        { id: 'm_2026_06_v1', name: '2026년 6월 입주자대표회의', date: '2026-06-24',
+          agendas: [
+            { id: 'a1', title: '주차 차단기 교체', summary: '교체하기로 함' },
+            { id: 'a2', title: '기타 안건', summary: '승강기 점검 논의' },
+            { id: 'a3', title: '옛 태그 안건', tags: ['소송'] }
+          ] },
+        { id: 't_2016_03_v1', name: '2016년 3월 임차인대표회의', date: '2016-03-10',
+          agendas: [{ id: 'b1', title: '주차장 도색', summary: '' }] }
+      ];
+
+      var r = B.build(회의, 분류표, 자동태그, 지금);
+
+      // 통계
+      assert.equal(r.통계.회의, 2, '회의 수');
+      assert.equal(r.통계.안건, 4, '안건 수');
+
+      var byLabel = {}; r.topics.forEach(function (t) { byLabel[t.label] = t; });
+
+      // 주제에 안건이 들어간다
+      assert.equal(byLabel['주차'].records.length, 2, '주차에 두 건');
+      assert.equal(byLabel['승강기'].records.length, 1, '제목에 단서가 없으면 본문으로 — 승강기 한 건');
+
+      /* 저장된 태그가 자동 분류보다 우선하고, 옛 이름은 바뀐다.
+         회의록 앱과 다른 답을 내면 사용자가 어느 쪽을 믿을지 알 수 없다. */
+      assert.equal(byLabel['하자·소송'].records.length, 1, '옛 태그 소송 → 하자·소송');
+
+      // 기록이 없는 주제도 남긴다 — "없다"도 정보다
+      assert.equal(r.topics.some(function (t) { return t.records.length === 0; }), true, '빈 주제도 목록에 남는다');
+      var 빈것 = r.topics.filter(function (t) { return t.records.length === 0; })[0];
+      assert.equal(/없어/.test(빈것.description), true, '빈 주제는 그렇게 설명한다');
+
+      // 화면이 기대하는 모양
+      var 주차 = byLabel['주차'];
+      assert.equal(주차.visibility, 'public', '공개 자료만 넣는다');
+      assert.equal(주차.id.indexOf('topic-') === 0, true, 'id 형식');
+      assert.equal(Array.isArray(주차.records[0]), true, 'records는 배열의 배열');
+      assert.equal(주차.records[0].length, 4, '[연월, 종류, 제목, 상태]');
+      assert.equal(주차.records[0][0], '2026.06', '최신이 먼저');
+      assert.equal(주차.records[1][1], '임차 안건', '임차 회의는 그렇게 표시');
+      assert.equal(주차.counts['안건'], 2, '건수');
+
+      // 최근 기록
+      assert.equal(r.recentRecords.length > 0, true, '최근 기록이 있다');
+      assert.equal(r.recentRecords[0].date, '2026.06', '최신순');
+      assert.equal(!!r.recentRecords[0].topicId, true, '주제로 이어지는 id를 준다');
+
+      // 제목 없는 안건은 넣지 않는다(빈 줄이 생긴다)
+      var 빈제목 = B.build([{ id: 'm_x', name: 'x', date: '2026-01-01', agendas: [{ id: 'z', title: '  ' }] }], 분류표, 자동태그, 지금);
+      assert.equal(빈제목.통계.안건, 0, '제목 없는 안건은 뺀다');
+
+      // 빈 입력에도 죽지 않는다
+      assert.equal(B.build(null, 분류표, 자동태그, 지금).통계.안건, 0, '회의가 없어도 동작');
+      assert.equal(B.build([], null, null, 지금).topics.length >= 1, true, '분류표가 없어도 기타는 남는다');
+    }
+  };
+});

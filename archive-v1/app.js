@@ -1,5 +1,7 @@
 (function(){
-const DATA=window.SANDLE_ARCHIVE_SAMPLE||{topics:[],recentRecords:[]};
+// 실제 회의록 자료는 비동기로 들어온다(data/live.js). 그래서 const가 아니라 let이고,
+// 자료가 준비되면 다시 그린다. 못 읽으면 샘플이 그대로 남는다.
+let DATA=window.SANDLE_ARCHIVE_SAMPLE||{topics:[],recentRecords:[]};
 const home=document.getElementById('homeView');
 const view=document.getElementById('topicView');
 const input=document.getElementById('searchInput');
@@ -115,6 +117,19 @@ form.addEventListener('submit',e=>{
 detailClose.onclick=closeDetail;
 detailDialog.addEventListener('click',e=>{if(e.target===detailDialog)closeDetail();});
 renderAllTopics();renderRecent();
+// 실제 자료가 준비되면 갈아끼우고 다시 그린다. 첫 화면에 있을 때만 바꿔서
+// 사용자가 이미 어떤 주제를 열어 보고 있으면 밑에서 화면이 바뀌지 않게 한다.
+if(window.SandleArchiveLive&&window.SandleArchiveLive.준비){
+  window.SandleArchiveLive.준비.then(function(자료){
+    if(!자료)return;
+    DATA=자료;
+    const 안내=document.querySelector('.search-help');
+    if(안내)안내.textContent='회의 '+자료.통계.회의+'건 · 안건 '+자료.통계.안건+'건을 주제 '+자료.통계.주제+'개로 묶었어. 회의록 앱의 분류를 그대로 쓴다.';
+    const 부제=document.querySelector('.brand small');
+    if(부제)부제.textContent='실제 회의록 '+자료.통계.회의+'건';
+    if(!home.classList.contains('is-hidden')){renderAllTopics();renderRecent();}
+  }).catch(function(){});
+}
 const rawHash=location.hash||'';
 let initial=null;
 if(rawHash.indexOf('#search-a-')===0){initial=topicById(decodeURIComponent(rawHash.replace(/^#search-a-/,'')));if(initial)renderSearchA(initial,initial.label,false);else showHome();}
