@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-01 15:20:28 KST
+마지막 갱신: 2026-09-01 15:29:00 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -18,17 +18,18 @@
 ### ARCHIVE-20260901-01 — Sandle Archive v1
 
 - 담당: GPT
-- 상태: `in_progress` — 4.1~4.2 검증 완료, 4.3 준비
+- 상태: `in_progress` — 4.1~4.3a 검증 완료, 실제 인증 결정 대기
 - 마스터 계획: `docs/archive-v1/ROADMAP_V1.md`
 - 1단계: `done` — 임시 확정
 - 2단계: `review` — 직접 테스트 가능, 실사용 중 보완
 - 3단계: `done` — 검증·인계 체크포인트 배포 완료
-- 완료: `4.1 저장소 역할 분리`, `4.2 SourceReference v1`
-- 현재: `4.3 public / resident / private 실제 권한 처리`
+- 완료: `4.1 저장소 역할 분리`, `4.2 SourceReference v1`, `4.3a 공개 발행 경계`
+- 현재: `4.3b 실제 입주민·관리자 인증 결정 대기`
 - 마지막 검증 완료: 실제 회의 213건 / 안건 1,125건 전체 변환
-- 다음: 공개 번들 제외 정책을 관리자 화면과 발행 흐름에 연결
+- 다음: 공개된 4단계 정책 화면 검토 후 인증 방식은 사용자와 결정
 - 공개 미리보기: `https://sandleapt.github.io/archive-v1/`
 - 3단계 직접 보기: `https://sandleapt.github.io/archive-v1/admin/#meetingImport`
+- 4단계 직접 보기: `https://sandleapt.github.io/archive-v1/admin/#storagePolicy`
 - 운영 루트 `index.html` 변경: 없음
 - `SandleAPT/minutes` 원본 코드/데이터 변경: 없음
 - 검색 A/B 최종 선택: 보류
@@ -46,7 +47,32 @@
 - 입력은 한 번, 노출은 여러 곳.
 - UI 구성과 데이터 구조를 분리한다.
 
-## 현재 체크포인트 — 3.7 검증 보완·인계
+## 현재 체크포인트 — 4.3a 공개 발행 경계
+
+- 공개 포털, minutes, 외부 원본 저장소의 역할을 분리함.
+- SourceReference v1과 public projection을 구현함.
+- 공개등급 화면, 저장·권한 화면, 발행 대기 화면이 같은 정책 모듈을 사용함.
+- resident/private는 화면과 `store.publish()` 양쪽에서 공개 발행을 차단함.
+- 정책 모듈이 없을 때도 발행을 막는 fail-closed 방식임.
+- 캐시 버전: `20260901-152900`
+- 검증 문서: `docs/archive-v1/STAGE4_VALIDATION.md`
+
+## 다음 AI가 바로 할 일
+
+1. 최신 main에서 `AGENTS.md`, `docs/AI_WORKFLOW.md`, 이 문서, Roadmap과 Stage 4 검증 문서를 읽는다.
+2. Stage 3·4 테스트를 다시 실행한다.
+3. `4.3b` 실제 인증은 사용자 결정 없이 임의 구현하지 않는다.
+4. 안전한 범위에서는 4.4 정책 화면 사용자 검토 대응이나 이전 완료 단계 피드백을 새 소번호로 반영한다.
+5. `MINUTES-20260901-01` 예약 9건은 담당 해제 전까지 수정하지 않는다.
+
+```bash
+node archive-v1/tests/stage3-source.test.js
+node archive-v1/tests/stage3-adapter.test.js
+SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test.js
+for test in archive-v1/tests/stage4-*.test.js; do node "$test" || exit 1; done
+```
+
+## 이전 체크포인트 참고 — 3.7 검증 보완·인계
 
 사용자 목표는 **현재 만들어진 회의록을 다시 작성하는 것이 아니라 더 보기 편하게 정리하는 것**으로 잡았다.
 
@@ -145,7 +171,7 @@
 - `AGENTS.md`
 - `docs/AI_WORKFLOW.md`
 
-## 다음 AI가 바로 할 일
+## 3단계 당시 다음 작업 기록 — 완료됨
 
 1. 최신 main에서 이 문서와 `docs/CONTINUE_ARCHIVE_PROMPT.md`를 읽는다.
 2. 아래 검증을 다시 실행해 3단계 체크포인트가 유지되는지 확인한다.
@@ -159,6 +185,18 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 ```
 
 ## 최근 인계
+
+### 2026-09-01 15:29:00 KST — GPT — 4.3a 공개 projection·발행 차단 체크포인트
+
+- 별도 `stage4/` 정책 모듈과 별도 Stage 4 화면·스타일·테스트 파일로 나눠 구현함.
+- 공개 포털·minutes·외부 원본 저장소의 역할을 관리 화면에서 확인할 수 있게 함.
+- public 자료는 허용 필드 projection을 만들고 resident/private는 공개 발행을 차단함.
+- 발행 화면뿐 아니라 store에서도 같은 정책을 강제하고 모듈 누락 시 fail-closed 처리함.
+- 공개 Archive 진행판을 4.3으로 갱신하고 캐시 버전을 `20260901-152900`으로 올림.
+- 자동 검증: Stage 3 회귀 213회의/1,125안건, Stage 4 테스트 4개, 전체 JS 문법, diff 검사 통과.
+- 헤드리스 Chromium 부재로 브라우저 클릭 자동화는 실행하지 못했으며 이 제한을 `STAGE4_VALIDATION.md`에 기록함.
+- 기존 운영 루트, minutes 원본, Claude 예약 9건 변경 없음.
+- 실제 resident/admin 인증은 사용자 결정이 필요하므로 4.3b로 남김.
 
 ### 2026-09-01 15:20:28 KST — GPT — 4.1~4.2 저장소·원본 참조 체크포인트
 

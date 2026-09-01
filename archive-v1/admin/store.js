@@ -42,7 +42,7 @@
     const item={
       id:'draft-'+Date.now(),sample:false,
       title:fields.title,documentType:fields.documentType,date:fields.date,scope:fields.scope,
-      source:fields.source||'',note:fields.note||'',visibility:fields.visibility||'public',
+      source:fields.source||'',note:fields.note||'',visibility:fields.visibility||'private',
       suggestions:{topic:s.topic,organization:s.organization,temporalStatus:s.temporalStatus,confidence:s.confidence},
       classificationApproved:false,classificationHeld:false,relation:s.relation,published:false
     };
@@ -69,8 +69,13 @@
   function updateRelation(id,values){const item=find(id);if(!item||!item.relation)return;item.relation=Object.assign({},item.relation,values||{});emit();}
   function approveRelation(id){const item=find(id);if(!item||!item.relation)return;item.relation.approved=true;item.relation.skipped=false;emit();}
   function skipRelation(id){const item=find(id);if(!item||!item.relation)return;item.relation.approved=false;item.relation.skipped=true;emit();}
-  function setVisibility(id,value){const item=find(id);if(!item)return;item.visibility=value;emit();}
-  function publish(id){const item=find(id);if(!item||!readyForPublish(item))return false;item.published=true;item.publishedAt=new Date().toISOString();emit();return true;}
+  function setVisibility(id,value){const item=find(id);if(!item)return;const policy=window.SandleVisibilityPolicy;item.visibility=policy?policy.normalizeVisibility(value):'private';emit();}
+  function publish(id){
+    const item=find(id);if(!item||!readyForPublish(item))return false;
+    const guard=window.SandlePublishGuard;
+    if(!guard||!guard.evaluate(item).canPublish)return false;
+    item.published=true;item.publishedAt=new Date().toISOString();emit();return true;
+  }
   function reset(){state={items:clone(source.items||[])};emit();}
   window.SandleAdminStore={
     data:source,getState,getCounts,find,readyForPublish,addDraft,addImportedDrafts,updateClassification,approveClassification,

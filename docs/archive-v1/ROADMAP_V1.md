@@ -193,7 +193,7 @@
 
 # 4. 저장소·원본·권한 구조 확정
 
-상태: `in_progress` — 4.1~4.2 완료, 4.3 준비
+상태: `in_progress` — 4.1~4.3a 완료, 실제 인증 결정 대기
 
 ### 4.1 GitHub / Google Drive 역할 분리 — `done`
 - GitHub: HTML/CSS/JS, 메타데이터, 검색 텍스트, taxonomy, relation, 검색 인덱스
@@ -207,6 +207,11 @@
 - 설계: `docs/archive-v1/STORAGE_AND_ACCESS_V1.md`
 
 ### 4.3 public / resident / private 실제 권한 처리 — `in_progress`
+
+- 4.3a `done` — 공개 projection과 resident/private 발행 차단을 관리자 화면·저장 함수에 연결
+- 4.3b `decision_needed` — 실제 입주민·관리자 인증 주체와 방식
+- 4.3c `planned` — 인증 만료·회수·감사 로그
+- 검증: `docs/archive-v1/STAGE4_VALIDATION.md`
 ### 4.4 사용자 검토
 ### 4.5 피드백 반영 및 4단계 확정
 
@@ -269,9 +274,9 @@
 - 1단계: `done` — 임시 확정
 - 2단계: `review` — 직접 테스트 가능, 실사용과 함께 보완
 - 3단계: `done` — 검증·인계 체크포인트 배포 완료
-- 완료: `4.1 저장소 역할 분리`, `4.2 SourceReference v1`
-- 현재: `4.3 public / resident / private 실제 권한 처리`
-- 다음: 공개 번들 제외 정책을 관리자 화면과 발행 흐름에 연결
+- 완료: `4.1 저장소 역할 분리`, `4.2 SourceReference v1`, `4.3a 공개 발행 경계`
+- 현재: `4.3b 실제 입주민·관리자 인증 결정 대기`
+- 다음: 사용자 결정 전까지 resident/private 공개 제외 유지, 4.4에서 현재 정책 화면 검토
 - 검색 A/B 최종 선택은 보류
 - Claude 예약 업무는 별도 작업으로 유지하며 수정하지 않음
 

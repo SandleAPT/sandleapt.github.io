@@ -109,10 +109,21 @@ visibility가 없거나 잘못된 값은 공개로 추정하지 않고 `private`
 
 - `archive-v1/admin/stage4/source-reference.js`
 - `archive-v1/admin/stage4/visibility-policy.js`
+- `archive-v1/admin/stage4/publish-guard.js`
+- `archive-v1/admin/views/storage-policy.js`
+- `archive-v1/admin/views/publish-stage4.js`
+- `archive-v1/assets/admin-stage4.css`
 - `archive-v1/tests/stage4-source-reference.test.js`
 - `archive-v1/tests/stage4-visibility.test.js`
+- `archive-v1/tests/stage4-publish-guard.test.js`
+- `archive-v1/tests/stage4-admin-integration.test.js`
+- 검증 기록: `docs/archive-v1/STAGE4_VALIDATION.md`
 
-## 7. 4.3에서 결정할 것
+## 7. 4.3 진행 상태
+
+4.3a 공개 projection과 공개 발행 차단은 관리자 화면과 store에 연결해 검증했다.
+
+4.3b에서 사용자와 결정할 것:
 
 - 실제 입주민 인증 주체와 인증 수단
 - resident 자료를 제공할 서버·저장소

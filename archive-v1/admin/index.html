@@ -5,28 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 Archive v1 관리 작업대</title>
 <meta name="description" content="산들마을 Archive v1 관리자 입력·검토·회의록 정리 흐름 프로토타입">
-<link rel="stylesheet" href="../assets/archive.css?v=20260901-1437">
-<link rel="stylesheet" href="../assets/admin.css?v=20260901-1437">
-<link rel="stylesheet" href="../assets/admin-workspace.css?v=20260901-1437">
-<link rel="stylesheet" href="../assets/admin-stage3.css?v=20260901-1437">
+<link rel="stylesheet" href="../assets/archive.css?v=20260901-152900">
+<link rel="stylesheet" href="../assets/admin.css?v=20260901-152900">
+<link rel="stylesheet" href="../assets/admin-workspace.css?v=20260901-152900">
+<link rel="stylesheet" href="../assets/admin-stage3.css?v=20260901-152900">
+<link rel="stylesheet" href="../assets/admin-stage4.css?v=20260901-152900">
 </head>
 <body class="admin-body">
 <header class="admin-top">
   <div class="admin-top-inner">
     <a class="admin-back" href="../">← Archive 공개 화면</a>
     <div class="admin-brand"><span class="mark">산</span><div><strong>Archive 관리 작업대</strong><small>기존 자료를 다시 쓰지 않고 보기 좋게 정리</small></div></div>
-    <span class="admin-preview-badge">STAGE 3 VERIFIED</span>
+    <span class="admin-preview-badge">STAGE 4.3 POLICY</span>
   </div>
 </header>
 
 <div class="aw-shell">
   <aside class="aw-sidebar">
-    <div class="aw-sidebar-head"><b>관리 도구</b><small>2단계는 써보며 보완하고, 3단계에서는 기존 회의록을 Archive 구조로 정리해.</small></div>
+    <div class="aw-sidebar-head"><b>관리 도구</b><small>기존 회의록을 Archive 구조로 정리하고 공개 전에 저장 위치와 공개 범위를 검사해.</small></div>
     <nav class="aw-nav" id="adminNav" aria-label="Archive 관리 도구">
       <button type="button" data-view="dashboard"><span class="ic">⌂</span>현재 작업 홈</button>
       <div class="aw-nav-divider"></div>
       <button type="button" data-view="meetingImport"><span class="ic">⇢</span><b>3</b> 회의록 → Archive</button>
       <button type="button" data-view="meeting"><span class="ic">✎</span>기존 회의 작성 열기</button>
+      <button type="button" data-view="storagePolicy"><span class="ic">▦</span><b>4</b> 저장 · 권한</button>
       <div class="aw-nav-divider"></div>
       <button type="button" data-view="register"><span class="ic">＋</span><b>2.2</b> 새 자료 등록</button>
       <button type="button" data-view="visibility"><span class="ic">◉</span><b>2.3</b> 공개 등급</button>
@@ -34,11 +36,11 @@
       <button type="button" data-view="relations"><span class="ic">↔</span><b>2.4</b> 관계 검토 <span class="count" data-count="relations"></span></button>
       <button type="button" data-view="publish"><span class="ic">⌁</span>발행 대기 <span class="count" data-count="publish"></span></button>
     </nav>
-    <div class="aw-sidebar-foot">지금은 구조·동선 프로토타입이야. 회의록 원본은 읽기만 하며, Archive 승인·발행 상태는 브라우저 메모리에서만 바뀌어.</div>
+    <div class="aw-sidebar-foot">회의록 원본은 읽기만 해. 공개 번들 제외 정책은 동작하지만 승인·발행 상태는 아직 브라우저 메모리에서만 바뀌어.</div>
   </aside>
 
   <main class="aw-main">
-    <div class="aw-main-top"><b id="adminCurrentTitle">현재 작업 홈</b><span>3단계 검증 완료 · 다음 4단계</span></div>
+    <div class="aw-main-top"><b id="adminCurrentTitle">현재 작업 홈</b><span>4.1~4.2 완료 · 4.3 정책 연결</span></div>
     <div id="adminView" aria-live="polite"></div>
   </main>
 </div>
@@ -50,20 +52,24 @@
   </article>
 </dialog>
 
-<script src="./data/sample.js?v=20260901-1437"></script>
+<script src="./data/sample.js?v=20260901-152900"></script>
 <script src="/minutes/assets/js/app/topic-defs.js?v=98"></script>
-<script src="./stage3/meeting-source.js?v=20260901-1437"></script>
-<script src="./stage3/meeting-adapter.js?v=20260901-1437"></script>
-<script src="./store.js?v=20260901-1437"></script>
-<script src="./ui.js?v=20260901-1437"></script>
-<script src="./views/dashboard.js?v=20260901-1437"></script>
-<script src="./views/meeting-import.js?v=20260901-1437"></script>
-<script src="./views/register.js?v=20260901-1437"></script>
-<script src="./views/visibility.js?v=20260901-1437"></script>
-<script src="./views/classification.js?v=20260901-1437"></script>
-<script src="./views/relations.js?v=20260901-1437"></script>
-<script src="./views/publish.js?v=20260901-1437"></script>
-<script src="./views/meeting.js?v=20260901-1437"></script>
-<script src="./app.js?v=20260901-1437"></script>
+<script src="./stage3/meeting-source.js?v=20260901-152900"></script>
+<script src="./stage3/meeting-adapter.js?v=20260901-152900"></script>
+<script src="./stage4/source-reference.js?v=20260901-152900"></script>
+<script src="./stage4/visibility-policy.js?v=20260901-152900"></script>
+<script src="./stage4/publish-guard.js?v=20260901-152900"></script>
+<script src="./store.js?v=20260901-152900"></script>
+<script src="./ui.js?v=20260901-152900"></script>
+<script src="./views/dashboard.js?v=20260901-152900"></script>
+<script src="./views/meeting-import.js?v=20260901-152900"></script>
+<script src="./views/storage-policy.js?v=20260901-152900"></script>
+<script src="./views/register.js?v=20260901-152900"></script>
+<script src="./views/visibility.js?v=20260901-152900"></script>
+<script src="./views/classification.js?v=20260901-152900"></script>
+<script src="./views/relations.js?v=20260901-152900"></script>
+<script src="./views/publish-stage4.js?v=20260901-152900"></script>
+<script src="./views/meeting.js?v=20260901-152900"></script>
+<script src="./app.js?v=20260901-152900"></script>
 </body>
 </html>

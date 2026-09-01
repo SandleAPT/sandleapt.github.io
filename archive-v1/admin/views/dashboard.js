@@ -4,7 +4,7 @@
   window.SandleAdminViews.dashboard=function(root,store){
     const c=store.getCounts();
     root.innerHTML=`
-      <section class="aw-page-head"><div><p class="admin-kicker">STAGE 3 VERIFIED · NEXT 4.1</p><h1>지금 있는 자료를 더 보기 좋게</h1><p>실제 회의 213건과 안건 1,125건의 변환 검증을 마쳤어. 다음은 공개 메타데이터와 원본 저장소, resident/private 권한 경계를 분리하는 단계야. 2단계 관리 기능은 사용자 피드백이 오면 관련 번호를 다시 열어 보완해.</p></div><button class="aw-ghost" data-reset>2단계 샘플 초기화</button></section>
+      <section class="aw-page-head"><div><p class="admin-kicker">STAGE 4.3 · PUBLIC BUNDLE POLICY</p><h1>지금 있는 자료를 더 보기 좋고 안전하게</h1><p>실제 회의 213건과 안건 1,125건의 변환 검증 뒤, 공개 포털·회의 원본·외부 파일 저장소의 역할을 분리했어. 이제 public만 허용 필드로 공개 번들을 만들고 resident/private는 빌드에서 제외해.</p></div><button class="aw-ghost" data-reset>2단계 샘플 초기화</button></section>
       <section class="aw-panel">
         <div class="aw-panel-head"><div><p class="admin-kicker">STAGE 3 · VERIFIED</p><h2>회의록 → Archive 정리</h2><p>`/minutes/`에 이미 저장된 회의록을 읽고, 회의 전체는 Document로 두고 안건은 Fragment로 나눠 검색·주제별 화면에서 다시 쓰는 흐름이야.</p></div><span>검증 완료 · 원본 수정 없음</span></div>
         <div class="aw-flow">
@@ -17,13 +17,13 @@
       </section>
       <section class="aw-stat-grid">
         <button class="aw-stat" data-go="meetingImport"><span>3단계</span><b>PASS</b><small>213회의 · 1,125안건 검증</small></button>
+        <button class="aw-stat" data-go="storagePolicy"><span>4단계 정책</span><b>ON</b><small>공개 projection · 비공개 제외</small></button>
         <button class="aw-stat" data-go="classification"><span>분류 검토</span><b>${c.classification}</b><small>회의 안건·일반 자료 함께 확인</small></button>
-        <button class="aw-stat" data-go="relations"><span>관계 검토</span><b>${c.relations}</b><small>근거 있는 연결만 확인</small></button>
         <button class="aw-stat" data-go="publish"><span>발행 대기</span><b>${c.publish}</b><small>현재는 메모리 프로토타입</small></button>
       </section>
       <section class="aw-grid-2">
         <article class="aw-panel compact"><p class="admin-kicker">2단계 · 계속 테스트</p><h3>새 자료 / 공개등급 / 검토함</h3><p>2.2~2.4는 확정해 잠그지 않았어. 실제로 써보다 불편한 부분이 보이면 계속 수정할 수 있게 유지해.</p><div class="aw-review-actions"><button class="aw-ghost" data-go="register">2.2 자료 등록</button><button class="aw-ghost" data-go="visibility">2.3 공개등급</button></div></article>
-        <article class="aw-panel compact"><p class="admin-kicker">3단계 · 출력 원칙</p><h3>기존 1페이지 회의록을 침범하지 않음</h3><p>출력은 계속 minutes가 담당하고 Archive는 검색·주제·타임라인용 구조만 만든다. 화면 구성이 나중에 바뀌어도 원본 회의 데이터는 다시 손대지 않는 방식이야.</p><button class="aw-primary" data-go="meetingImport">회의록 변환 보기</button></article>
+        <article class="aw-panel compact"><p class="admin-kicker">4단계 · 저장 원칙</p><h3>비공개 자료는 공개 파일에 넣지 않음</h3><p>화면에서 숨기는 방식이 아니라 public 자료만 별도 projection으로 만들고 resident/private는 공개 산출물에서 제외해.</p><button class="aw-primary" data-go="storagePolicy">저장 · 권한 검사 보기</button></article>
       </section>
       <section class="aw-prototype-warning"><b>현재 상태</b><span>3단계 변환 화면은 공개 `/minutes/` 정적 데이터를 읽기만 해. Archive 분류함으로 보내는 동작 역시 아직 브라우저 메모리 안의 검토 프로토타입이며 실제 회의록 원본을 수정하지 않아.</span></section>`;
     root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>U().nav(b.dataset.go));
