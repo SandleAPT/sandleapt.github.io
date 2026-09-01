@@ -16,14 +16,26 @@
     return uniq(hits.length?hits:['기타']);
   }
 
-  function storedTopics(agenda){
+  function storedTopicValues(agenda){
     const raw=Array.isArray(agenda&&agenda.tags)&&agenda.tags.length?agenda.tags:(clean(agenda&&agenda.category)?[agenda.category]:[]);
     return uniq(raw);
   }
 
+  function storedTopics(agenda){
+    const raw=storedTopicValues(agenda);
+    if(!raw.length) return [];
+    const taxonomy=window.TopicTaxonomy;
+    if(taxonomy&&typeof taxonomy.resolveStored==='function') return uniq(taxonomy.resolveStored(agenda,autoTopics));
+    return raw;
+  }
+
   function topicsFor(agenda){
+    const raw=storedTopicValues(agenda);
     const stored=storedTopics(agenda);
-    if(stored.length&&!(stored.length===1&&stored[0]==='기타')) return {topics:stored,source:'stored',confidence:98};
+    const usedFallback=raw.some(t=>t==='기타'||t==='저수조·청소');
+    if(stored.length&&!(stored.length===1&&stored[0]==='기타')){
+      return {topics:stored,source:usedFallback?'inferred':'stored',confidence:usedFallback?82:98};
+    }
     const inferred=autoTopics(agenda);
     return {topics:inferred,source:'inferred',confidence:inferred[0]==='기타'?58:78};
   }

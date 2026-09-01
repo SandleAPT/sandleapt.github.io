@@ -1,0 +1,20 @@
+{
+  "index": {
+    "generatedAt": "2026-09-01T00:00:00.000Z",
+    "years": [
+      { "year": "2026", "file": "data-2026.json", "count": 1, "updatedAt": "2026-09-01T00:00:00.000Z" }
+    ]
+  },
+  "year": {
+    "generatedAt": "2026-09-01T00:00:00.000Z",
+    "items": [
+      {
+        "id": "fixture-meeting-1",
+        "name": "2026년 테스트 회의",
+        "date": "2026-08-31",
+        "updatedAt": "2026-09-01T00:00:00.000Z",
+        "json": "{\"meeting\":{\"body\":\"입대의\",\"date\":\"2026-08-31\",\"attendance\":{\"101\":true,\"102\":false}},\"agendas\":[{\"id\":\"a1\",\"title\":\"주차 차단기 교체\",\"summary\":\"주차장 차단기 교체 검토\",\"decision\":\"교체하기로 의결\",\"followup\":\"견적 비교\",\"votes\":{\"101\":\"for\",\"102\":\"against\"},\"tags\":[\"기타\"]},{\"id\":\"a2\",\"title\":\"미화 인력 운영\",\"summary\":\"미화원 운영 검토\",\"category\":\"미화\"},{\"id\":\"a3\",\"title\":\"저수조 청소\",\"summary\":\"저수조 청소 일정\",\"category\":\"저수조·청소\"}]}"
+      }
+    ]
+  }
+}
