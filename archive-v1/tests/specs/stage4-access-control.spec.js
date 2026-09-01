@@ -67,7 +67,12 @@
       assert.equal(ac.filterRelations(연결, '', 찾기)[0].target, 'pub', '남는 것은 공개 상대');
       assert.equal(ac.filterRelations(연결, 'view', 찾기).length, 2, '열람용은 내부공개까지');
       assert.equal(ac.filterRelations(연결, 'edit', 찾기).length, 4, '수정용은 전부');
-      assert.equal(ac.filterRelations(연결, 'edit', null).length, 0, '조회 함수 없으면 전부 차단');
+      // 조회 함수를 안 넘긴 경우(호출 쪽 실수). 등급을 알 수 없으니 전부 비공개로 본다.
+      // 관리자는 비공개를 볼 수 있으므로 그대로 보이고, 아래 등급은 아무것도 못 본다.
+      // 실수가 나도 자료가 아래로 새지 않는 것이 핵심이다.
+      assert.equal(ac.filterRelations(연결, '', null).length, 0, '조회 함수 없으면 비로그인은 전부 차단');
+      assert.equal(ac.filterRelations(연결, 'view', null).length, 0, '조회 함수 없으면 열람용도 전부 차단');
+      assert.equal(ac.filterRelations(연결, 'edit', null).length, 4, '관리자는 비공개를 볼 수 있으므로 그대로');
 
       // 기록 단위 투영 — 원본을 건드리지 않아야 관리 화면이 계속 전체를 본다.
       var 원본 = { id: 'x', visibility: 'public', relations: 연결.slice() };
