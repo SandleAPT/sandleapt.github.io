@@ -5,36 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 Archive v1 관리 작업대</title>
 <meta name="description" content="산들마을 Archive v1 관리자 입력·검토·발행 흐름 프로토타입">
-<link rel="stylesheet" href="../assets/archive.css">
-<link rel="stylesheet" href="../assets/admin.css">
-<link rel="stylesheet" href="../assets/admin-workspace.css">
+<link rel="stylesheet" href="../assets/archive.css?v=20260901-1400">
+<link rel="stylesheet" href="../assets/admin.css?v=20260901-1400">
+<link rel="stylesheet" href="../assets/admin-workspace.css?v=20260901-1400">
 </head>
 <body class="admin-body">
 <header class="admin-top">
   <div class="admin-top-inner">
     <a class="admin-back" href="../">← Archive 공개 화면</a>
-    <div class="admin-brand"><span class="mark">산</span><div><strong>Archive 관리 작업대</strong><small>2단계 전체 흐름 프로토타입</small></div></div>
-    <span class="admin-preview-badge">2.5 REVIEW</span>
+    <div class="admin-brand"><span class="mark">산</span><div><strong>Archive 관리 작업대</strong><small>2.2 · 2.3 · 2.4 직접 테스트 가능</small></div></div>
+    <span class="admin-preview-badge">2.5 REVIEW · BUILD 2</span>
   </div>
 </header>
 
 <div class="aw-shell">
   <aside class="aw-sidebar">
-    <div class="aw-sidebar-head"><b>관리 도구</b><small>한 단계씩 컨펌하지 않고 2단계 전체를 이어서 볼 수 있게 구성했어.</small></div>
+    <div class="aw-sidebar-head"><b>관리 도구</b><small>번호별 화면을 직접 눌러보고 2단계 전체 흐름을 한꺼번에 확인해.</small></div>
     <nav class="aw-nav" id="adminNav" aria-label="Archive 관리 도구">
-      <button type="button" data-view="dashboard"><span class="ic">⌂</span>전체 흐름</button>
-      <button type="button" data-view="register"><span class="ic">＋</span>새 자료 등록</button>
-      <button type="button" data-view="classification"><span class="ic">✓</span>분류 검토 <span class="count" data-count="classification"></span></button>
-      <button type="button" data-view="relations"><span class="ic">↔</span>관계 검토 <span class="count" data-count="relations"></span></button>
+      <button type="button" data-view="dashboard"><span class="ic">⌂</span>2단계 테스트 홈</button>
+      <button type="button" data-view="register"><span class="ic">＋</span><b>2.2</b> 새 자료 등록</button>
+      <button type="button" data-view="visibility"><span class="ic">◉</span><b>2.3</b> 공개 등급</button>
+      <button type="button" data-view="classification"><span class="ic">✓</span><b>2.4</b> 분류 검토 <span class="count" data-count="classification"></span></button>
+      <button type="button" data-view="relations"><span class="ic">↔</span><b>2.4</b> 관계 검토 <span class="count" data-count="relations"></span></button>
       <button type="button" data-view="publish"><span class="ic">⌁</span>발행 대기 <span class="count" data-count="publish"></span></button>
       <div class="aw-nav-divider"></div>
       <button type="button" data-view="meeting"><span class="ic">✎</span>회의 작성 연결</button>
     </nav>
-    <div class="aw-sidebar-foot">지금은 UI·업무흐름 프로토타입이야. 승인·발행 상태는 브라우저 메모리에서만 바뀌고 새로고침하면 초기화돼.</div>
+    <div class="aw-sidebar-foot">테스트 상태는 브라우저 메모리에서만 바뀌어. 새로고침하면 샘플 초기 상태로 돌아오며 실제 저장·공개는 일어나지 않아.</div>
   </aside>
 
   <main class="aw-main">
-    <div class="aw-main-top"><b id="adminCurrentTitle">전체 흐름</b><span>2.1~2.4 구현 · 2.5 전체 검토</span></div>
+    <div class="aw-main-top"><b id="adminCurrentTitle">2단계 테스트 홈</b><span>2.2~2.4 개별 테스트 · 2.5 전체 검토</span></div>
     <div id="adminView" aria-live="polite"></div>
   </main>
 </div>
@@ -46,15 +47,16 @@
   </article>
 </dialog>
 
-<script src="./data/sample.js"></script>
-<script src="./store.js"></script>
-<script src="./ui.js"></script>
-<script src="./views/dashboard.js"></script>
-<script src="./views/register.js"></script>
-<script src="./views/classification.js"></script>
-<script src="./views/relations.js"></script>
-<script src="./views/publish.js"></script>
-<script src="./views/meeting.js"></script>
-<script src="./app.js"></script>
+<script src="./data/sample.js?v=20260901-1400"></script>
+<script src="./store.js?v=20260901-1400"></script>
+<script src="./ui.js?v=20260901-1400"></script>
+<script src="./views/dashboard.js?v=20260901-1400"></script>
+<script src="./views/register.js?v=20260901-1400"></script>
+<script src="./views/visibility.js?v=20260901-1400"></script>
+<script src="./views/classification.js?v=20260901-1400"></script>
+<script src="./views/relations.js?v=20260901-1400"></script>
+<script src="./views/publish.js?v=20260901-1400"></script>
+<script src="./views/meeting.js?v=20260901-1400"></script>
+<script src="./app.js?v=20260901-1400"></script>
 </body>
 </html>
