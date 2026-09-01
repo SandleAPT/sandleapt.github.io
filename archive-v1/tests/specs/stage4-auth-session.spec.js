@@ -53,9 +53,16 @@
         assert.ok(auth.remainingMs() > 23 * 60 * 60 * 1000, '남은 시간이 23시간 이상');
         assert.equal(await auth.currentRole(), 'view', '현재 role은 view');
 
-        // 서버가 거부하면 저장된 키를 버린다(비밀번호 교체·회수 대응)
+        // 재확인 주기 안에서는 서버를 다시 부르지 않는다(왕복 절약)
+        var callsBefore = g.__authCalls.length;
+        await auth.currentRole();
+        assert.equal(g.__authCalls.length, callsBefore, '재확인 주기 내에는 서버 호출 없음');
+
+        // 서버가 거부하면 저장된 키를 버린다(비밀번호 교체·회수 대응).
+        // force=true는 캐시를 무시하고 즉시 확인한다 — 캐시를 무기한 믿으면
+        // 비밀번호를 회수해도 그 세션이 24시간 통과하는 결함이 생긴다.
         g.__authReply = { ok: false, role: '' };
-        var revoked = await auth.currentRole();
+        var revoked = await auth.currentRole(true);
         assert.equal(revoked, '', '서버가 거부하면 role 없음');
         assert.equal(auth.savedKey(), '', '거부되면 저장된 키도 삭제');
 

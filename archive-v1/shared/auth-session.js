@@ -15,8 +15,11 @@
   var AT_KEY = 'sandle_admin_unlock_at';
   var TTL = 24 * 60 * 60 * 1000;
 
-  // 마지막으로 서버가 확인해 준 role. 새로고침하면 사라지므로 저장된 키로 다시 확인한다.
-  var verifiedRole = '';
+  // 마지막으로 서버가 확인해 준 role과 그 시각.
+  // 캐시를 무기한 믿으면 비밀번호를 회수해도 그 세션이 24시간 내내 통과한다(검증에서 잡힌 결함).
+  // 그래서 재확인 주기를 두고, 지나면 서버에 다시 묻는다.
+  var verifiedRole = '', verifiedAt = 0;
+  var RECHECK = 5 * 60 * 1000;
 
   function now() { return Date.now(); }
 
@@ -38,12 +41,12 @@
 
   function forget() {
     drop(KEY); drop(AT_KEY);
-    verifiedRole = '';
+    verifiedRole = ''; verifiedAt = 0;
   }
 
   function remember(key, role) {
     write(KEY, key); write(AT_KEY, String(now()));
-    verifiedRole = role;
+    verifiedRole = role; verifiedAt = now();
   }
 
   // 서버에 비밀번호를 확인한다. 실패·오류는 모두 '권한 없음'으로 떨어뜨린다(fail-closed).
@@ -70,15 +73,18 @@
     });
   }
 
-  // 현재 role을 돌려준다. 저장된 키가 있으면 서버에 한 번 더 확인한다.
-  // 비밀번호가 바뀌었거나 회수됐을 때 옛 키로 계속 열리는 것을 막기 위함이다.
-  function currentRole() {
-    if (verifiedRole) return Promise.resolve(verifiedRole);
+  // 현재 role을 돌려준다.
+  // 저장된 키가 있어도 캐시가 오래됐으면(RECHECK 초과) 서버에 다시 묻는다.
+  // 비밀번호가 교체·회수됐을 때 옛 키로 계속 열리는 것을 막기 위함이다.
+  // force=true면 캐시를 무시하고 즉시 서버에 확인한다(민감한 동작 직전에 사용).
+  function currentRole(force) {
     var k = savedKey();
-    if (!k) return Promise.resolve('');
+    if (!k) { verifiedRole = ''; verifiedAt = 0; return Promise.resolve(''); }
+    var fresh = verifiedRole && (now() - verifiedAt) < RECHECK;
+    if (fresh && !force) return Promise.resolve(verifiedRole);
     return verify(k).then(function (res) {
       if (!res.ok) { forget(); return ''; }
-      verifiedRole = res.role;
+      verifiedRole = res.role; verifiedAt = now();
       return res.role;
     });
   }
@@ -94,6 +100,7 @@
 
   window.SandleAuthSession = {
     TTL: TTL,
+    RECHECK: RECHECK,
     signIn: signIn,
     verify: verify,
     currentRole: currentRole,
