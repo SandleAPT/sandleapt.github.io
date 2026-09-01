@@ -15,7 +15,15 @@ function topicByQuery(q){q=(q||'').trim().toLowerCase();if(!q)return null;return
 function tagClass(tag){return tag==='rule'?'rule':tag==='contract'?'contract':tag==='current'?'current':'history';}
 function showHome(){home.classList.remove('is-hidden');view.classList.add('is-hidden');view.innerHTML='';input.value='';try{history.replaceState(null,'',location.pathname);}catch(e){}window.scrollTo({top:0,behavior:'smooth'});}
 function openTopic(t){const buttons=[...document.querySelectorAll('#allTopics .topic-text-btn')];const b=buttons.find(x=>x.textContent.trim()===String(t.label).trim());if(b){b.click();return;}location.hash='#topic-'+encodeURIComponent(t.id);location.reload();}
-function openDetail(meta,title,note){detailContent.innerHTML=`<div class="detail-meta">${meta.map(v=>`<span>${esc(v)}</span>`).join('')}</div><h2>${esc(title)}</h2><p>${esc(note||'세부 설명이 아직 연결되지 않은 샘플 기록이야.')}</p><div class="detail-foot">실제 Archive에서는 원문, 관련 회의, 근거 규정, 계약·후속 기록으로 이어지는 링크를 함께 제공할 예정이야.</div>`;if(typeof detailDialog.showModal==='function')detailDialog.showModal();else detailDialog.setAttribute('open','');}
+/* 원문 링크(2026-09-02): Archive는 회의록을 복제하지 않고 찾아가게 하는 것이 목적이라,
+ * 안건을 누르면 회의록 앱의 그 회의를 연다. 링크가 없으면 예전 안내를 그대로 둔다. */
+function openDetail(meta,title,note,원문,회의){
+  const 발 = 원문
+    ? `<div class="detail-foot"><a class="detail-open" href="${esc(원문)}">회의록 원문 열기 →</a>${회의?`<small>${esc(회의)}</small>`:''}</div>`
+    : `<div class="detail-foot">이 항목은 아직 원문으로 이어지지 않아.</div>`;
+  detailContent.innerHTML=`<div class="detail-meta">${meta.map(v=>`<span>${esc(v)}</span>`).join('')}</div><h2>${esc(title)}</h2><p>${esc(note||'세부 설명이 아직 연결되지 않았어.')}</p>${발}`;
+  if(typeof detailDialog.showModal==='function')detailDialog.showModal();else detailDialog.setAttribute('open','');
+}
 function summaryItems(t){const out=[];if(t.description)out.push(t.description);if((t.current||[]).length){out.push(`현재 확인 가능한 기준 ${t.current.length}건: ${t.current.slice(0,2).map(x=>x.title).join(' · ')}`);}if((t.timeline||[]).length){const e=t.timeline[t.timeline.length-1];out.push(`가장 최근 흐름: ${e.date} · ${e.title}`);}if((t.records||[]).length){out.push(`연결된 관련 기록 ${t.records.length}건을 회의·규정·보험 등 자료종류와 함께 확인할 수 있어.`);}return out.slice(0,4);}
 function attachBInteractions(t){
   const homeBtn=view.querySelector('[data-b-home]');if(homeBtn)homeBtn.onclick=showHome;
@@ -31,9 +39,9 @@ function attachBInteractions(t){
     if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:'nearest',inline:'center'});
   });
   view.querySelectorAll('[data-b-topic]').forEach(b=>b.onclick=()=>openTopic(t));
-  view.querySelectorAll('[data-b-current]').forEach(b=>{b.onclick=()=>{const c=t.current[+b.dataset.bCurrent];openDetail([자료().currentLabel||'현재 기준',c.kind],c.title,c.note);};});
-  view.querySelectorAll('[data-b-timeline]').forEach(b=>{b.onclick=()=>{const e=t.timeline[+b.dataset.bTimeline];openDetail([e.date,'타임라인'],e.title,e.note);};});
-  view.querySelectorAll('[data-b-record]').forEach(b=>{b.onclick=()=>{const r=t.records[+b.dataset.bRecord];openDetail([r[0],r[1],r[3]],r[2],'검색 결과에서는 목록용 요약만 보여줘. 실제 Archive에서는 원문과 관련 기록을 바로 연결할 예정이야.');};});
+  view.querySelectorAll('[data-b-current]').forEach(b=>{b.onclick=()=>{const c=t.current[+b.dataset.bCurrent];openDetail([자료().currentLabel||'현재 기준',c.kind],c.title,c.note,c.원문,c.회의);};});
+  view.querySelectorAll('[data-b-timeline]').forEach(b=>{b.onclick=()=>{const e=t.timeline[+b.dataset.bTimeline];openDetail([e.date,'타임라인'],e.title,e.note,e.원문,e.회의);};});
+  view.querySelectorAll('[data-b-record]').forEach(b=>{b.onclick=()=>{const r=t.records[+b.dataset.bRecord];openDetail([r[0],r[1],r[3]],r[2],r[5]?('회의: '+r[5]):'',r[4],r[5]);};});
 }
 /* 주제 전환 줄 (사용자 요청 2026-09-02)
  *   "선택해서 들어갔을 때 다시 뒤로 가서 고르기 귀찮으니

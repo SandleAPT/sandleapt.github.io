@@ -89,6 +89,18 @@
       assert.equal(주차.records[1][1], '임차 안건', '임차 회의는 그렇게 표시');
       assert.equal(주차.counts['안건'], 2, '건수');
 
+      /* 원문으로 가는 길 — Archive는 회의록을 복제하지 않고 찾아가게 한다.
+       * 링크가 빠지면 화면이 "예정이야"만 보여주고 끝난다(2026-09-02 이전 상태). */
+      assert.equal(주차.records[0][4], '/minutes/?open=m_2026_06_v1', '원문 주소가 5번째 자리에');
+      assert.equal(주차.records[0][5], '2026년 6월 입주자대표회의', '어느 회의인지도 함께');
+      assert.equal(주차.records[0].length, 6, '앞 네 자리는 그대로 두고 뒤에 덧붙인다');
+      assert.equal(주차.timeline[0].원문, '/minutes/?open=m_2026_06_v1', '타임라인에도 원문');
+      assert.equal(주차.current[0].원문, '/minutes/?open=m_2026_06_v1', '최근 항목에도 원문');
+      // 회의 id가 없으면 링크를 만들지 않는다 — 아무 데도 안 가는 링크는 없느니만 못하다.
+      var id없음 = B.build([{ name: 'x', date: '2026-01-01', agendas: [{ id: 'q', title: '주차 건' }] }], 분류표, 자동태그, 지금);
+      var 주차2 = id없음.topics.filter(function (t) { return t.label === '주차'; })[0];
+      assert.equal(주차2.records[0][4], '', '회의 id가 없으면 빈 링크');
+
       // 최근 기록
       assert.equal(r.recentRecords.length > 0, true, '최근 기록이 있다');
       assert.equal(r.recentRecords[0].date, '2026.06', '최신순');

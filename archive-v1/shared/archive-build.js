@@ -50,6 +50,15 @@
   function 회의체(id) { return String(id || '').indexOf('t_') === 0 ? '임차' : '입대의'; }
 
   /*
+   * 원문으로 가는 주소. 회의록 앱의 해당 회의를 연다.
+   * Archive는 회의록을 다시 쓰지 않고 "찾아가게" 하는 것이 목적이므로,
+   * 원문은 언제나 회의록 앱이 보여준다. 여기서 본문을 복제하지 않는다.
+   */
+  function 원문주소(x) {
+    return x.회의id ? '/minutes/?open=' + encodeURIComponent(x.회의id) : '';
+  }
+
+  /*
    * meetings: [{id, name, date, agendas:[{id,title,summary,decision,tags}]}]
    * taxonomy: window.TopicTaxonomy (defs + resolveStored)
    * autoTags: 태그가 없을 때 쓸 자동 분류 함수 (a) -> [주제]
@@ -110,13 +119,15 @@
         // '현재 기준'은 회의록만으로 판단할 수 없다. 규약·계약 자료가 들어오기 전까지는
         // 가장 최근 기록 몇 건을 '최근 움직임'으로 보여주고, 현행이라고 단정하지 않는다.
         current: 목록.slice(0, 2).map(function (x) {
-          return { kind: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), tags: ['history'] };
+          return { kind: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), tags: ['history'], 원문: 원문주소(x), 회의: x.회의 };
         }),
         timeline: 목록.slice(0, 40).map(function (x) {
-          return { date: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : '') };
+          return { date: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), 원문: 원문주소(x), 회의: x.회의 };
         }),
+        // records는 화면이 배열로 읽는다(자리를 바꾸면 화면이 깨진다).
+        // 원문 주소는 5번째 자리에 덧붙인다 — 앞 네 자리는 그대로 둔다.
         records: 목록.map(function (x) {
-          return [x.ym, x.회의체 === '임차' ? '임차 안건' : '입대의 안건', x.제목, x.상태];
+          return [x.ym, x.회의체 === '임차' ? '임차 안건' : '입대의 안건', x.제목, x.상태, 원문주소(x), x.회의];
         })
       };
     }).sort(function (a, b) { return b.records.length - a.records.length; });
