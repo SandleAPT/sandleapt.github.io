@@ -1,4 +1,18 @@
 window.SANDLE_ARCHIVE_SAMPLE={
+  topTopics:[
+    {topicId:"gym",rank:1,note:"회의·운영·보험·잡수입 연결 샘플"},
+    {topicId:"parking",rank:2,note:"운영규정과 장기 논의 흐름 후보"},
+    {topicId:"election",rank:3,note:"공고→구성→투표→결과 흐름 후보"},
+    {topicId:"library",rank:4,note:"운영규정 개정과 보험 연결 샘플"},
+    {topicId:"defect",rank:5,note:"판결·지급·후속조치 연결 후보"}
+  ],
+  recentRecords:[
+    {date:"2026.08",kind:"회의·안건",title:"커뮤니티시설 운영 및 시설 확충",status:"논의",topicId:"gym"},
+    {date:"2026.07",kind:"보험증권",title:"체육시설업자배상책임보험",status:"현행",topicId:"gym"},
+    {date:"2026.07",kind:"보험증권",title:"시설소유관리자배상책임보험 — 도서관",status:"현행",topicId:"library"},
+    {date:"2024.10",kind:"관리규약",title:"주민공동시설 관련 현행 규약",status:"현행",topicId:"gym"},
+    {date:"2023.06",kind:"운영규정",title:"산들마을푸른숲 작은도서관 운영규정 개정",status:"현행",topicId:"library"}
+  ],
   topics:[
     {
       id:"gym",label:"헬스장 · GX",aliases:["헬스","체력단련장","gx","커뮤니티센터"],description:"이용료·운영·시설확충·보험·잡수입이 한 주제에서 어떻게 연결되는지 보는 샘플",
@@ -43,6 +57,7 @@ window.SANDLE_ARCHIVE_SAMPLE={
       ]
     },
     {id:"parking",label:"주차",aliases:["주차장","방문차량","차량"],description:"아직 구조 확인 전인 다음 샘플 후보",counts:{},current:[],timeline:[],records:[]},
-    {id:"election",label:"선거 · 선관위",aliases:["선거","선관위","동대표"],description:"공고→구성→후보→투표→결과를 사건 흐름으로 묶는 다음 샘플 후보",counts:{},current:[],timeline:[],records:[]}
+    {id:"election",label:"선거 · 선관위",aliases:["선거","선관위","동대표"],description:"공고→구성→후보→투표→결과를 사건 흐름으로 묶는 다음 샘플 후보",counts:{},current:[],timeline:[],records:[]},
+    {id:"defect",label:"하자판결금",aliases:["하자","판결금","하자소송"],description:"판결·수령·지급·후속조치가 어떻게 연결되는지 확인할 다음 샘플 후보",counts:{},current:[],timeline:[],records:[]}
   ]
 };
