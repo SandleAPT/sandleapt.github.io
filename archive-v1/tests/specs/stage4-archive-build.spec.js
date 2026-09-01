@@ -18,13 +18,19 @@
       return raw.map(function (t) { return t === '소송' ? '하자·소송' : t; });
     }
   };
-  function 자동태그(a) {
-    var t = String(a.title || '');
+  // 회의록 앱과 같은 규칙: 제목을 먼저 보고, 걸리면 본문은 보지 않는다.
+  function 훑기(s) {
     var out = [];
     분류표.defs.forEach(function (d) {
-      if (d.kw.some(function (k) { return t.indexOf(k) >= 0; })) out.push(d.key);
+      if (d.kw.some(function (k) { return String(s || '').indexOf(k) >= 0; })) out.push(d.key);
     });
-    return out.length ? out : ['기타'];
+    return out;
+  }
+  function 자동태그(a) {
+    var 제목 = 훑기(a && a.title);
+    if (제목.length) return 제목;
+    var 본문 = 훑기(((a && a.decision) || '') + ' ' + ((a && a.summary) || ''));
+    return 본문.length ? 본문 : ['기타'];
   }
 
   return {
