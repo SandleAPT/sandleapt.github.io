@@ -105,7 +105,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 </head>
 <body>
 <aside class="rail" id="rail">
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v280 · 2026.09.02 15:31:05 갱신</small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v281 · 2026.09.02 15:48:20 갱신</small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -152,7 +152,7 @@ var GROUPS = [
     // Archive 시험판(2026-09-02, 사용자 요청 "왔다갔다 하게"). 같은 호스트라 iframe으로 띄운다.
     // 회의록과는 **다른 앱**이므로 service를 따로 준다 — minutes로 두면 postMessage로 화면 전환을
     // 시도해 엉뚱한 곳을 건드린다. 아직 시험판이라 이름에 그대로 적는다.
-    { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=280" },
+    { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=281" },
     { id: "setupView",  label: "회의 설정",   view: "setupView",  adminOnly: true },
     { id: "repsView",   label: "동대표 명단", view: "repsView",   adminOnly: true },
     { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true }
@@ -171,6 +171,36 @@ var GROUPS = [
     { id: "community", label: "커뮤니티센터 이용 안내", service: "community", url: BASE + "/CommunityNotice/" }
   ]}
 ];
+/*
+ * 새 버전이 나왔는지 스스로 확인한다 (2026-09-02).
+ *
+ * 왜: GitHub Pages가 이 페이지를 `Cache-Control: max-age=600`으로 내려준다. 그래서 배포한 뒤에도
+ * 방문자는 한동안 **옛 페이지를 계속 본다.** 실제로 사용자가 "시분초 적어달라니까!"라고 했는데
+ * 이미 배포돼 있었고 브라우저가 옛 것을 들고 있던 것이었다(2026-09-02). 고쳤는데 안 고쳐진 것처럼 보인다.
+ *
+ * 헤더는 우리가 못 바꾸므로, 페이지가 **자기 주소를 캐시 무시로 한 번 더 읽어** 버전 글자를 비교한다.
+ * 다르면 조용히 띠를 띄운다 — 자동으로 새로고침하지 않는다. 보던 화면이 갑자기 날아가면 더 나쁘다.
+ */
+(function () {
+  var 지금표기 = (document.querySelector(".brand small") || {}).textContent || "";
+  if (!지금표기) return;
+  setTimeout(function () {
+    fetch(location.pathname + "?_=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.text() : ""; })
+      .then(function (html) {
+        var m = html.match(/<small>(v[^<]*갱신)<\/small>/);
+        if (!m || m[1] === 지금표기.trim()) return;
+        var bar = document.createElement("div");
+        bar.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:60;background:#b5841a;color:#fff;padding:9px 14px;font-size:13px;display:flex;gap:10px;align-items:center;justify-content:center";
+        bar.innerHTML = '새로 고친 판이 있어요 <b style="font-weight:800">' + m[1].replace(/</g, "&lt;") + '</b>' +
+          '<button style="border:0;border-radius:8px;padding:5px 12px;font:inherit;font-weight:800;cursor:pointer">새로고침</button>';
+        bar.querySelector("button").onclick = function () { location.reload(true); };
+        document.body.appendChild(bar);
+      })
+      .catch(function () {});
+  }, 3000);   // 첫 화면이 뜨고 난 뒤에 확인한다
+})();
+
 function isAdminDevice() { // v61: 24시간 만료 규칙(회의록·관리비와 공통) — 만료된 키는 지우고 관리자 메뉴를 숨긴다
   try {
     var k = localStorage.getItem("sandle_admin_key"); if (!k) return false;
@@ -187,7 +217,7 @@ var SERVICES = {
   community: { url: BASE + "/CommunityNotice/" },
   // iframe src 는 **이곳**에서 읽는다(항목의 url 은 '새 창으로 열기' 단추용).
   // 여기 등록을 빠뜨리면 메뉴를 눌러도 아무 일이 일어나지 않는다 — 2026-09-02에 실제로 그랬다.
-  archive:   { url: BASE + "/archive-v1/?v=280" }
+  archive:   { url: BASE + "/archive-v1/?v=281" }
 };
 // 모바일 하단 바(서비스 단위)
 var BOTTOM = [

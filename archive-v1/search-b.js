@@ -54,8 +54,8 @@ function attachBInteractions(t,t0){
   view.querySelectorAll('[data-narrow]').forEach(b=>b.onclick=()=>{
     const v=b.dataset.narrow||'';
     좁힘=(v&&v!==좁힘)?v:null;
-    펼친연도=null;   // 좁히면 남는 해가 달라진다 — 가장 최근 해부터 다시 편다
-    renderB(t0||t,input.value||(t0||t).label);
+    접은연도.clear();   // 좁히면 남는 해가 달라진다 — 전부 다시 편다
+    제자리로(b,()=>renderB(t0||t,input.value||(t0||t).label,true));
   });
   view.querySelectorAll('[data-b-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.bMode;form.requestSubmit();});
   // 주제 전환 — 첫 화면으로 돌아가지 않고 바로 옆 주제로 간다.
@@ -63,7 +63,7 @@ function attachBInteractions(t,t0){
     const n=(자료().topics||[]).find(x=>x.id===b.dataset.tswitch);
     if(!n)return;
     좁힘=null;          // 다른 주제로 가면 좁힘은 푼다 — 그 주제엔 없는 갈래일 수 있다
-    펼친연도=null;      // 펼친 해도 초기화 — 그 주제엔 없는 해일 수 있다
+    접은연도.clear();   // 접어둔 해도 초기화 — 그 주제엔 없는 해일 수 있다
     input.value=n.label;
     renderB(n,n.label);
     // 누른 주제가 화면 밖에 있으면 그 자리로 스크롤해 둔다.
@@ -77,8 +77,8 @@ function attachBInteractions(t,t0){
   view.querySelectorAll('[data-b-timeline]').forEach(b=>{b.onclick=()=>{const e=보이는타임라인[+b.dataset.bTimeline];if(!e)return;openDetail([e.date,'타임라인'],e.title,e.note,e.원문,e.회의,e.본문);};});
   // 연도 머리를 누르면 그 해를 펼친다(한 번에 한 해).
   view.querySelectorAll('[data-year]').forEach(b=>b.onclick=()=>{
-    펼친연도=(펼친연도===b.dataset.year)?null:b.dataset.year;
-    renderB(t0||t,input.value||(t0||t).label);
+    if(접은연도.has(b.dataset.year))접은연도.delete(b.dataset.year);else 접은연도.add(b.dataset.year);
+    제자리로(b,()=>renderB(t0||t,input.value||(t0||t).label,true));
   });
   view.querySelectorAll('[data-b-record]').forEach(b=>{b.onclick=()=>{const r=t.records[+b.dataset.bRecord];openDetail([r[0],r[1],r[3]],r[2],r[5]?('회의: '+r[5]):'',r[4],r[5],r[7]);};});
 }
@@ -156,7 +156,11 @@ function 요약채우기(label){
  * 규칙: 가장 최근 연도는 펼치고 나머지는 접는다. 접힌 해도 **몇 건인지와 몇 월인지**는 보여준다 —
  * 접는 것과 숨기는 것은 다르다. 눌러서 펼칠 수 있다.
  */
-let 펼친연도=null;
+/* 2026-09-02 사용자 재지적: *"클릭하지 않아도 다 열린채로 보이는 게 좋을거 같구"*.
+ * 그래서 **기본은 전부 펼침**으로 바꿨다. 연도 머리는 구분선과 건수 역할로 남기고,
+ * 길다고 느끼면 눌러서 접을 수 있게 한다(접힌 해도 몇 월인지는 남는다).
+ * 처음에 한 해만 펼친 것은 내 판단이었고, 사용자는 한눈에 다 보는 쪽을 원했다. */
+let 접은연도=new Set();
 function 연도(ym){ return String(ym||'').slice(0,4); }
 function 타임라인HTML(items){
   if(!items||!items.length) return '';
@@ -167,10 +171,9 @@ function 타임라인HTML(items){
     g.항목.push(e);
   });
   해별.sort((a,b)=>b.해.localeCompare(a.해));
-  if(!펼친연도||!해별.some(g=>g.해===펼친연도)) 펼친연도=해별[0].해;
   let n=0;
   return 해별.map(g=>{
-    const 펼침=g.해===펼친연도;
+    const 펼침=!접은연도.has(g.해);
     const 머리=`<button type="button" class="tl-year${펼침?' open':''}" data-year="${esc(g.해)}"><b>${esc(g.해)}년</b><i>${g.항목.length}건</i><span class="tl-caret">${펼침?'▾':'▸'}</span></button>`;
     if(!펼침){
       // 접힌 해 — 몇 월에 무엇이 있었는지는 남긴다. 숨기는 게 아니라 접는 것이다.
@@ -183,7 +186,10 @@ function 타임라인HTML(items){
          두 번 뜨는데, 어느 쪽 회의인지 안 보이면 그냥 중복으로 읽힌다. 합치지는 않는다 —
          서로 다른 회의에서 따로 정한 것이라 합치면 사실이 달라진다. */
       const 몸=e.회의체?`<span class="tl-body ${e.회의체==='임차'?'t':'i'}">${esc(e.회의체)}</span>`:'';
-      return `<button type="button" class="search-b-event" data-b-timeline="${i}"><time>${esc(e.date)}${몸}</time><div><b>${esc(e.title)}</b><p>${esc(e.note)}</p></div></button>`;
+      /* 굵직한 것 짚기 (5.5e). 「중요」라고 뭉뚱그리지 않고 **왜 짚었는지**를 적는다 —
+         무엇이 중요한지는 사람마다 다르지만 「의견 갈림」·「재심의」는 사실이다. */
+      const 짚=(e.짚음||[]).map(k=>`<em class="tl-flag">${esc(k)}</em>`).join('');
+      return `<button type="button" class="search-b-event${짚?' big':''}" data-b-timeline="${i}"><time>${esc(e.date)}${몸}</time><div><b>${짚}${esc(e.title)}</b><p>${esc(e.note)}</p></div></button>`;
     }).join('');
     return `<div class="tl-group">${머리}<div class="tl-items">${줄}</div></div>`;
   }).join('');
@@ -191,25 +197,45 @@ function 타임라인HTML(items){
 /* 펼친 해의 항목만 data-b-timeline 번호를 받으므로, 클릭 처리도 같은 순서로 맞춰야 한다.
    화면과 다른 배열을 쓰면 엉뚱한 안건이 열린다. */
 function 펼친항목(items){
-  return (items||[]).filter(e=>연도(e.date)===펼친연도);
+  return (items||[]).filter(e=>{const y=연도(e.date);return y&&!접은연도.has(y);});
 }
-function renderB(t0,query){
+/* 제자리에서 다시 그리기 (2026-09-02 사용자 지적).
+ * 연도나 갈래를 누르면 화면이 **맨 위로 튀어 올랐다** — 다시 그릴 때마다 view.scrollIntoView 를
+ * 부르기 때문이다. 주제를 처음 열 때는 맞지만, 같은 화면 안에서 접었다 폈다 할 때는 아니다.
+ *
+ * 단순히 스크롤 위치를 되돌리는 것으로는 부족하다. 옛 해가 접히면 위쪽 내용이 줄어들어
+ * 누른 자리가 위로 밀린다. 그래서 **누른 단추가 화면에서 있던 높이에 그대로 있도록** 맞춘다.
+ */
+function 제자리로(누른것, 다시그리기){
+  var 전 = 누른것 ? 누른것.getBoundingClientRect().top : 0;
+  var 열쇠 = 누른것 ? (누른것.dataset.year!==undefined?'[data-year="'+누른것.dataset.year+'"]':'[data-narrow="'+(누른것.dataset.narrow||'')+'"]') : '';
+  다시그리기();
+  if(!열쇠) return;
+  var 새것 = view.querySelector(열쇠);
+  if(새것) window.scrollBy(0, 새것.getBoundingClientRect().top - 전);
+}
+function renderB(t0,query,제자리){
   const t=좁힌것(t0);
   const layout=LAYOUTS.B||{preview:{current:3,timeline:6,records:12}};
   const p=layout.preview||{};
   const currentItems=(t.current||[]).slice(0,p.current||3);
   const timelineItems=t.timeline||[];   // 연도별로 접으므로 여기서 자르지 않는다 (5.5d)
-  const recordItems=(t.records||[]).slice(0,p.records||12);
   const current=currentItems.map((c,i)=>`<button type="button" class="search-b-current" data-b-current="${i}"><div class="meta"><span class="tag current">${esc(자료().currentLabel||'현재 기준')}</span><span class="tag ${tagClass(c.tags&&c.tags[1])}">${esc(c.kind)}</span></div><strong>${esc(c.title)}</strong><p>${esc(c.note)}</p></button>`).join('');
   const summary=summaryItems(t).map(x=>`<li>${esc(x)}</li>`).join('');
   const timeline=타임라인HTML(timelineItems);
-  const records=recordItems.map((r,i)=>`<button type="button" class="search-b-record" data-b-record="${i}"><span class="date">${esc(r[0])}</span><span class="kind">${esc(r[1])}</span><span class="title">${esc(r[2])}</span><span class="status">${esc(r[3])}</span></button>`).join('');
+  /* 「자료 전체」 칸은 뺐다 (사용자 지적 2026-09-02: *"타임라인이나 자료 전체나 표기만 다를 뿐
+   * 똑같아 보여서 자료 전체는 지워도 될듯?"*). 맞다. 타임라인이 40건에서 잘리던 동안에는
+   * 「자료 전체」가 나머지를 맡았지만, 5.5d에서 타임라인이 **전량을 연도별로** 보여주게 되면서
+   * 같은 것을 두 번 늘어놓게 됐다.
+   * records 자료 자체는 남긴다 — 갈래로 좁히기와 건수 세기가 그것을 쓴다.
+   * 규약·계약·보험처럼 **회의록이 아닌 자료**가 들어오면 그때 다시 만든다(6단계). 그 전엔 중복일 뿐이다. */
   const counts=Object.entries(t.counts||{}).map(([k,v])=>`<span>${esc(k)} ${esc(v)}</span>`).join('');
-  const extraRecords=(t.records||[]).length>recordItems.length?`<div class="search-b-more">전체 ${(t.records||[]).length}건 중 ${recordItems.length}건 표시 · <button type="button" data-b-topic>주제 전체 보기</button></div>`:'';
   home.classList.add('is-hidden');view.classList.remove('is-hidden');input.value=query||t.label;
-  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>“${esc(query||t.label)}” 검색 결과</h2><p><b>${esc(t.label)}</b>에 얽힌 안건을 모았어. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인, 자료 전체 순으로 내려가.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<div data-brief>${요약HTML(t0.label)}</div><section class="search-b-section"><div class="search-b-section-head"><span>1</span><div><h3>${esc(자료().currentLabel||'현재 기준')}</h3><small>${esc(자료().currentNote||'지금 적용되는 규정·계약·보험부터')}</small></div></div><div class="search-b-current-grid">${current||'<p class="search-b-empty">현재 기준 샘플이 아직 없어.</p>'}</div></section><section class="search-b-summary"><div class="search-b-section-head"><span>2</span><div><h3>핵심 요약</h3><small>검색 결과 전체를 짧게 훑기</small></div></div><ul>${summary||'<li>요약할 샘플 데이터가 아직 없어.</li>'}</ul></section><section class="search-b-section"><div class="search-b-section-head"><span>3</span><div><h3>타임라인</h3><small>과거 논의에서 최근 흐름까지</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">타임라인 샘플이 아직 없어.</p>'}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>4</span><div><h3>자료 전체</h3><small>회의·규정·계약·보험 등 원자료 목록</small></div></div><div class="search-b-records">${records||'<p class="search-b-empty">관련 기록 샘플이 아직 없어.</p>'}</div>${extraRecords}</section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
+  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>“${esc(query||t.label)}” 검색 결과</h2><p><b>${esc(t.label)}</b>에 얽힌 안건을 모았어. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인, 자료 전체 순으로 내려가.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<div data-brief>${요약HTML(t0.label)}</div><section class="search-b-section"><div class="search-b-section-head"><span>1</span><div><h3>${esc(자료().currentLabel||'현재 기준')}</h3><small>${esc(자료().currentNote||'지금 적용되는 규정·계약·보험부터')}</small></div></div><div class="search-b-current-grid">${current||'<p class="search-b-empty">현재 기준 샘플이 아직 없어.</p>'}</div></section><section class="search-b-summary"><div class="search-b-section-head"><span>2</span><div><h3>핵심 요약</h3><small>검색 결과 전체를 짧게 훑기</small></div></div><ul>${summary||'<li>요약할 샘플 데이터가 아직 없어.</li>'}</ul></section><section class="search-b-section"><div class="search-b-section-head"><span>3</span><div><h3>타임라인</h3><small>연도별 · 최근 해부터</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">아직 기록이 없어.</p>'}</div></section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
   요약채우기(t0.label);
-  attachBInteractions(t,t0);try{history.replaceState(null,'','#search-b-'+encodeURIComponent(t.id));}catch(e){}view.scrollIntoView({behavior:'smooth',block:'start'});
+  attachBInteractions(t,t0);try{history.replaceState(null,'','#search-b-'+encodeURIComponent(t.id));}catch(e){}
+  // 주제를 처음 열 때만 위로 올린다. 같은 화면에서 접었다 폈다 할 때는 그 자리에 둔다.
+  if(!제자리)view.scrollIntoView({behavior:'smooth',block:'start'});
 }
 form.addEventListener('submit',function(e){
   if(mode!=='B')return;

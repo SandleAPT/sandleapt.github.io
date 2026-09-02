@@ -94,3 +94,14 @@
 }
 .tl-body.i { background: #efe7d2; color: #6a5312; }
 .tl-body.t { background: #dfe8ef; color: #2f5470; }
+
+/* 굵직한 것 짚기 (5.5e, 2026-09-02)
+   무엇이 중요한지는 사람마다 다르므로 「중요」라고 뭉뚱그리지 않고 왜 짚었는지를 적는다. */
+.tl-flag {
+  display: inline-block; margin-right: 5px; padding: 1px 7px;
+  border-radius: 999px; background: var(--gold, #b08d3f); color: #fff;
+  font-style: normal; font-size: .68em; font-weight: 800; vertical-align: 2px;
+  letter-spacing: .02em;
+}
+.search-b-event.big b { font-size: 1.06em; }
+.search-b-event.big { background: var(--aw-soft, #f9f7f1); border-radius: 8px; }
