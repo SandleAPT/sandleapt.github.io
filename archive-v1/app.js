@@ -94,6 +94,17 @@ function renderSearchA(t,query,doScroll=true){
  * 그래서 **건수 순 + 건수 표시**로 바꾼다. 이름으로 찾는 길은 검색창이 이미 있다.
  * 기록이 없는 주제는 맨 뒤로 보낸다(지우지는 않는다 — "이 주제는 기록이 없다"도 정보다).
  */
+/* 포털 안(iframe)에서 열렸을 때 (2026-09-02).
+ * 포털 왼쪽 메뉴에 Archive를 넣었더니, 이 화면의 「← 현재 포털」을 누르면
+ * **포털 안에 포털이 다시 열렸다.** 액자 속 액자다.
+ * 끼워져 있으면 그 링크만 바깥 창을 바꾸게 한다 — 링크를 없애지는 않는다.
+ * 나머지 머리말은 그대로 둔다. 관리 화면(🔒)으로 가는 유일한 입구가 거기 있다. */
+(function(){
+  try{
+    if(window.top===window.self)return;
+    document.querySelectorAll('.top a.back').forEach(function(a){ a.target='_top'; });
+  }catch(e){ /* 다른 출처에 끼워졌으면 top 접근이 막힌다 — 그대로 둔다 */ }
+})();
 function renderAllTopics(){
   allTopics.innerHTML='';
   const 건수=t=>(t.records||[]).length;
