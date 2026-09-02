@@ -225,3 +225,18 @@
    폭 제한을 없애고 상자 여백에만 맡긴다. */
 .search-b-summary [data-brief] .tb-now,
 .search-b-summary [data-brief] li { max-width: none; }
+
+/* 「짚어둘 것」과 「어떻게 여기까지 왔나」를 눈으로 가른다 (2026-09-02 사용자 지적:
+   "첫번째 줄은 전체적 요약 같구 아래는 히스토리 요약본 같은데 분리되는 구조가 필요할거 같아")
+   지금 벌어지는 일과 지나온 일이 한 덩어리로 늘어서면 같은 무게로 읽힌다. */
+.search-b-summary .tb-history {
+  list-style: none; margin: 0; padding-left: 0;
+  line-height: 1.75; font-size: .94em;
+}
+.search-b-summary .tb-history li { margin: 7px 0; padding-left: 13px; position: relative; opacity: .88; }
+.search-b-summary .tb-history li::before {
+  content: ''; position: absolute; left: 0; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--gold, #b08d3f); opacity: .45;
+}
+/* 짚어둘 것은 조금 더 또렷하게 */
+.search-b-summary .tb-points li { font-size: 1.0em; }

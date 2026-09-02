@@ -98,9 +98,10 @@
    */
   function 글로만들기(o) {
     var out = [];
-    if (o.요점 && o.요점.length) {
+    var 줄 = (o.요점 || []).concat(o.히스토리 || []);
+    if (줄.length) {
       out.push('## 요점');
-      o.요점.forEach(function (x) { out.push('- ' + x); });
+      줄.forEach(function (x) { out.push('- ' + x); });
     }
     if (o.현재상태) out.push('- 현재 상태: ' + o.현재상태);
     return out.join('\n');
@@ -117,7 +118,9 @@
       var 흐름 = '';
       var m = 옛글.match(/^##\s*시간 흐름\s*$[\s\S]*/m);
       if (m) 흐름 = '\n' + m[0].replace(/^[-*]\s*현재\s*상태\s*[:：].*$/m, '').replace(/\n{3,}/g, '\n\n');
-      map[label] = { text: 글로만들기(o) + 흐름 };
+      /* 글(text)만 넘기면 화면에서 「짚을 것」과 「지나온 일」을 다시 가를 수가 없다.
+       * 회의록 앱은 글만 읽으므로 text도 만들고, Archive는 `구조`를 그대로 받아 나눠 그린다. */
+      map[label] = { text: 글로만들기(o) + 흐름, 구조: o };
     });
     return map;
   }
