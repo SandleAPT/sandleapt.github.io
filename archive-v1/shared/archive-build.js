@@ -85,6 +85,8 @@
           회의: m.name || '', 회의id: m.id, 회의체: 회의체(m.id),
           /* 목록에 한 줄로 스쳐 보여줄 것. 여기서는 줄여도 된다 — 목록은 훑는 자리다. */
           요지: String(a.summary || a.decision || '').replace(/\s+/g, ' ').slice(0, 160),
+          // 「왜 이 주제에 걸렸나」를 찾을 때 뒤진다(자르지 않은 본문이라야 한다).
+          본문전체: String(a.summary || '') + ' ' + String(a.decision || '') + ' ' + String(a.followup || ''),
           /*
            * 팝업에서 보여줄 안건 전문 (5.5b, 사용자 요청 2026-09-02).
            *
@@ -159,6 +161,33 @@
 
     최근.sort(function (a, b) { return String(b.날짜).localeCompare(String(a.날짜)); });
 
+    /*
+     * 왜 이 안건이 이 주제에 걸렸는가 (5.4 ④)
+     *
+     * 「기타 안건」이라는 제목이 목록을 채우는데, 미리보기 본문은 엉뚱한 데서 시작한다.
+     * 하자·소송의 2026.05 「기타 안건」은 미리보기가 **커뮤니티센터 위탁업체** 이야기였다.
+     * 방문자는 "이게 왜 하자·소송이지?" 한다. 제목을 고쳐 쓸 수는 없다 — 회의록에 그렇게 적혀 있다.
+     * 대신 **어느 대목 때문에 걸렸는지**를 보여준다. 그러면 「기타 안건」도 읽힌다.
+     *
+     * 제목에서 걸렸으면 이미 보이므로 아무것도 만들지 않는다. 본문에서 걸렸을 때만 그 언저리를 오린다.
+     */
+    function 걸린대목(항목, label) {
+      var def = defs.filter(function (d) { return d.key === label; })[0];
+      var kws = (def && def.kw) || [];
+      if (!kws.length) return '';
+      var 제목 = String(항목.제목 || '');
+      for (var i = 0; i < kws.length; i++) if (제목.indexOf(kws[i]) >= 0) return '';   // 제목에 이미 보인다
+      var 본문 = String(항목.본문전체 || '');
+      for (var j = 0; j < kws.length; j++) {
+        var at = 본문.indexOf(kws[j]);
+        if (at < 0) continue;
+        var 앞 = Math.max(0, at - 45);
+        var 조각 = 본문.slice(앞, at + kws[j].length + 75).replace(/\s+/g, ' ').trim();
+        return (앞 > 0 ? '…' : '') + 조각 + '…';
+      }
+      return '';
+    }
+
     var topics = Object.keys(주제별).map(function (label) {
       var 목록 = 주제별[label].slice().sort(function (a, b) { return String(b.날짜).localeCompare(String(a.날짜)); });
       var def = defs.filter(function (d) { return d.key === label; })[0];
@@ -182,13 +211,22 @@
         // '현재 기준'은 회의록만으로 판단할 수 없다. 규약·계약 자료가 들어오기 전까지는
         // 가장 최근 기록 몇 건을 '최근 움직임'으로 보여주고, 현행이라고 단정하지 않는다.
         current: 목록.slice(0, 2).map(function (x) {
-          return { kind: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), tags: ['history'], 원문: 원문주소(x), 회의: x.회의, 본문: x.본문 };
+          var 걸림0 = 걸린대목(x, label);
+          return { kind: x.ym, title: x.제목, note: x.회의 + (걸림0 ? ' — ' + 걸림0 : (x.요지 ? ' — ' + x.요지 : '')), tags: ['history'], 원문: 원문주소(x), 회의: x.회의, 본문: x.본문 };
         }),
         /* 타임라인은 **전부** 넘긴다(예전엔 40건에서 잘랐다).
          * 화면이 연도별로 접어 보여주므로(5.5d) 여기서 미리 자르면 옛 연도가 통째로 사라진다.
          * 계약·입찰 230건이 가장 많고 한 건이 200자 남짓이라 양은 문제가 되지 않는다. */
         timeline: 목록.map(function (x) {
-          return { date: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), 원문: 원문주소(x), 회의: x.회의, 본문: x.본문 };
+          /* 미리보기는 **걸린 대목**을 먼저 쓴다. 없으면(=제목에서 걸렸으면) 본문 첫머리를 쓴다.
+             제목이 「기타 안건」인데 첫머리가 딴 이야기면 왜 여기 있는지 알 수 없다. */
+          var 걸림 = 걸린대목(x, label);
+          return {
+            date: x.ym, title: x.제목,
+            note: x.회의 + (걸림 ? ' — ' + 걸림 : (x.요지 ? ' — ' + x.요지 : '')),
+            걸림: 걸림, 회의체: x.회의체,
+            원문: 원문주소(x), 회의: x.회의, 본문: x.본문
+          };
         }),
         /*
          * 갈래 — 이 주제 안을 다시 나누는 축 (5.4)

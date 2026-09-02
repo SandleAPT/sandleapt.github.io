@@ -84,3 +84,13 @@
   word-break: keep-all;
 }
 .tl-items { padding-left: 2px; }
+
+/* 타임라인의 회의체 표시 (5.4 ②)
+   입대의와 임차가 같은 사안을 각각 다루면 같은 제목이 두 번 뜬다.
+   합치지 않고 어느 회의인지만 밝힌다 — 합치면 사실이 달라진다. */
+.tl-body {
+  display: inline-block; margin-left: 5px; padding: 0 5px;
+  border-radius: 999px; font-size: .72em; font-weight: 700; vertical-align: 1px;
+}
+.tl-body.i { background: #efe7d2; color: #6a5312; }
+.tl-body.t { background: #dfe8ef; color: #2f5470; }

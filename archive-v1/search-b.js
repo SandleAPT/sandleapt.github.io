@@ -179,7 +179,11 @@ function 타임라인HTML(items){
     }
     const 줄=g.항목.map(e=>{
       const i=n++;
-      return `<button type="button" class="search-b-event" data-b-timeline="${i}"><time>${esc(e.date)}</time><div><b>${esc(e.title)}</b><p>${esc(e.note)}</p></div></button>`;
+      /* 회의체를 붙인다 (5.4 ②). 입대의와 임차가 같은 사안을 각각 다루면 목록에 같은 제목이
+         두 번 뜨는데, 어느 쪽 회의인지 안 보이면 그냥 중복으로 읽힌다. 합치지는 않는다 —
+         서로 다른 회의에서 따로 정한 것이라 합치면 사실이 달라진다. */
+      const 몸=e.회의체?`<span class="tl-body ${e.회의체==='임차'?'t':'i'}">${esc(e.회의체)}</span>`:'';
+      return `<button type="button" class="search-b-event" data-b-timeline="${i}"><time>${esc(e.date)}${몸}</time><div><b>${esc(e.title)}</b><p>${esc(e.note)}</p></div></button>`;
     }).join('');
     return `<div class="tl-group">${머리}<div class="tl-items">${줄}</div></div>`;
   }).join('');

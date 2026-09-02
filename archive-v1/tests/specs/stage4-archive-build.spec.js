@@ -173,6 +173,30 @@
       assert.equal(칸이름(표없음).indexOf('표결 (동별 기록)') < 0, true, '표가 하나도 없어도 칸을 만들지 않는다');
       assert.equal(칸이름(표없음).join(','), '의결', '남는 것은 의결뿐');
 
+      /* ── 왜 이 주제에 걸렸나 (5.4 ④) ──
+       * 「기타 안건」이 목록을 채우는데 미리보기가 엉뚱한 데서 시작하면 왜 여기 있는지 알 수 없다.
+       * (실제: 하자·소송의 「기타 안건」 미리보기가 커뮤니티센터 이야기로 시작했다.)
+       * 제목을 고쳐 쓸 수는 없다 — 회의록에 그렇게 적혀 있다. 대신 걸린 대목을 보여준다. */
+      var 걸림 = B.build([{ id: 'm_h', name: 'h회의', date: '2026-02-02', agendas: [{
+        id: 'h1', title: '기타 안건', summary: '앞부분은 전혀 다른 이야기입니다. 그리고 승강기 정기검사 지적사항 보수를 논의했습니다. 뒷이야기.'
+      }] }], 분류표, 자동태그, 지금);
+      var 승 = 걸림.topics.filter(function (t) { return t.label === '승강기'; })[0];
+      assert.equal(/승강기/.test(승.timeline[0].note), true, '걸린 낱말이 미리보기에 보인다');
+      assert.equal(승.timeline[0].걸림.indexOf('승강기') >= 0, true, '걸린 대목을 따로 들고 있다');
+      assert.equal(승.timeline[0].note.indexOf('앞부분은 전혀 다른') < 0, true, '본문 첫머리가 아니라 걸린 데를 보여준다');
+
+      // 제목에서 걸렸으면 이미 보이므로 아무것도 만들지 않는다
+      var 제목걸림 = B.build([{ id: 'm_i', name: 'i회의', date: '2026-02-02', agendas: [{
+        id: 'i1', title: '승강기 교체 건', summary: '본문 첫머리입니다.'
+      }] }], 분류표, 자동태그, 지금).topics.filter(function (t) { return t.label === '승강기'; })[0];
+      assert.equal(제목걸림.timeline[0].걸림, '', '제목에 이미 보이면 만들지 않는다');
+      assert.equal(/본문 첫머리/.test(제목걸림.timeline[0].note), true, '그때는 본문 첫머리를 쓴다');
+
+      /* 회의체를 들고 있다 (5.4 ②). 입대의와 임차가 같은 사안을 각각 다루면 같은 제목이 두 번 뜬다.
+         합치지 않는다 — 서로 다른 회의에서 따로 정한 것이라 합치면 사실이 달라진다. 밝히기만 한다. */
+      assert.equal(주차.timeline[0].회의체, '입대의', '입대의 안건');
+      assert.equal(주차.timeline[1].회의체, '임차', '임차 안건');
+
       // 최근 기록
       assert.equal(r.recentRecords.length > 0, true, '최근 기록이 있다');
       assert.equal(r.recentRecords[0].date, '2026.06', '최신순');
