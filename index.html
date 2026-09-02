@@ -178,7 +178,10 @@ function svcOf(it) { return it.service || it.group.service || it.id; }
 var SERVICES = {
   minutes:   { url: MIN + MINQ, embed: true },
   fees:      { url: FEES },
-  community: { url: BASE + "/CommunityNotice/" }
+  community: { url: BASE + "/CommunityNotice/" },
+  // iframe src 는 **이곳**에서 읽는다(항목의 url 은 '새 창으로 열기' 단추용).
+  // 여기 등록을 빠뜨리면 메뉴를 눌러도 아무 일이 일어나지 않는다 — 2026-09-02에 실제로 그랬다.
+  archive:   { url: BASE + "/archive-v1/?v=69" }
 };
 // 모바일 하단 바(서비스 단위)
 var BOTTOM = [
