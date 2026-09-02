@@ -166,3 +166,16 @@
 .search-b-summary .tb-flow { list-style: none; margin: 0; padding-left: 0; line-height: 1.75; font-size: .92em; }
 .search-b-summary .tb-flow li { margin: 5px 0; }
 .search-b-summary .tb-flow li::before { content: '·'; margin-right: 7px; opacity: .45; font-weight: 700; }
+
+/* 주제 전환줄의 연도 동그라미 (2026-09-02)
+   첫 화면과 같은 모양으로. 같은 목록이 화면마다 다르게 보이면 같은 목록으로 안 읽힌다. */
+.tswitch-bar .tyear {
+  display: inline-grid; place-items: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  margin: 0 6px 0 10px; vertical-align: middle;
+  background: var(--gold, #b08d3f); color: #fff;
+  font-size: 11px; font-weight: 800; letter-spacing: -.02em;
+}
+.tswitch-bar .tyear:first-child { margin-left: 0; }
+/* 두 번째 해부터는 조용하게 — 최근이 먼저 눈에 들어와야 한다 */
+.tswitch-bar .tyear ~ .tyear { background: #cfc6ae; }

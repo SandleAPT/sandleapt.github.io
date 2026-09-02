@@ -104,12 +104,19 @@ function 주제줄(현재){
   목록=목록.slice().sort(function(a,b){
     return String(최신(b)).localeCompare(String(최신(a))) || 셈(b)-셈(a);
   });
+  /* 첫 화면처럼 **연도 동그라미로 묶는다** (사용자 지적 2026-09-02:
+     "첫 화면에선 잘 보이는데 주제 클릭하고 들어가면 거기선 그렇게 안보여").
+     같은 목록이 화면마다 다른 모양이면 같은 목록으로 안 읽힌다. */
+  var 지난해='';
   var 칩=목록.map(function(x){
+    var y=String(최신(x)).slice(0,4);
+    var 머리='';
+    if(y&&y!==지난해){ 지난해=y; 머리='<span class="tyear" title="'+esc(y)+'년에 마지막으로 다룬 주제">'+esc(y.slice(2))+'</span>'; }
     var on = x.id===현재.id;
-    return '<button type="button" class="tswitch'+(on?' on':'')+'" data-tswitch="'+esc(x.id)+'"'+(on?' aria-current="true"':'')+'>'
+    return 머리+'<button type="button" class="tswitch'+(on?' on':'')+'" data-tswitch="'+esc(x.id)+'"'+(on?' aria-current="true"':'')+'>'
       + esc(x.label) + '<i>' + 셈(x) + '</i></button>';
   }).join('');
-  return '<nav class="tswitch-bar" aria-label="다른 주제로 바로 가기">'+칩+'</nav>';
+  return '<nav class="tswitch-bar" aria-label="다른 주제로 바로 가기 — 최근 논의 순">'+칩+'</nav>';
 }
 
 /* 갈래로 좁히기 (5.4).
