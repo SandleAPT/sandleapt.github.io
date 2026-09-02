@@ -194,3 +194,16 @@
 @media (max-width: 760px) {
   .search-b-summary [data-brief] { padding: 13px 15px 15px; }
 }
+
+/* 요약 본문을 제목 글자와 같은 선에 세운다 (2026-09-02)
+   제목 앞에는 번호 뱃지(23px)가 있어서 제목 글자는 카드에서 49px 안쪽에서 시작한다.
+   본문만 30px 에서 시작하니 계단처럼 어긋나 보였다.
+   그리고 box-sizing 이 없어 padding 만큼 오른쪽으로 29px 삐져나가 있었다. */
+.search-b-summary [data-brief] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 15px 20px 17px 49px;
+}
+@media (max-width: 760px) {
+  .search-b-summary [data-brief] { padding: 13px 15px 15px 15px; }
+}
