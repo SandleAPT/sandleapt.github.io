@@ -124,7 +124,7 @@
       var 긴글 = '첫째 줄입니다.\n둘째 줄입니다.\n' + '가'.repeat(400);
       var 전문 = B.build([{ id: 'm_f', name: 'f회의', date: '2026-03-03', agendas: [{
         id: 'f1', title: '주차 전문 시험', summary: 긴글, decision: '가결한다.\n조건 있음.',
-        followup: '다음 달 보고', remarks: '비고 줄'
+        followup: '다음 달 보고', remarks: { '202': '비고 줄' }
       }] }], 분류표, 자동태그, 지금);
       var 주차F = 전문.topics.filter(function (t) { return t.label === '주차'; })[0];
       var 칸 = 주차F.records[0][7];
@@ -140,6 +140,26 @@
       // 내용이 없는 안건은 빈 상자를 만들지 않는다
       var 빈안건 = B.build([{ id: 'm_g', name: 'g회의', date: '2026-03-03', agendas: [{ id: 'g1', title: '주차 빈 건' }] }], 분류표, 자동태그, 지금);
       assert.equal(빈안건.topics.filter(function (t) { return t.label === '주차'; })[0].records[0][7].length, 0, '내용이 없으면 빈 목록');
+
+      /* 표결·비고는 **실제 자료 모양**을 따른다.
+       * 2026-09-02에 `yes/no/abstain` 같은 이름을 짐작으로 썼다가, 실제로 찬성5/반대5인 안건에
+       * 「찬성 0 · 반대 0 · 기권 0」을 보여줬다. **틀린 숫자는 안 보여주는 것보다 훨씬 나쁘다.**
+       * 실제 모양: votes = {동: 'for'|'against'}, remarks = {동: '글'}. 전체 자료에 기권은 없다. */
+      var 칸이름 = function (rec) { return (rec[7] || []).map(function (c) { return c.이름; }); };
+      var 찾기 = function (rec, 이름) { return (rec[7] || []).filter(function (c) { return c.이름 === 이름; })[0]; };
+
+      var 표결건 = B.build([{ id: 'm_v', name: 'v회의', date: '2026-03-03', agendas: [{
+        id: 'v1', title: '주차 표결 건', decision: '가결',
+        votes: { '202': 'for', '204': 'for', '206': 'against' }, remarks: { '202': '', '204': '' }
+      }] }], 분류표, 자동태그, 지금).topics.filter(function (t) { return t.label === '주차'; })[0].records[0];
+      assert.equal(찾기(표결건, '표결').글, '찬성 2 · 반대 1', '동별 표를 세어 보여준다');
+      assert.equal(칸이름(표결건).indexOf('비고') < 0, true, '비고가 전부 빈 문자열이면 칸을 만들지 않는다');
+
+      var 표없음 = B.build([{ id: 'm_w', name: 'w회의', date: '2026-03-03', agendas: [{
+        id: 'w1', title: '주차 표 없는 건', decision: '보류', votes: {}, remarks: {}
+      }] }], 분류표, 자동태그, 지금).topics.filter(function (t) { return t.label === '주차'; })[0].records[0];
+      assert.equal(칸이름(표없음).indexOf('표결') < 0, true, '표가 하나도 없으면 표결 칸을 만들지 않는다 — 0/0을 보여주지 않는다');
+      assert.equal(칸이름(표없음).join(','), '의결', '남는 것은 의결뿐');
 
       // 최근 기록
       assert.equal(r.recentRecords.length > 0, true, '최근 기록이 있다');

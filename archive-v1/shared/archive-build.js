@@ -107,11 +107,35 @@
             넣기('논의', a.summary);
             넣기('의결', a.decision);
             넣기('후속조치', a.followup);
-            넣기('표결', a.votes && typeof a.votes === 'object'
-              ? ['찬성 ' + (a.votes.yes || a.votes.찬성 || 0), '반대 ' + (a.votes.no || a.votes.반대 || 0),
-                 '기권 ' + (a.votes.abstain || a.votes.기권 || 0)].join(' · ')
-              : a.votes);
-            넣기('비고', a.remarks);
+            /*
+             * 표결. **실제 자료 모양을 확인하고 맞췄다** — 처음엔 `yes/no/abstain` 같은 이름을
+             * 짐작으로 썼다가 실제 찬성5/반대5인 안건에 「찬성 0 · 반대 0 · 기권 0」을 보여줬다.
+             * 없는 것을 보여주느니 안 보여주는 게 낫고, **틀린 숫자를 보여주는 건 그보다 훨씬 나쁘다.**
+             *
+             * 실제 모양: `{ "202": "for", "204": "against", … }` — 동(또는 참석자)별 한 표씩.
+             * 전체 자료에 나오는 값은 `for`(4,692)와 `against`(35) **둘뿐**이다. 기권은 없다 —
+             * 그래서 기권 칸도 만들지 않는다. 표가 하나도 없으면 표결 칸 자체를 넣지 않는다.
+             */
+            넣기('표결', (function () {
+              if (!a.votes || typeof a.votes !== 'object') return a.votes;
+              var 찬 = 0, 반 = 0;
+              Object.keys(a.votes).forEach(function (k) {
+                var v = String(a.votes[k] || '');
+                if (v === 'for') 찬++; else if (v === 'against') 반++;
+              });
+              if (!찬 && !반) return '';
+              return '찬성 ' + 찬 + ' · 반대 ' + 반;
+            })());
+            /*
+             * 비고도 `{ "202": "…" }` 꼴의 객체다. 1,212건 중 **내용이 있는 것은 7건**뿐이고
+             * 나머지는 빈 객체다. 그대로 넣으면 전부 「[object Object]」가 된다.
+             */
+            넣기('비고', (function () {
+              if (!a.remarks || typeof a.remarks !== 'object') return a.remarks;
+              return Object.keys(a.remarks)
+                .map(function (k) { return String(a.remarks[k] || '').trim(); })
+                .filter(Boolean).join('\n');
+            })());
             return 칸;
           })(),
           상태: 상태(날짜, 지금), 주제들: tags
