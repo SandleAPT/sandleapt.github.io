@@ -8,3 +8,20 @@
 }
 .detail-foot .detail-open:hover{ filter:brightness(1.06); }
 .detail-foot small{ display:block; margin-top:6px; opacity:.7; }
+/* 안건 전문 (5.5b, 2026-09-02 사용자 요청)
+   팝업을 열었다는 건 읽으려고 연 것이다. 자르지 않고, 줄바꿈을 살린다. */
+.detail-where { margin: -4px 0 12px; font-size: .84em; opacity: .6; }
+.detail-body { margin: 0 0 4px; }
+.detail-body section { margin: 0 0 14px; }
+.detail-body section:last-child { margin-bottom: 0; }
+.detail-body h3 {
+  margin: 0 0 5px; font-size: .74em; font-weight: 800; letter-spacing: .06em;
+  color: var(--gold, #b08d3f); text-transform: none;
+}
+.detail-body p {
+  margin: 0;
+  /* 회의록 본문은 항목이 줄로 나뉜 글이다. 줄바꿈을 살려야 읽힌다. */
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.75;
+}

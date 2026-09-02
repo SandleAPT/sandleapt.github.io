@@ -93,7 +93,7 @@
        * 링크가 빠지면 화면이 "예정이야"만 보여주고 끝난다(2026-09-02 이전 상태). */
       assert.equal(주차.records[0][4], '/minutes/?open=m_2026_06_v1', '원문 주소가 5번째 자리에');
       assert.equal(주차.records[0][5], '2026년 6월 입주자대표회의', '어느 회의인지도 함께');
-      assert.equal(주차.records[0].length, 7, '앞 네 자리는 그대로 두고 뒤에 덧붙인다(7번째는 갈래 — 5.4)');
+      assert.equal(주차.records[0].length, 8, '앞 네 자리는 그대로 두고 뒤에 덧붙인다(7 갈래 · 8 안건 전문)');
       assert.equal(주차.timeline[0].원문, '/minutes/?open=m_2026_06_v1', '타임라인에도 원문');
       assert.equal(주차.current[0].원문, '/minutes/?open=m_2026_06_v1', '최근 항목에도 원문');
       // 회의 id가 없으면 링크를 만들지 않는다 — 아무 데도 안 가는 링크는 없느니만 못하다.
@@ -117,6 +117,29 @@
       assert.equal((겹B['주차'].갈래 || []).some(function (g) { return g.label === '승강기'; }), true, '주차의 갈래에 승강기');
       assert.equal((겹B['승강기'].갈래 || []).some(function (g) { return g.label === '주차'; }), true, '승강기의 갈래에 주차');
       assert.equal(겹B['주차'].records[0][6].indexOf('승강기') >= 0, true, '안건도 자기 갈래를 들고 있다');
+
+      /* ── 안건 전문 (5.5b) ──
+       * 사용자 요청: 팝업 내용이 잘리고 줄바꿈이 안 먹는다.
+       * 팝업을 열었다는 건 읽으려고 연 것이라 자를 이유가 없다. 목록의 한 줄 요지와는 다르다. */
+      var 긴글 = '첫째 줄입니다.\n둘째 줄입니다.\n' + '가'.repeat(400);
+      var 전문 = B.build([{ id: 'm_f', name: 'f회의', date: '2026-03-03', agendas: [{
+        id: 'f1', title: '주차 전문 시험', summary: 긴글, decision: '가결한다.\n조건 있음.',
+        followup: '다음 달 보고', remarks: '비고 줄'
+      }] }], 분류표, 자동태그, 지금);
+      var 주차F = 전문.topics.filter(function (t) { return t.label === '주차'; })[0];
+      var 칸 = 주차F.records[0][7];
+      assert.equal(Array.isArray(칸), true, '8번째 자리는 안건 전문');
+      assert.equal(칸.length, 4, '논의·의결·후속조치·비고 — 빈 칸은 넣지 않는다');
+      assert.equal(칸[0].이름, '논의', '논의가 먼저');
+      assert.equal(칸[1].이름, '의결', '그다음 의결');
+      // 자르지 않는다
+      assert.equal(칸[0].글.length, 긴글.length, '전문은 길이 그대로 — 자르지 않는다');
+      assert.equal(칸[0].글.indexOf('\n') > 0, true, '줄바꿈을 살린다 — 뭉개면 한 덩어리가 된다');
+      // 목록용 요지는 반대로 한 줄이어야 한다(목록은 훑는 자리다)
+      assert.equal(주차F.timeline[0].note.indexOf('\n'), -1, '목록 미리보기는 한 줄로');
+      // 내용이 없는 안건은 빈 상자를 만들지 않는다
+      var 빈안건 = B.build([{ id: 'm_g', name: 'g회의', date: '2026-03-03', agendas: [{ id: 'g1', title: '주차 빈 건' }] }], 분류표, 자동태그, 지금);
+      assert.equal(빈안건.topics.filter(function (t) { return t.label === '주차'; })[0].records[0][7].length, 0, '내용이 없으면 빈 목록');
 
       // 최근 기록
       assert.equal(r.recentRecords.length > 0, true, '최근 기록이 있다');

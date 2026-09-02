@@ -83,7 +83,37 @@
         var 항목 = {
           날짜: 날짜, ym: ym, 제목: String(a.title).trim(),
           회의: m.name || '', 회의id: m.id, 회의체: 회의체(m.id),
+          /* 목록에 한 줄로 스쳐 보여줄 것. 여기서는 줄여도 된다 — 목록은 훑는 자리다. */
           요지: String(a.summary || a.decision || '').replace(/\s+/g, ' ').slice(0, 160),
+          /*
+           * 팝업에서 보여줄 안건 전문 (5.5b, 사용자 요청 2026-09-02).
+           *
+           * 지적: *"내용이 어느정도 보여주다 잘리더라고. 회의록 내용 길어봤자인데 그냥 해당
+           * 안건내용 다 적어줬음 싶고. 줄바꿈 이런것도 먹혀야 읽기 편할거 같아."*
+           *
+           * 맞다. 팝업까지 열었으면 그건 **읽으려고 연 것**이다. 거기서 자를 이유가 없다.
+           * 그리고 요지는 `\s+ → ' '`로 줄바꿈을 뭉개고 있었다. 회의록 본문은 항목이 줄로 나뉜
+           * 글이라 줄바꿈을 없애면 한 덩어리가 되어 읽기가 나빠진다. 여기서는 **원문 그대로** 둔다.
+           *
+           * 논의·의결·후속조치·표결을 뭉치지 않고 나눠서 넘긴다. 회의록에서 뜻이 다른 칸이고,
+           * 「무엇을 논의했나」와 「무엇을 정했나」는 읽는 사람에게 특히 다르다.
+           */
+          본문: (function () {
+            var 칸 = [];
+            var 넣기 = function (이름, v) {
+              var s = String(v == null ? '' : v).replace(/\r\n/g, '\n').trim();
+              if (s) 칸.push({ 이름: 이름, 글: s });
+            };
+            넣기('논의', a.summary);
+            넣기('의결', a.decision);
+            넣기('후속조치', a.followup);
+            넣기('표결', a.votes && typeof a.votes === 'object'
+              ? ['찬성 ' + (a.votes.yes || a.votes.찬성 || 0), '반대 ' + (a.votes.no || a.votes.반대 || 0),
+                 '기권 ' + (a.votes.abstain || a.votes.기권 || 0)].join(' · ')
+              : a.votes);
+            넣기('비고', a.remarks);
+            return 칸;
+          })(),
           상태: 상태(날짜, 지금), 주제들: tags
         };
         tags.forEach(function (t) {
@@ -119,10 +149,10 @@
         // '현재 기준'은 회의록만으로 판단할 수 없다. 규약·계약 자료가 들어오기 전까지는
         // 가장 최근 기록 몇 건을 '최근 움직임'으로 보여주고, 현행이라고 단정하지 않는다.
         current: 목록.slice(0, 2).map(function (x) {
-          return { kind: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), tags: ['history'], 원문: 원문주소(x), 회의: x.회의 };
+          return { kind: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), tags: ['history'], 원문: 원문주소(x), 회의: x.회의, 본문: x.본문 };
         }),
         timeline: 목록.slice(0, 40).map(function (x) {
-          return { date: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), 원문: 원문주소(x), 회의: x.회의 };
+          return { date: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), 원문: 원문주소(x), 회의: x.회의, 본문: x.본문 };
         }),
         /*
          * 갈래 — 이 주제 안을 다시 나누는 축 (5.4)
@@ -152,7 +182,7 @@
         // 5번째 원문 주소, 6번째 회의명, 7번째 이 안건이 걸린 다른 주제들(갈래로 좁힐 때 쓴다).
         records: 목록.map(function (x) {
           return [x.ym, x.회의체 === '임차' ? '임차 안건' : '입대의 안건', x.제목, x.상태, 원문주소(x), x.회의,
-                  (x.주제들 || []).filter(function (l) { return l !== label; })];
+                  (x.주제들 || []).filter(function (l) { return l !== label; }), x.본문];
         })
       };
     }).sort(function (a, b) { return b.records.length - a.records.length; });

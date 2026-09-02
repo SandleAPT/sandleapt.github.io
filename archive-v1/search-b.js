@@ -17,11 +17,21 @@ function showHome(){home.classList.remove('is-hidden');view.classList.add('is-hi
 function openTopic(t){const buttons=[...document.querySelectorAll('#allTopics .topic-text-btn')];const b=buttons.find(x=>x.textContent.trim()===String(t.label).trim());if(b){b.click();return;}location.hash='#topic-'+encodeURIComponent(t.id);location.reload();}
 /* 원문 링크(2026-09-02): Archive는 회의록을 복제하지 않고 찾아가게 하는 것이 목적이라,
  * 안건을 누르면 회의록 앱의 그 회의를 연다. 링크가 없으면 예전 안내를 그대로 둔다. */
-function openDetail(meta,title,note,원문,회의){
+/* 안건 상세 팝업.
+ * 사용자 지적(2026-09-02): 내용이 잘리고 줄바꿈이 안 먹는다.
+ * 팝업을 열었다는 건 **읽으려고 연 것**이라 자를 이유가 없다. 전문을 그대로 보여준다.
+ * 줄바꿈은 CSS(white-space: pre-wrap)로 살린다 — 회의록 본문은 항목이 줄로 나뉜 글이라
+ * 줄을 뭉개면 한 덩어리가 되어 읽기가 나빠진다.
+ * 논의·의결·후속조치는 뜻이 다른 칸이라 나눠서 보여준다. */
+function openDetail(meta,title,note,원문,회의,본문){
   const 발 = 원문
     ? `<div class="detail-foot"><a class="detail-open" href="${esc(원문)}">회의록 원문 열기 →</a>${회의?`<small>${esc(회의)}</small>`:''}</div>`
     : `<div class="detail-foot">이 항목은 아직 원문으로 이어지지 않아.</div>`;
-  detailContent.innerHTML=`<div class="detail-meta">${meta.map(v=>`<span>${esc(v)}</span>`).join('')}</div><h2>${esc(title)}</h2><p>${esc(note||'세부 설명이 아직 연결되지 않았어.')}</p>${발}`;
+  const 몸통 = (본문&&본문.length)
+    ? `<div class="detail-body">${본문.map(c=>`<section><h3>${esc(c.이름)}</h3><p>${esc(c.글)}</p></section>`).join('')}</div>`
+    : `<p>${esc(note||'세부 설명이 아직 연결되지 않았어.')}</p>`;
+  const 회의줄 = (본문&&본문.length&&회의) ? `<p class="detail-where">${esc(회의)}</p>` : '';
+  detailContent.innerHTML=`<div class="detail-meta">${meta.map(v=>`<span>${esc(v)}</span>`).join('')}</div><h2>${esc(title)}</h2>${회의줄}${몸통}${발}`;
   if(typeof detailDialog.showModal==='function')detailDialog.showModal();else detailDialog.setAttribute('open','');
 }
 /* 핵심 요약.
@@ -58,9 +68,9 @@ function attachBInteractions(t,t0){
     if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:'nearest',inline:'center'});
   });
   view.querySelectorAll('[data-b-topic]').forEach(b=>b.onclick=()=>openTopic(t));
-  view.querySelectorAll('[data-b-current]').forEach(b=>{b.onclick=()=>{const c=t.current[+b.dataset.bCurrent];openDetail([자료().currentLabel||'현재 기준',c.kind],c.title,c.note,c.원문,c.회의);};});
-  view.querySelectorAll('[data-b-timeline]').forEach(b=>{b.onclick=()=>{const e=t.timeline[+b.dataset.bTimeline];openDetail([e.date,'타임라인'],e.title,e.note,e.원문,e.회의);};});
-  view.querySelectorAll('[data-b-record]').forEach(b=>{b.onclick=()=>{const r=t.records[+b.dataset.bRecord];openDetail([r[0],r[1],r[3]],r[2],r[5]?('회의: '+r[5]):'',r[4],r[5]);};});
+  view.querySelectorAll('[data-b-current]').forEach(b=>{b.onclick=()=>{const c=t.current[+b.dataset.bCurrent];openDetail([자료().currentLabel||'현재 기준',c.kind],c.title,c.note,c.원문,c.회의,c.본문);};});
+  view.querySelectorAll('[data-b-timeline]').forEach(b=>{b.onclick=()=>{const e=t.timeline[+b.dataset.bTimeline];openDetail([e.date,'타임라인'],e.title,e.note,e.원문,e.회의,e.본문);};});
+  view.querySelectorAll('[data-b-record]').forEach(b=>{b.onclick=()=>{const r=t.records[+b.dataset.bRecord];openDetail([r[0],r[1],r[3]],r[2],r[5]?('회의: '+r[5]):'',r[4],r[5],r[7]);};});
 }
 /* 주제 전환 줄 (사용자 요청 2026-09-02)
  *   "선택해서 들어갔을 때 다시 뒤로 가서 고르기 귀찮으니
