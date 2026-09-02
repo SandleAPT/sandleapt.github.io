@@ -16,3 +16,8 @@ body.embedded .wrap { padding-top: 8px; }
 .notice-admin { margin: 10px 0 0; }
 .notice-admin a { font-size: .88em; font-weight: 700; color: var(--gold, #b08d3f); text-decoration: none; }
 .notice-admin a:hover { text-decoration: underline; }
+
+/* hidden 속성이 실제로 먹게 (2026-09-02)
+   .search 에 display:flex 가 걸려 있어 hidden 속성만으로는 안 숨겨졌다.
+   속성 선택자가 클래스 규칙보다 약해서 그냥 무시된다. */
+[hidden] { display: none !important; }
