@@ -214,3 +214,7 @@
   border: 1px dashed var(--line, #e3e0d8); border-radius: 8px;
   font-size: .82em; line-height: 1.6; opacity: .8;
 }
+
+/* 그 회의체에 기록이 없을 때 (2026-09-02)
+   없는 것을 있는 것처럼 보여주지 않는다. 요약 자리를 비우고 사실만 적는다. */
+.search-b-summary .tb-none { margin: 0; font-size: .95em; line-height: 1.7; opacity: .8; }
