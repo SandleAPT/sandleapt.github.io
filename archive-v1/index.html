@@ -52,9 +52,9 @@
       <section class="home-panel recent-panel">
         <div class="section-head">
           <div><p class="section-kicker">LATEST</p><h2>최근 추가 · 변경 기록</h2></div>
-          <span class="sample-badge soft">샘플 자료</span>
+          <span class="sample-badge soft" id="recentBadge">실제 회의록</span>
         </div>
-        <p class="section-note">현재는 샘플 자료의 날짜를 기준으로 배치했어. 실제 운영 때는 Archive 등록·수정 시각도 별도로 보여줄 수 있어.</p>
+        <p class="section-note">회의가 열린 날짜순이야. Archive에 언제 정리했는지는 아직 따로 보여주지 않아.</p>
         <div id="recentRecords" class="recent-list"></div>
       </section>
     </div>
@@ -88,7 +88,14 @@
 <script src="./shared/freshness.js?v=20260902-1430"></script>
 <script src="./login.js?v=20260902-1520"></script>
 <script src="./freshness-ui.js?v=20260902-1330"></script>
+<!-- 개발 비계는 공개 화면에서 뺐다 (5.1, 2026-09-02).
+     실제 회의록을 붙인 뒤로 이 두 판이 화면 위 1,000px 가까이를 차지해, 방문자가 내용을 보려면
+     한참 스크롤해야 했다. 게다가 문구가 낡아 지금은 **사실이 아닌 것**을 보여주고 있었다 —
+     「A/B 최종 선택은 보류」(1.10에서 B안 확정), 「실제 입주민·관리자 로그인은 아직 제공하지 않아」(4.4a에서 붙임).
+     파일은 남겨 둔다. 다시 보려면 아래 두 줄의 주석을 풀면 된다.
+     진행 상황의 진본은 docs/archive-v1/ROADMAP_V1.md 다.
 <script src="./review-1-8.js?v=20260901-152900"></script>
 <script src="./progress-4-3.js?v=20260901-152900"></script>
+-->
 </body>
 </html>
