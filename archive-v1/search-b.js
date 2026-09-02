@@ -103,6 +103,30 @@ function 좁힌것(t){
     description:recs.length?`${t.label} 중 ‘${좁힘}’ ${recs.length}건`:''
   });
 }
+/* 사람이 쓴 주제 흐름 요약 (5.5a).
+ * 회의록 앱이 이미 갖고 있던 것을 그대로 보여준다. 기계가 만든 「N건 · 기간」보다 이것이 먼저다.
+ * 아직 안 받았으면 자리만 비워 두고, 도착하면 그 자리에 끼워 넣는다(화면 전체를 다시 그리지 않는다). */
+let 요약표=null;
+function 요약HTML(label){
+  const S=window.SandleTopicSummary;
+  if(!S||!요약표) return '';
+  const r=S.파싱((요약표[label]||{}).text);
+  if(!r) return '';
+  const 요점=r.요점.slice(0,5).map(x=>`<li>${esc(x)}</li>`).join('');
+  return `<section class="topic-brief">${r.현재상태?`<p class="tb-now"><b>지금</b> ${esc(r.현재상태)}</p>`:''}`
+    +(요점?`<ul class="tb-points">${요점}</ul>`:'')
+    +`<p class="tb-src">회의록 앱의 주제 흐름 요약</p></section>`;
+}
+function 요약채우기(label){
+  const S=window.SandleTopicSummary;
+  if(!S||요약표) return;
+  S.불러오기(window.fetch.bind(window)).then(function(m){
+    if(!m) return;
+    요약표=m;
+    const 자리=view.querySelector('[data-brief]');
+    if(자리) 자리.innerHTML=요약HTML(label);
+  }).catch(function(){});
+}
 function renderB(t0,query){
   const t=좁힌것(t0);
   const layout=LAYOUTS.B||{preview:{current:3,timeline:6,records:12}};
@@ -117,7 +141,8 @@ function renderB(t0,query){
   const counts=Object.entries(t.counts||{}).map(([k,v])=>`<span>${esc(k)} ${esc(v)}</span>`).join('');
   const extraRecords=(t.records||[]).length>recordItems.length?`<div class="search-b-more">전체 ${(t.records||[]).length}건 중 ${recordItems.length}건 표시 · <button type="button" data-b-topic>주제 전체 보기</button></div>`:'';
   home.classList.add('is-hidden');view.classList.remove('is-hidden');input.value=query||t.label;
-  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>“${esc(query||t.label)}” 검색 결과</h2><p><b>${esc(t.label)}</b>에 얽힌 안건을 모았어. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인, 자료 전체 순으로 내려가.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<section class="search-b-section"><div class="search-b-section-head"><span>1</span><div><h3>${esc(자료().currentLabel||'현재 기준')}</h3><small>${esc(자료().currentNote||'지금 적용되는 규정·계약·보험부터')}</small></div></div><div class="search-b-current-grid">${current||'<p class="search-b-empty">현재 기준 샘플이 아직 없어.</p>'}</div></section><section class="search-b-summary"><div class="search-b-section-head"><span>2</span><div><h3>핵심 요약</h3><small>검색 결과 전체를 짧게 훑기</small></div></div><ul>${summary||'<li>요약할 샘플 데이터가 아직 없어.</li>'}</ul></section><section class="search-b-section"><div class="search-b-section-head"><span>3</span><div><h3>타임라인</h3><small>과거 논의에서 최근 흐름까지</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">타임라인 샘플이 아직 없어.</p>'}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>4</span><div><h3>자료 전체</h3><small>회의·규정·계약·보험 등 원자료 목록</small></div></div><div class="search-b-records">${records||'<p class="search-b-empty">관련 기록 샘플이 아직 없어.</p>'}</div>${extraRecords}</section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
+  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>“${esc(query||t.label)}” 검색 결과</h2><p><b>${esc(t.label)}</b>에 얽힌 안건을 모았어. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인, 자료 전체 순으로 내려가.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<div data-brief>${요약HTML(t0.label)}</div><section class="search-b-section"><div class="search-b-section-head"><span>1</span><div><h3>${esc(자료().currentLabel||'현재 기준')}</h3><small>${esc(자료().currentNote||'지금 적용되는 규정·계약·보험부터')}</small></div></div><div class="search-b-current-grid">${current||'<p class="search-b-empty">현재 기준 샘플이 아직 없어.</p>'}</div></section><section class="search-b-summary"><div class="search-b-section-head"><span>2</span><div><h3>핵심 요약</h3><small>검색 결과 전체를 짧게 훑기</small></div></div><ul>${summary||'<li>요약할 샘플 데이터가 아직 없어.</li>'}</ul></section><section class="search-b-section"><div class="search-b-section-head"><span>3</span><div><h3>타임라인</h3><small>과거 논의에서 최근 흐름까지</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">타임라인 샘플이 아직 없어.</p>'}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>4</span><div><h3>자료 전체</h3><small>회의·규정·계약·보험 등 원자료 목록</small></div></div><div class="search-b-records">${records||'<p class="search-b-empty">관련 기록 샘플이 아직 없어.</p>'}</div>${extraRecords}</section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
+  요약채우기(t0.label);
   attachBInteractions(t,t0);try{history.replaceState(null,'','#search-b-'+encodeURIComponent(t.id));}catch(e){}view.scrollIntoView({behavior:'smooth',block:'start'});
 }
 form.addEventListener('submit',function(e){

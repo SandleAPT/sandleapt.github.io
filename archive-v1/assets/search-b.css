@@ -48,3 +48,20 @@
 }
 .search-b-narrow .narrow.on i { opacity: .8; }
 .search-b-narrow .narrow.clear { border-style: dashed; opacity: .7; }
+
+/* 사람이 쓴 주제 흐름 요약 (5.5a, 2026-09-02)
+   기계가 만든 「N건 · 기간」보다 이것이 먼저 눈에 들어와야 한다. */
+.topic-brief {
+  margin: 4px 0 16px; padding: 14px 16px;
+  border: 1px solid var(--line, #e3e0d8); border-left: 4px solid var(--gold, #b08d3f);
+  border-radius: 10px; background: var(--aw-soft, #f7f7f4);
+}
+.tb-now { margin: 0; font-size: 1.02em; line-height: 1.65; }
+.tb-now b {
+  display: inline-block; margin-right: 6px; padding: 1px 8px;
+  border-radius: 999px; background: var(--gold, #b08d3f); color: #fff;
+  font-size: .72em; vertical-align: 2px; letter-spacing: .04em;
+}
+.tb-points { margin: 10px 0 0; padding-left: 18px; font-size: .9em; line-height: 1.75; }
+.tb-points li { margin: 2px 0; }
+.tb-src { margin: 8px 0 0; font-size: .74em; opacity: .5; }
