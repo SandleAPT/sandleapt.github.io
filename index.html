@@ -109,7 +109,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v291</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v292</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -156,7 +156,7 @@ var GROUPS = [
     // Archive 시험판(2026-09-02, 사용자 요청 "왔다갔다 하게"). 같은 호스트라 iframe으로 띄운다.
     // 회의록과는 **다른 앱**이므로 service를 따로 준다 — minutes로 두면 postMessage로 화면 전환을
     // 시도해 엉뚱한 곳을 건드린다. 아직 시험판이라 이름에 그대로 적는다.
-    { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=291" },
+    { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=292" },
     { id: "setupView",  label: "회의 설정",   view: "setupView",  adminOnly: true },
     { id: "repsView",   label: "동대표 명단", view: "repsView",   adminOnly: true },
     { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true }
@@ -237,7 +237,7 @@ var SERVICES = {
   community: { url: BASE + "/CommunityNotice/" },
   // iframe src 는 **이곳**에서 읽는다(항목의 url 은 '새 창으로 열기' 단추용).
   // 여기 등록을 빠뜨리면 메뉴를 눌러도 아무 일이 일어나지 않는다 — 2026-09-02에 실제로 그랬다.
-  archive:   { url: BASE + "/archive-v1/?v=291" }
+  archive:   { url: BASE + "/archive-v1/?v=292" }
 };
 // 모바일 하단 바(서비스 단위)
 var BOTTOM = [

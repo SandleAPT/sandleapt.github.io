@@ -44,3 +44,18 @@ body.embedded .wrap { padding-top: 8px; }
   background: var(--gold, #b08d3f); border-color: var(--gold, #b08d3f);
   color: #fff; font-weight: 700;
 }
+
+/* 연도별 주제 묶음 (사용자 제안 2026-09-02)
+   마지막으로 다뤄진 해로 묶는다. 26 칸에 있는 것이 곧 지금 일이다. */
+.year-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; }
+.year-row + .year-row { border-top: 1px dashed var(--line, #e6e1d6); }
+.ycircle {
+  flex: 0 0 auto; width: 30px; height: 30px; margin-top: 1px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--gold, #b08d3f); color: #fff;
+  font-size: 12.5px; font-weight: 800; letter-spacing: -.02em;
+}
+/* 오래된 해일수록 조용하게 — 위쪽(최근)이 먼저 눈에 들어와야 한다 */
+.year-row:nth-child(n+3) .ycircle { background: #cfc6ae; }
+.year-row:nth-child(n+6) .ycircle { background: #ded8c9; color: #6b6455; }
+.year-topics { flex: 1 1 auto; min-width: 0; line-height: 2.1; }

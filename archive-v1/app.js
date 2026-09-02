@@ -157,12 +157,43 @@ function renderBodyFilter(){
     }
   }catch(e){ /* 다른 출처에 끼워졌으면 top 접근이 막힌다 — 그대로 둔다 */ }
 })();
+/* 마지막으로 다뤄진 때 (사용자 제안 2026-09-02).
+ * 건수 순으로 두니 위쪽이 몇 해 전에 끝난 주제로 채워졌다 — *"클릭하니까 너무 과거께 나온다"*.
+ * 건수는 '많이 다툰 주제'를 말해줄 뿐 '지금 무슨 일이 있나'는 말해주지 않는다.
+ * 그래서 **마지막 안건이 언제였나**로 세우고 연도별로 묶는다. 올해 칸에 있는 것이 곧 지금 일이다. */
+window.SandleBody.최신 = function (t) {
+  return (t.records || []).filter(function (r) { return window.SandleBody.맞나(r[1]); })
+    .reduce(function (m, r) { return String(r[0]) > m ? String(r[0]) : m; }, '');
+};
 function renderAllTopics(){
   allTopics.innerHTML='';
   const 건수=t=>window.SandleBody.건수(t);
+  const 최신=t=>window.SandleBody.최신(t);
   const topics=DATA.topics.filter(t=>t.visibility!=='private')
-    .filter(t=>!window.SandleBody.값||건수(t)>0)   // 고른 회의체에 기록이 없는 주제는 뺀다
-    .slice().sort((a,b)=>건수(b)-건수(a)||String(a.label).localeCompare(String(b.label),'ko'));
+    .filter(t=>건수(t)>0)                       // 기록이 없으면 눌러도 빈 화면이라 뺀다
+    .slice().sort((a,b)=>String(최신(b)).localeCompare(String(최신(a)))||건수(b)-건수(a));
+
+  // 연도별로 묶어 앞에 동그라미를 놓는다. 같은 해 안에서는 최근 달 → 건수 순.
+  const 해별=[];
+  topics.forEach(t=>{
+    const y=String(최신(t)).slice(0,4); if(!y)return;
+    let g=해별.find(x=>x.해===y); if(!g){g={해:y,주제:[]};해별.push(g);}
+    g.주제.push(t);
+  });
+  해별.forEach(g=>{
+    const 줄=document.createElement('div'); 줄.className='year-row';
+    const 동그라미=document.createElement('span'); 동그라미.className='ycircle';
+    동그라미.textContent=g.해.slice(2);            // 2026 → 26
+    동그라미.title=g.해+'년에 마지막으로 다룬 주제';
+    줄.appendChild(동그라미);
+    const 칸=document.createElement('div'); 칸.className='year-topics';
+    그리기(g.주제,칸);
+    줄.appendChild(칸);
+    allTopics.appendChild(줄);
+  });
+  return;
+
+  function 그리기(topics,담을곳){
   topics.forEach((t,i)=>{
     const b=document.createElement('button');b.type='button';b.className='topic-text-btn';
     /* 다른 코드가 이 단추에서 주제를 찾는다(search-b.js). **글자가 아니라 id로 찾게 한다** —
@@ -172,9 +203,10 @@ function renderAllTopics(){
     b.title=t.description||t.label;
     b.appendChild(document.createTextNode(t.label));
     if(건수(t)){const n=document.createElement('i');n.className='tcount';n.textContent=건수(t);b.appendChild(n);}
-    b.onclick=()=>renderTopic(t);allTopics.appendChild(b);
-    if(i<topics.length-1){const sep=document.createElement('span');sep.className='topic-sep';sep.textContent='·';sep.setAttribute('aria-hidden','true');allTopics.appendChild(sep);}
+    b.onclick=()=>renderTopic(t);담을곳.appendChild(b);
+    if(i<topics.length-1){const sep=document.createElement('span');sep.className='topic-sep';sep.textContent='·';sep.setAttribute('aria-hidden','true');담을곳.appendChild(sep);}
   });
+  }
 }
 function renderRecent(){
   recentRecords.innerHTML='';

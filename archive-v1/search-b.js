@@ -98,8 +98,11 @@ function 주제줄(현재){
   if(목록.length<2) return '';
   /* 첫 화면과 **같은 순서**로 (사용자 지적 2026-09-02: 메인은 안건 수 순인데 들어오면 갑자기 가나다순).
      같은 목록이 화면마다 다른 순서로 나오면 눈이 기억한 자리를 잃는다. 둘 다 안건 수 순으로 맞춘다. */
+  /* 첫 화면과 **같은 순서**: 마지막으로 다뤄진 때가 최근인 주제부터 (사용자 제안 2026-09-02).
+     건수 순으로 두면 위쪽이 몇 해 전에 끝난 주제로 채워져 "지금 무슨 일이 있나"가 안 보인다. */
+  var 최신=function(x){ var B=window.SandleBody; return B&&B.최신?B.최신(x):((x.records||[])[0]||[])[0]||''; };
   목록=목록.slice().sort(function(a,b){
-    return 셈(b)-셈(a) || String(a.label).localeCompare(String(b.label),'ko');
+    return String(최신(b)).localeCompare(String(최신(a))) || 셈(b)-셈(a);
   });
   var 칩=목록.map(function(x){
     var on = x.id===현재.id;
