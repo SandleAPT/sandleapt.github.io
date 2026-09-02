@@ -179,24 +179,37 @@ function 기록없음(t0){
   if(!B||!B.값) return false;
   return !(t0.records||[]).some(r=>B.맞나(r[1]));
 }
-function 회의체안내(t0){
+/* 회의체 정보는 **사실만** 계산해 넘기고, 문장은 요약HTML이 만든다 (2026-09-02).
+ * 예전에는 여기서 문장까지 만들었는데, 그 문장이 "합친 요약을 보고 있다"를 전제로 쓰여 있었다.
+ * 회의체 전용 요약을 붙인 뒤로는 임차를 골라도 「위 요약의 최근 내용은 입주자대표회의 쪽」이라고
+ * 나왔다 — **임차 것만 추려 쓴 요약인데 틀린 안내**다(사용자 지적).
+ * 무엇을 보고 있는지는 요약을 고르는 쪽만 알 수 있으므로 문장도 거기서 만든다. */
+function 회의체정보(t0){
   const B=window.SandleBody;
-  if(!B||!B.값) return '';
-  const 이름=B.값==='임차'?'임차인대표회의':'입주자대표회의';
-  const 반대이름=B.값==='임차'?'입주자대표회의':'임차인대표회의';
+  if(!B||!B.값) return null;
   const recs=(t0.records||[]).filter(r=>B.맞나(r[1]));
-  if(!recs.length) return `「${esc(이름)}」에서는 이 주제를 다룬 기록이 <b>없습니다</b>. 이 주제는 ${esc(반대이름)}에서만 다뤘습니다.`;
   const ym=recs.map(r=>r[0]).filter(Boolean).sort();
-  const 내최신=ym[ym.length-1];
   const 전체=(t0.records||[]).map(r=>r[0]).filter(Boolean).sort();
-  const 전체최신=전체[전체.length-1];
-  let s=`「${esc(이름)}」 기록은 <b>${recs.length}건 · ${esc(ym[0])} ~ ${esc(내최신)}</b>입니다. `;
-  s+= (내최신<전체최신)
-    ? `${esc(내최신)} 이후로는 이 주제를 다루지 않았고, <b>위 요약의 최근 내용은 ${esc(반대이름)} 쪽</b>입니다.`
-    : `위 요약은 두 회의체를 함께 다룹니다.`;
-  return s;
+  return {
+    값:B.값,
+    이름:B.값==='임차'?'임차인대표회의':'입주자대표회의',
+    반대이름:B.값==='임차'?'입주자대표회의':'임차인대표회의',
+    건수:recs.length, 처음:ym[0]||'', 끝:ym[ym.length-1]||'',
+    뒤처짐:!!(ym.length&&전체.length&&ym[ym.length-1]<전체[전체.length-1])
+  };
 }
-function 요약HTML(label, 기계요약, 회의체안내, 기록없음){
+function 회의체문장(정보, 전용){
+  if(!정보) return '';
+  if(!정보.건수) return `「${esc(정보.이름)}」에서는 이 주제를 다룬 기록이 <b>없습니다</b>. 이 주제는 ${esc(정보.반대이름)}에서만 다뤘습니다.`;
+  const 범위=`「${esc(정보.이름)}」 기록은 <b>${정보.건수}건 · ${esc(정보.처음)} ~ ${esc(정보.끝)}</b>입니다.`;
+  /* 전용 요약을 보고 있으면 "위 요약은 저쪽 것" 같은 말을 붙이면 안 된다 — 틀린 안내가 된다. */
+  if(전용) return 정보.뒤처짐 ? `${범위} ${esc(정보.끝)} 이후로는 이 주제를 다루지 않았습니다.` : 범위;
+  return 정보.뒤처짐
+    ? `${범위} ${esc(정보.끝)} 이후로는 이 주제를 다루지 않았고, <b>위 요약은 두 회의체를 합쳐 쓴 것이라 최근 내용은 ${esc(정보.반대이름)} 쪽</b>입니다.`
+    : `${범위} 위 요약은 두 회의체를 함께 다룹니다.`;
+}
+function 요약HTML(label, 기계요약, 정보JSON, 기록없음){
+  const 정보=(function(){try{return 정보JSON?JSON.parse(정보JSON):null;}catch(e){return null;}})();
   const S=window.SandleTopicSummary;
   /* 회의체별 요약 (사용자 지적 2026-09-02: 수광선은 입대의에만 있는데 임차를 눌러도
    * 입대의 내용으로 쓴 요약이 그대로 나온다).
@@ -206,7 +219,7 @@ function 요약HTML(label, 기계요약, 회의체안내, 기록없음){
    *  ③ 아직 안 쓴 회의체는 합친 요약을 보여주되, **합친 것임을 밝힌다**(회의체안내).
    *     합친 글을 그 회의체 것인 양 내놓지 않는다. */
   const B=window.SandleBody;
-  if(기록없음) return `<p class="tb-none">${회의체안내||'이 회의체에서 다룬 기록이 없습니다.'}</p>`;
+  if(기록없음) return `<p class="tb-none">${회의체문장(정보,false)||'이 회의체에서 다룬 기록이 없습니다.'}</p>`;
   const 열쇠=(B&&B.값)?(label+'|'+B.값):label;
   const r=(S&&요약표)?(S.파싱((요약표[열쇠]||{}).text)||S.파싱((요약표[label]||{}).text)):null;
   /* 사람이 쓴 요약이 **핵심 요약 자리의 본체**다 (5.5f, 사용자 지적 2026-09-02:
@@ -235,7 +248,7 @@ function 요약HTML(label, 기계요약, 회의체안내, 기록없음){
      * 아래 목록만 줄어드니 요약도 그 회의체 것처럼 읽힌다 — 그건 잘못된 읽힘이라 밝혀 둔다.
      * 회의체별로 따로 쓰지 않는 이유: 두 회의가 같은 사안을 각각 다루므로 나누면
      * 「입대의는 의결, 임차는 부결」 같은 **갈린 지점이 오히려 안 보인다.** */
-    +(회의체안내?`<p class="tb-both">${회의체안내}</p>`:'')
+    +((function(){var m=회의체문장(정보,전용);return m?`<p class="tb-both">${m}</p>`:'';})())
     +`<p class="tb-src">회의록 앱의 주제 흐름 요약에서 가져왔습니다</p>`;
 }
 function 요약채우기(label){
@@ -334,7 +347,7 @@ function renderB(t0,query,제자리){
    * 규약·계약·보험처럼 **회의록이 아닌 자료**가 들어오면 그때 다시 만든다(6단계). 그 전엔 중복일 뿐이다. */
   const counts=Object.entries(t.counts||{}).map(([k,v])=>`<span>${esc(k)} ${esc(v)}</span>`).join('');
   home.classList.add('is-hidden');view.classList.remove('is-hidden');input.value=query||t.label;
-  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>${esc(query||t.label)}</h2><p><b>${esc(t.label)}</b>에 관한 안건을 모았습니다. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인 순으로 이어집니다.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<section class="search-b-summary"><div class="search-b-section-head"><span>1</span><div><h3>핵심 요약</h3><small>지금 어떤 상태이고, 어떻게 여기까지 왔나</small></div></div><div data-brief data-machine="${esc(summary)}" data-body="${esc(회의체안내(t0))}" data-none="${기록없음(t0)?'1':''}">${요약HTML(t0.label, summary, 회의체안내(t0), 기록없음(t0))}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>2</span><div><h3>타임라인</h3><small>연도별 · 최근 해부터</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">아직 기록이 없습니다.</p>'}</div></section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
+  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>${esc(query||t.label)}</h2><p><b>${esc(t.label)}</b>에 관한 안건을 모았습니다. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인 순으로 이어집니다.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<section class="search-b-summary"><div class="search-b-section-head"><span>1</span><div><h3>핵심 요약</h3><small>지금 어떤 상태이고, 어떻게 여기까지 왔나</small></div></div><div data-brief data-machine="${esc(summary)}" data-body="${esc(JSON.stringify(회의체정보(t0)||null))}" data-none="${기록없음(t0)?'1':''}">${요약HTML(t0.label, summary, JSON.stringify(회의체정보(t0)||null), 기록없음(t0))}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>2</span><div><h3>타임라인</h3><small>연도별 · 최근 해부터</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">아직 기록이 없습니다.</p>'}</div></section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
   요약채우기(t0.label);
   attachBInteractions(t,t0);try{history.replaceState(null,'','#search-b-'+encodeURIComponent(t.id));}catch(e){}
   // 주제를 처음 열 때만 위로 올린다. 같은 화면에서 접었다 폈다 할 때는 그 자리에 둔다.

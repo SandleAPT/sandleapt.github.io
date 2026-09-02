@@ -218,3 +218,10 @@
 /* 그 회의체에 기록이 없을 때 (2026-09-02)
    없는 것을 있는 것처럼 보여주지 않는다. 요약 자리를 비우고 사실만 적는다. */
 .search-b-summary .tb-none { margin: 0; font-size: .95em; line-height: 1.7; opacity: .8; }
+
+/* 줄바꿈이 화면 폭보다 일찍 일어나던 것 (2026-09-02 사용자 지적)
+   읽는 폭을 잡겠다고 max-width:68ch 를 걸었더니, 아래 안내 상자는 창 끝까지 가는데
+   「지금」과 요점만 중간에서 끊겼다. 같은 상자 안에서 줄 끝이 다르면 어긋나 보인다.
+   폭 제한을 없애고 상자 여백에만 맡긴다. */
+.search-b-summary [data-brief] .tb-now,
+.search-b-summary [data-brief] li { max-width: none; }
