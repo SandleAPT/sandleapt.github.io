@@ -109,7 +109,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v336</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v337</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -145,7 +145,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 // 같은 호스트 기준 주소(배포: https://sandleapt.github.io, 로컬 점검: http://localhost:…)
 var BASE = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://sandleapt.github.io";
 var MIN = BASE + "/minutes/";
-var MINQ = "?embed=1&v=135"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
+var MINQ = "?embed=1&v=136"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
 var FEES = BASE + "/fees/?v=46";
 // 2026-08-26 재편(v38): 내용 기준 4그룹, 번호 없음. 작성용 화면은 회의록 그룹 안에서 관리자 기기에만 표시.
 var GROUPS = [
@@ -258,136 +258,3 @@ var current = null, frames = {}, ready = {};
 // 메뉴 그리기
 GROUPS.forEach(function (g) {
   var box = document.createElement("div"); box.className = "grp " + g.cls + (g.collapsible ? " collapsible" : ""); box.id = "grp-" + g.id;
-  if (g.collapsible) {
-    var tb = document.createElement("button"); tb.type = "button"; tb.className = "grp-title toggle";
-    tb.innerHTML = '<span class="dot"></span>' + g.title + '<span class="arrow">▸</span>';
-    tb.onclick = function () { box.classList.toggle("open"); try { localStorage.setItem("sandle_portal_admin_open", box.classList.contains("open") ? "1" : "0"); } catch (e) {} };
-    box.appendChild(tb);
-    // 회의록 앱과 같은 규칙: 관리자 키가 있는 기기나 한 번 펼친 기기는 펼친 채로
-    try { var v = localStorage.getItem("sandle_portal_admin_open"); if (v === "1" || (v === null && localStorage.getItem("sandle_admin_key"))) box.classList.add("open"); } catch (e) {}
-  } else {
-    var t = document.createElement("div"); t.className = "grp-title"; t.innerHTML = '<span class="dot"></span>' + g.title; box.appendChild(t);
-  }
-  var items = document.createElement("div"); items.className = "items";
-  var dividerAdded = false;
-  g.items.forEach(function (it) {
-    // v62: 관리자 메뉴도 항상 표시(🔒 포함) — 숨기면 키 만료 후 비밀번호를 넣을 입구가 없어짐(사용자 요청).
-    //      화면 자체는 회의록 앱이 서버 검증으로 잠근다(v69~), 열람/수정 2단계 키는 v92~.
-    if (it.adminOnly && !dividerAdded) { var d = document.createElement("div"); d.className = "items-divider"; items.appendChild(d); dividerAdded = true; }
-    var b = document.createElement("button"); b.type = "button"; b.className = "item" + (it.adminOnly ? " locked" : ""); b.dataset.id = it.id;
-    b.innerHTML = (it.adminOnly ? '<span class="num">🔒</span>' : "") + '<span>' + it.label + '</span>' + (it.external ? '<span class="ext">새 창 ↗</span>' : "");
-    b.onclick = function () { show(it.id, true); if (it.external) window.open(it.url, "_blank", "noopener"); closeDrawer(); };
-    items.appendChild(b);
-  });
-  box.appendChild(items); menu.appendChild(box);
-});
-BOTTOM.forEach(function (bt) {
-  var b = document.createElement("button"); b.className = bt.cls; b.dataset.id = bt.id; b.innerHTML = '<span class="ic">' + bt.ic + '</span>' + bt.label;
-  b.onclick = function () { var it = ITEMS[bt.id]; show(bt.id, true); if (it && it.external) window.open(it.url, "_blank", "noopener"); };
-  bottom.appendChild(b);
-});
-
-// 화면(pane) 준비
-function paneFor(key) {
-  var p = document.getElementById("pane-" + key);
-  if (p) return p;
-  p = document.createElement("div"); p.className = "pane"; p.id = "pane-" + key;
-  p.innerHTML = '<div class="loading"></div>';
-  main.appendChild(p);
-  return p;
-}
-function ensureService(key) {
-  var s = SERVICES[key], p = paneFor("svc-" + key);
-  if (!frames[key]) {
-    var f = document.createElement("iframe"); f.src = s.url; f.title = key; f.setAttribute("allow", "clipboard-write; fullscreen");
-    p.classList.add("loading-on");
-    f.addEventListener("load", function () { p.classList.remove("loading-on"); });
-    p.insertBefore(f, p.firstChild); frames[key] = f;
-  }
-  return p;
-}
-function ensureExternal(it) {
-  var p = paneFor("ext-" + it.id);
-  if (!p.querySelector(".ext-pane")) {
-    p.innerHTML = '<div class="ext-pane"><div class="ext-card"><h2>' + it.label + ' <span style="color:var(--muted);font-weight:600;font-size:13px">새 창</span></h2>' +
-      '<p>' + (it.note || "") + '<br>이 페이지는 노션에 있어 포털 안에 끼워 넣을 수 없어, 새 창으로 열립니다. 포털은 이 창에 그대로 남아 있어요.</p>' +
-      '<a class="go" href="' + it.url + '" target="_blank" rel="noopener">' + it.label + ' 열기 ↗</a>' +
-      '<small>창이 안 열렸으면 위 단추를 눌러 주세요(팝업 차단).</small></div></div>';
-  }
-  return p;
-}
-
-// 회의록 앱에 화면 전환 요청 — 앱이 준비(ready)되기 전이면 준비된 뒤 보낸다
-var pendingView = null;
-function tellMinutes(view) {
-  var f = frames.minutes; if (!f) return;
-  if (!ready.minutes) { pendingView = view; return; }
-  try { f.contentWindow.postMessage({ source: "sandle-portal", type: "show", view: view }, location.origin); } catch (e) {}
-}
-window.addEventListener("message", function (e) {
-  if (e.origin !== location.origin || !e.data || e.data.source !== "sandle-minutes") return;
-  if (e.data.type === "ready") {
-    ready.minutes = true;
-    if (pendingView) { var v = pendingView; pendingView = null; tellMinutes(v); }
-  } else if (e.data.type === "view" && e.data.view) {
-    // 앱 안에서 화면이 바뀌면(예: 시작 시 자동 열기) 메뉴 표시를 맞춘다
-    if (ITEMS[e.data.view] && (!current || current.id !== e.data.view)) show(e.data.view, false, true);
-  }
-});
-
-// 메뉴(세부 화면)마다 화면별 page_view — GA '페이지 및 화면' 보고서에 제목별 행으로 잡힌다
-var lastTracked = null;
-function trackView(it) {
-  if (!window.gtag || lastTracked === it.id) return;
-  lastTracked = it.id;
-  gtag("event", "page_view", { page_title: document.title, page_location: location.origin + "/#" + it.id });
-}
-function directUrl(it) {
-  if (it.external || it.url) return it.url;
-  return MIN + (it.view && it.view !== "previewView" ? "?tab=" + it.view : "");
-}
-function show(id, push, fromApp) {
-  var it = ITEMS[id] || ITEMS.previewView;
-  current = it;
-  document.querySelectorAll(".item").forEach(function (b) { b.classList.toggle("active", b.dataset.id === it.id); });
-  // 하단 바: 하자판결금은 자기 단추, 그 밖의 회의록 화면은 '회의록', 외부/커뮤니티는 같은 id
-  var bottomId = it.id === "hajaView" ? "hajaView" : (!it.external && svcOf(it) === "minutes") ? "previewView" : it.id;
-  document.querySelectorAll(".bottom button").forEach(function (b) { b.classList.toggle("active", b.dataset.id === bottomId); });
-  if (it.group.collapsible) document.getElementById("grp-" + it.group.id).classList.add("open");
-  document.querySelectorAll(".pane").forEach(function (p) { p.classList.remove("active"); });
-  if (it.external) ensureExternal(it).classList.add("active");
-  else {
-    var svc = svcOf(it);
-    ensureService(svc).classList.add("active");
-    if (svc === "minutes" && it.view && !fromApp) tellMinutes(it.view);
-  }
-  var u = directUrl(it); openBtn.href = u; openBtnM.href = u;
-  topTitle.textContent = it.label;
-  document.title = "산들마을 입주민 포털 — " + it.label;
-  trackView(it);
-  if (push) { try { history.replaceState(null, "", "#" + it.id); } catch (e) {} }
-}
-document.getElementById("reloadBtn").onclick = function () {
-  if (!current || current.external) return;
-  var svc = svcOf(current), f = frames[svc]; if (!f) return;
-  paneFor("svc-" + svc).classList.add("loading-on");
-  if (svc === "minutes") { ready.minutes = false; pendingView = current.view; f.src = MIN + MINQ + (current.view && current.view !== "previewView" ? "&tab=" + current.view : ""); }
-  else f.src = f.src;
-};
-// 모바일 서랍
-function closeDrawer() { document.body.classList.remove("drawer"); }
-document.getElementById("menuBtn").onclick = function () { document.body.classList.toggle("drawer"); };
-document.getElementById("scrim").onclick = closeDrawer;
-window.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
-
-window.addEventListener("hashchange", function () { show((location.hash || "").replace(/^#/, ""), false); });
-(function () {
-  var first = (location.hash || "").replace(/^#/, "") || "previewView";
-  var it = ITEMS[first] || ITEMS.previewView;
-  // 첫 화면이 회의록 앱 안의 탭이면 iframe 주소에 &tab= 을 붙여 처음부터 그 화면으로(메시지 왕복 없이)
-  if (!it.external && (svcOf(it) === "minutes") && it.view && it.view !== "previewView") SERVICES.minutes.url = MIN + MINQ + "&tab=" + it.view;
-  show(it.id, false);
-})();
-</script>
-</body>
-</html>
