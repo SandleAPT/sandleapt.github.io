@@ -179,3 +179,18 @@
 .tswitch-bar .tyear:first-child { margin-left: 0; }
 /* 두 번째 해부터는 조용하게 — 최근이 먼저 눈에 들어와야 한다 */
 .tswitch-bar .tyear ~ .tyear { background: #cfc6ae; }
+
+/* 핵심 요약 여백 정리 (2026-09-02 사용자 지적: "정렬이 너무 왼쪽 딱 붙어버리는 문제")
+   원래 요약 목록에는 padding-left:37px 가 있었는데, 줄 시작점을 맞추려고 그것을 0으로
+   만들면서 **카드 안쪽 여백까지 없앴다.** 글이 상자 테두리에 붙어버렸다.
+   여백은 바깥 상자가 한 번만 갖고, 안쪽 요소는 전부 0으로 두어 한 선에 세운다. */
+.search-b-summary [data-brief] { padding: 15px 20px 17px; }
+.search-b-summary [data-brief] > * { margin-left: 0; padding-left: 0; }
+.search-b-summary [data-brief] ul { margin: 0; padding: 0; }
+.search-b-summary [data-brief] > p { margin-right: 0; }
+/* 상자 안 글이 오른쪽 끝까지 닿지 않게 — 읽는 폭을 잡아 준다 */
+.search-b-summary [data-brief] .tb-now,
+.search-b-summary [data-brief] li { max-width: 68ch; }
+@media (max-width: 760px) {
+  .search-b-summary [data-brief] { padding: 13px 15px 15px; }
+}
