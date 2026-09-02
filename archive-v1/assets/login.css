@@ -82,3 +82,27 @@
 .audit-tb td:first-child { white-space: nowrap; opacity: .65; }
 .audit-tb td:last-child { text-align: right; opacity: .5; font-size: .92em; }
 .audit-tb tr.bad td { color: #b3261e; }
+
+/* ── 상단 작은 로그인 단추 (2026-09-02 사용자 요청) ──
+   첫 화면 한복판을 차지할 일이 아니다. 평소엔 단추 하나, 누를 때만 칸이 열린다. */
+.top-inner .login-slot { position: relative; margin: 0; max-width: none; }
+.login-chip {
+  border: 1px solid var(--line, #e3e0d8); background: transparent; color: inherit;
+  font: inherit; font-size: .8em; cursor: pointer;
+  padding: 4px 11px; border-radius: 999px; white-space: nowrap;
+}
+.login-chip:hover { border-color: var(--gold, #b08d3f); }
+.login-chip.on {
+  background: var(--gold, #b08d3f); border-color: var(--gold, #b08d3f);
+  color: #fff; font-weight: 700;
+}
+.login-panel {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 40;
+  width: min(360px, calc(100vw - 32px));
+  padding: 12px; border: 1px solid var(--line, #e3e0d8); border-radius: 12px;
+  background: var(--paper, #fffdf8); box-shadow: 0 10px 30px rgba(0,0,0,.14);
+  text-align: left;
+}
+.login-panel .login-box { border: 0; background: transparent; padding: 0; }
+.login-panel .login-note { text-align: left; }
+@media (max-width: 720px) { .login-panel { right: auto; left: 0; } }

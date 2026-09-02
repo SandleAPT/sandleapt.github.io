@@ -47,8 +47,13 @@
   function 그리기(role, 안내) {
     var 이름 = A.describeRole(role);
     var 볼수있는것 = A.allowedLevels(role).map(function (v) { return A.levelName(v); }).join(' · ');
+    /* 상단 작은 단추 + 눌러야 펼쳐지는 칸 (사용자 요청 2026-09-02).
+       평소엔 단추 하나만 보이고, 누를 때만 입력칸이 나온다. */
+    var 열림 = 자리.classList.contains('open');
     if (role) {
       자리.innerHTML =
+        '<button type="button" class="login-chip on" data-toggle>' + esc(이름) + '</button>' +
+        '<div class="login-panel"' + (열림 ? '' : ' hidden') + '>' +
         '<div class="login-box on">' +
         '<div class="login-who"><b>' + esc(이름) + '</b>으로 보는 중' +
         '<small>볼 수 있는 등급: ' + esc(볼수있는것) + (남은시간() ? ' · ' + esc(남은시간()) : '') + '</small></div>' +
@@ -58,21 +63,34 @@
         '<p class="login-note">아직 <b>내부공개·비공개 자료를 내려주는 경로가 없어서</b>, 로그인해도 지금 보이는 회의록은 같아. ' +
         '그 자료를 붙이는 일은 따로 남아 있어(4.1 외부 저장소).</p>' +
         /* 인증 기록은 관리자만. 입주민에게 접근 기록을 보여주지 않는다(서버도 같은 판정을 한다). */
-        (role === 'edit' ? '<div class="login-audit"><button type="button" class="fresh-btn" data-audit>인증 기록 보기</button></div>' : '');
+        (role === 'edit' ? '<div class="login-audit"><button type="button" class="fresh-btn" data-audit>인증 기록 보기</button></div>' : '') +
+        '</div>';
     } else {
       자리.innerHTML =
+        '<button type="button" class="login-chip" data-toggle>🔑 로그인</button>' +
+        '<div class="login-panel"' + (열림 || 안내 ? '' : ' hidden') + '>' +
         '<form class="login-box" data-login>' +
         '<label for="loginPw">입주민·관리자 확인</label>' +
         '<input id="loginPw" type="password" autocomplete="current-password" placeholder="회의록 앱과 같은 비밀번호">' +
         '<button type="submit">확인</button>' +
         '</form>' +
         (안내 ? '<p class="login-note bad">' + esc(안내) + '</p>' :
-          '<p class="login-note">회의록은 누구나 볼 수 있어. 비밀번호는 <b>입주민 전용 자료</b>를 붙였을 때를 위한 거야.</p>');
+          '<p class="login-note">회의록은 누구나 볼 수 있어. 비밀번호는 <b>입주민 전용 자료</b>를 붙였을 때를 위한 거야.</p>') +
+        '</div>';
+      if (안내) 자리.classList.add('open');
     }
     붙이기();
   }
 
   function 붙이기() {
+    // 단추를 누르면 칸이 열리고 닫힌다. 화면 밖을 누르면 닫는다.
+    var chip = 자리.querySelector('[data-toggle]');
+    if (chip) chip.onclick = function (e) {
+      e.stopPropagation();
+      자리.classList.toggle('open');
+      var p = 자리.querySelector('.login-panel');
+      if (p) p.hidden = !자리.classList.contains('open');
+    };
     var f = 자리.querySelector('[data-login]');
     if (f) f.onsubmit = function (e) {
       e.preventDefault();
@@ -137,6 +155,15 @@
       btn.disabled = false; btn.textContent = '다시 불러오기';
     });
   }
+
+  // 화면 밖을 누르면 닫는다 — 상단 단추 옆에 열린 채로 남아 있으면 거슬린다.
+  document.addEventListener('click', function (e) {
+    if (!자리.classList.contains('open')) return;
+    if (자리.contains(e.target)) return;
+    자리.classList.remove('open');
+    var p = 자리.querySelector('.login-panel');
+    if (p) p.hidden = true;
+  });
 
   // 처음 열 때: 저장된 키가 있으면 서버에 다시 물어 확인한다(만료·회수 반영).
   그리기('');

@@ -6,20 +6,24 @@
 <title>산들마을 Archive v1 미리보기</title>
 <meta name="description" content="산들마을 기록·규정·계약 통합 아카이브 구조 검증용 미리보기">
 <link rel="stylesheet" href="./assets/archive.css?v=20260901-152900">
-<link rel="stylesheet" href="./assets/home.css?v=20260902-2900">
+<link rel="stylesheet" href="./assets/home.css?v=20260902-3100">
 <link rel="stylesheet" href="./assets/detail.css?v=20260902-2100">
 <link rel="stylesheet" href="./assets/search-a.css?v=20260901-152900">
-<link rel="stylesheet" href="./assets/search-b.css?v=20260902-3000">
+<link rel="stylesheet" href="./assets/search-b.css?v=20260902-3100">
 <link rel="stylesheet" href="./assets/review-1-8.css?v=20260901-152900">
 <link rel="stylesheet" href="./assets/progress-1-9.css?v=20260901-152900">
 <link rel="stylesheet" href="./assets/admin-entry.css?v=20260901-152900">
-<link rel="stylesheet" href="./assets/login.css?v=20260902-1520">
+<link rel="stylesheet" href="./assets/login.css?v=20260902-3100">
 </head>
 <body>
 <header class="top">
   <div class="top-inner">
     <a class="back" href="/">← 현재 포털</a>
     <div class="brand"><span class="mark">산</span><div><strong>산들마을 Archive v1</strong><small>회의록 불러오는 중…</small></div></div>
+    <!-- 로그인은 상단 작은 단추로 (사용자 요청 2026-09-02).
+         첫 화면 한복판을 차지할 일이 아니다 — 회의록은 누구나 볼 수 있고,
+         비밀번호는 입주민 전용 자료를 붙였을 때를 위한 것이라 평소엔 눈에 안 띄어도 된다. -->
+    <div id="loginSlot" class="login-slot"></div>
     <a class="admin-entry-link" href="./admin/#storagePolicy">🔒 저장 · 권한 보기</a>
     <span class="badge">시험판</span>
   </div>
@@ -38,11 +42,12 @@
       <span>⌕</span><input id="searchInput" autocomplete="off" placeholder="예: 헬스장, GX, 도서관, 주차, 선거"><button>검색</button>
     </form>
     <p class="search-help">회의록을 불러오는 중…</p>
-    <p id="dataAsOf" class="data-asof"></p>
-    <div id="freshCheck" class="fresh-slot"></div>
-    <div id="loginSlot" class="login-slot"></div>
   </section>
 
+  <!-- 위에서부터 전체 주제 → 최신 정보 (사용자 요청 2026-09-02).
+       예전엔 둘을 좌우로 놓아 주제 목록이 화면 절반만 썼다. 주제를 누르는 것이 이 화면의
+       주된 일이므로 그것부터 넓게 보여주고, 최신 정보는 그 아래에 둔다.
+       자료 기준 시각·클라우드 대조는 화면 맨 아래로 내렸다 — 매번 볼 것은 아니다. -->
   <section id="homeView" class="home-view">
     <div class="home-grid">
       <section class="home-panel topic-index-panel">
@@ -66,6 +71,13 @@
   </section>
 
   <section id="topicView" class="topic-view is-hidden" aria-live="polite"></section>
+
+  <!-- 자료 기준 시각·클라우드 대조는 여기로 내렸다 (2026-09-02).
+       중요하지만 **매번 볼 것은 아니다.** 위에 있으면 주제 목록을 밀어낸다. -->
+  <section class="meta-strip">
+    <p id="dataAsOf" class="data-asof"></p>
+    <div id="freshCheck" class="fresh-slot"></div>
+  </section>
 
   <section class="notice">
     <strong>아직 만들어 가는 중이야</strong>
@@ -92,7 +104,7 @@
 <script src="./shared/topic-summary.js?v=20260902-2000"></script>
 <script src="./search-b.js?v=20260902-3000"></script>
 <script src="./shared/freshness.js?v=20260902-1430"></script>
-<script src="./login.js?v=20260902-1520"></script>
+<script src="./login.js?v=20260902-3100"></script>
 <script src="./freshness-ui.js?v=20260902-1330"></script>
 <!-- 개발 비계는 공개 화면에서 뺐다 (5.1, 2026-09-02).
      실제 회의록을 붙인 뒤로 이 두 판이 화면 위 1,000px 가까이를 차지해, 방문자가 내용을 보려면

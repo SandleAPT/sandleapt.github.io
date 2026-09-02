@@ -21,3 +21,13 @@ body.embedded .wrap { padding-top: 8px; }
    .search 에 display:flex 가 걸려 있어 hidden 속성만으로는 안 숨겨졌다.
    속성 선택자가 클래스 규칙보다 약해서 그냥 무시된다. */
 [hidden] { display: none !important; }
+
+/* 위에서부터 전체 주제 → 최신 정보 (2026-09-02 사용자 요청)
+   주제를 누르는 것이 이 화면의 주된 일이라 그것부터 넓게 보여준다.
+   좌우로 나누면 주제 목록이 화면 절반만 쓴다. */
+.home-grid { display: block; }
+.home-grid > .home-panel { margin-bottom: 18px; }
+.home-grid > .home-panel:last-child { margin-bottom: 0; }
+
+/* 자료 기준 시각 · 클라우드 대조 (화면 아래) */
+.meta-strip { margin: 22px 0 10px; padding-top: 14px; border-top: 1px solid var(--line, #e6e1d6); }
