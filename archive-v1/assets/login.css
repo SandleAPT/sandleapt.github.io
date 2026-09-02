@@ -106,3 +106,9 @@
 .login-panel .login-box { border: 0; background: transparent; padding: 0; }
 .login-panel .login-note { text-align: left; }
 @media (max-width: 720px) { .login-panel { right: auto; left: 0; } }
+
+/* 이 기기 기억하기 (2026-09-02) */
+.login-trust { display: flex; align-items: center; gap: 7px; flex: 1 0 100%; margin-top: 4px; cursor: pointer; }
+.login-trust input { width: 15px; height: 15px; flex: 0 0 auto; }
+.login-trust span { font-size: .8em; opacity: .75; }
+.login-trust b { font-weight: 700; opacity: 1; }

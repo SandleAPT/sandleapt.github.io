@@ -73,6 +73,10 @@
         '<label for="loginPw">입주민·관리자 확인</label>' +
         '<input id="loginPw" type="password" autocomplete="current-password" placeholder="회의록 앱과 같은 비밀번호">' +
         '<button type="submit">확인</button>' +
+        /* 「이 기기 기억하기」 (2026-09-02). 24시간 만료는 빌린 기기를 위한 장치였는데
+           본인 기기에서도 매일 다시 넣게 되어 번거로웠다. 기기별로 나눈다. */
+        '<label class="login-trust"><input type="checkbox" id="loginTrust"' + (S.trusted && S.trusted() ? ' checked' : '') + '>' +
+        '<span>이 기기 기억하기 <b>30일</b> — 내 기기에서만 켜세요</span></label>' +
         '</form>' +
         (안내 ? '<p class="login-note bad">' + esc(안내) + '</p>' :
           '<p class="login-note">회의록은 누구나 볼 수 있습니다. 비밀번호는 <b>입주민 전용 자료</b>를 위한 것입니다.</p>') +
@@ -101,7 +105,8 @@
          돌려받은 값을 그냥 참/거짓으로 보면 **틀린 비밀번호에도 객체가 참이라 로그인된
          것처럼 그려진다.** 2026-09-02 실제로 그렇게 만들었다가 검증에서 잡혔다.
          그래서 ok와 role을 모두 확인한다. */
-      S.signIn(pw).then(function (res) {
+      var 기억 = !!(자리.querySelector('#loginTrust') || {}).checked;
+      S.signIn(pw, 기억).then(function (res) {
         var role = 역할(res);
         if (role) 그리기(role);
         else 그리기('', '비밀번호가 맞지 않습니다. 회의록 앱과 같은 비밀번호입니다.');

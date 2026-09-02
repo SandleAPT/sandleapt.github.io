@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -122,7 +122,7 @@ const auto=autoChecks();if(auto.length){html+=`<div style="font-weight:900;margi
 const GAS_URL='https://script.google.com/macros/s/AKfycbyhpE-DB5WAAEx7uqTCPwU-e0sPKuupkYN3YoQWALiFWe0IHFNh1y91e1VNtDmMxxoxLA/exec',GAS_TOKEN='ITDXaUBDTmrz6DbQ3tv9R';
 let decUnlocked=false,decVerifying=false;
 // v44: 24시간 만료 규칙(회의록 앱과 공통) — 확인 후 24시간 지나면 키를 지우고 재입력
-function decHasKey(){try{const k=localStorage.getItem('sandle_admin_key');if(!k)return false;const at=+localStorage.getItem('sandle_admin_unlock_at')||0;if(!at||(Date.now()-at)>24*60*60*1000){localStorage.removeItem('sandle_admin_key');localStorage.removeItem('sandle_admin_unlock_at');decUnlocked=false;return false}return true}catch(e){return false}}
+function decHasKey(){try{const k=localStorage.getItem('sandle_admin_key');if(!k)return false;const at=+localStorage.getItem('sandle_admin_unlock_at')||0;const ttl=(localStorage.getItem('sandle_admin_trust')==='1')?30*24*60*60*1000:24*60*60*1000;/* v107 기기 기억 */if(!at||(Date.now()-at)>ttl){localStorage.removeItem('sandle_admin_key');localStorage.removeItem('sandle_admin_unlock_at');decUnlocked=false;return false}return true}catch(e){return false}}
 function decLocked(){return !(decUnlocked||decHasKey())}
 function decVerify(k){return fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'verify',adminKey:k,token:GAS_TOKEN})}).then(r=>r.json()).then(x=>!!(x&&x.ok))} // v45: 열람·수정 키 모두 인정
 function decUnlock(){const inp=document.getElementById('decKeyInput'),msg=document.getElementById('decKeyMsg');const k=inp?inp.value.trim():'';

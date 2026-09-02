@@ -13,7 +13,13 @@
   var TOKEN = 'ITDXaUBDTmrz6DbQ3tv9R';
   var KEY = 'sandle_admin_key';
   var AT_KEY = 'sandle_admin_unlock_at';
-  var TTL = 24 * 60 * 60 * 1000;
+  /* v107 「이 기기 기억하기」 (사용자 요청 2026-09-02).
+   * 24시간 만료는 원래 **빌린 기기**를 위한 장치였는데 본인 기기에서도 매일 다시 넣게 되어
+   * 번거로웠다. 기기별로 나눈다 — 기억하기를 켠 기기는 30일, 아니면 그대로 24시간.
+   * 이 규칙을 보는 곳이 넷이다(회의록 core.js AdminGate · 포털 · 관리비 · 여기).
+   * **한 곳만 고치면 회의록에선 안 만료됐는데 다른 데선 만료돼 보인다.** 바꿀 땐 넷을 함께. */
+  var TRUST_KEY = 'sandle_admin_trust';
+  var TTL = 24 * 60 * 60 * 1000, TRUST_TTL = 30 * 24 * 60 * 60 * 1000;
 
   // 마지막으로 서버가 확인해 준 role과 그 시각.
   // 캐시를 무기한 믿으면 비밀번호를 회수해도 그 세션이 24시간 내내 통과한다(검증에서 잡힌 결함).
@@ -47,10 +53,12 @@
   function write(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* 사파리 프라이빗 등 */ } }
   function drop(k) { try { localStorage.removeItem(k); } catch (e) {} }
 
+  function trusted() { return read(TRUST_KEY) === '1'; }
+  function ttl() { return trusted() ? TRUST_TTL : TTL; }
   function expired() {
     var at = Number(read(AT_KEY) || 0);
     // 확인 시각이 없는 키는 만료로 본다(예전 방식으로 저장된 키).
-    return !at || (now() - at) > TTL;
+    return !at || (now() - at) > ttl();
   }
 
   function savedKey() {
@@ -64,8 +72,9 @@
     verifiedRole = ''; verifiedAt = 0;
   }
 
-  function remember(key, role) {
+  function remember(key, role, trust) {
     write(KEY, key); write(AT_KEY, String(now()));
+    if (trust === true) write(TRUST_KEY, '1'); else if (trust === false) drop(TRUST_KEY);
     verifiedRole = role; verifiedAt = now();
   }
 
@@ -86,9 +95,9 @@
   }
 
   // 비밀번호를 확인하고 통과하면 세션에 저장한다.
-  function signIn(key) {
+  function signIn(key, trust) {
     return verify(key).then(function (res) {
-      if (res.ok) remember(key, res.role);
+      if (res.ok) remember(key, res.role, trust);
       return res;
     });
   }
@@ -115,7 +124,7 @@
   function remainingMs() {
     var at = Number(read(AT_KEY) || 0);
     if (!at) return 0;
-    return Math.max(0, TTL - (now() - at));
+    return Math.max(0, ttl() - (now() - at));
   }
 
   /*
@@ -136,7 +145,7 @@
   }
 
   window.SandleAuthSession = {
-    TTL: TTL,
+    TTL: TTL, TRUST_TTL: TRUST_TTL, trusted: trusted,
     RECHECK: RECHECK,
     signIn: signIn,
     verify: verify,

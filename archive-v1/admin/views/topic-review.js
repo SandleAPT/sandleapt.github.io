@@ -191,7 +191,8 @@
     if (S && S.savedKey) { if (S.expired && S.expired()) return ''; return S.savedKey() || ''; }
     try {
       const at = Number(localStorage.getItem('sandle_admin_unlock_at') || 0);
-      if (!at || Date.now() - at > 24 * 60 * 60 * 1000) return '';
+      const ttl = (localStorage.getItem('sandle_admin_trust') === '1') ? 30*24*60*60*1000 : 24*60*60*1000;  // v107 기기 기억
+      if (!at || Date.now() - at > ttl) return '';
       return localStorage.getItem('sandle_admin_key') || '';
     } catch (e) { return ''; }
   }
