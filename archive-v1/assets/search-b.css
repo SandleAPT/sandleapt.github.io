@@ -27,3 +27,24 @@
   .tswitch{ font-size:.78em; }
   .tswitch.on{ font-size:1.1em; }
 }
+/* 갈래로 좁히기 (5.4, 2026-09-02)
+   계약·입찰 230건처럼 서로 무관한 갈래가 섞인 주제를 안에서 다시 나눈다.
+   주제 전환 줄(.tswitch-bar) 바로 아래에 오므로, 그것과 헷갈리지 않게 더 작고 조용하게. */
+.search-b-narrow {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
+  margin: 6px 0 14px; padding: 8px 10px;
+  border: 1px dashed var(--line, #e3e0d8); border-radius: 10px;
+}
+.search-b-narrow .nlabel { font-size: .78em; opacity: .6; margin-right: 4px; }
+.search-b-narrow .narrow {
+  border: 1px solid var(--line, #e3e0d8); background: transparent; color: inherit;
+  font: inherit; font-size: .8em; cursor: pointer;
+  padding: 3px 9px; border-radius: 999px;
+}
+.search-b-narrow .narrow i { font-style: normal; opacity: .5; margin-left: 4px; font-size: .9em; }
+.search-b-narrow .narrow:hover { border-color: var(--gold, #b08d3f); }
+.search-b-narrow .narrow.on {
+  background: var(--gold, #b08d3f); border-color: var(--gold, #b08d3f); color: #fff; font-weight: 700;
+}
+.search-b-narrow .narrow.on i { opacity: .8; }
+.search-b-narrow .narrow.clear { border-style: dashed; opacity: .7; }

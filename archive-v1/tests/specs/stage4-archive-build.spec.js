@@ -93,13 +93,30 @@
        * 링크가 빠지면 화면이 "예정이야"만 보여주고 끝난다(2026-09-02 이전 상태). */
       assert.equal(주차.records[0][4], '/minutes/?open=m_2026_06_v1', '원문 주소가 5번째 자리에');
       assert.equal(주차.records[0][5], '2026년 6월 입주자대표회의', '어느 회의인지도 함께');
-      assert.equal(주차.records[0].length, 6, '앞 네 자리는 그대로 두고 뒤에 덧붙인다');
+      assert.equal(주차.records[0].length, 7, '앞 네 자리는 그대로 두고 뒤에 덧붙인다(7번째는 갈래 — 5.4)');
       assert.equal(주차.timeline[0].원문, '/minutes/?open=m_2026_06_v1', '타임라인에도 원문');
       assert.equal(주차.current[0].원문, '/minutes/?open=m_2026_06_v1', '최근 항목에도 원문');
       // 회의 id가 없으면 링크를 만들지 않는다 — 아무 데도 안 가는 링크는 없느니만 못하다.
       var id없음 = B.build([{ name: 'x', date: '2026-01-01', agendas: [{ id: 'q', title: '주차 건' }] }], 분류표, 자동태그, 지금);
       var 주차2 = id없음.topics.filter(function (t) { return t.label === '주차'; })[0];
       assert.equal(주차2.records[0][4], '', '회의 id가 없으면 빈 링크');
+
+      /* ── 갈래 (5.4) ──
+       * 「계약·입찰」 230건처럼 서로 무관한 것이 섞인 주제를 안에서 다시 나누는 축.
+       * 새 어휘를 만들지 않고 **이미 걸려 있는 다른 주제**를 쓴다(실측 98%가 걸려 있었다).
+       * 여기서 고정하는 것: 자기 자신은 갈래가 아니고, 많은 것이 먼저 온다. */
+      var 주차갈래 = 주차.갈래 || [];
+      assert.equal(주차갈래.some(function (g) { return g.label === '주차'; }), false, '자기 자신은 갈래가 아니다');
+      // a1(주차 차단기 교체)은 '주차'만, b1(주차장 도색)도 '주차'만 → 겹치는 갈래가 없다
+      assert.equal(Array.isArray(주차.records[0][6]), true, '7번째 자리는 그 안건이 걸린 다른 주제들');
+
+      // 한 안건이 두 주제에 걸리면 서로의 갈래가 된다
+      var 겹침 = B.build([{ id: 'm_z', name: 'z회의', date: '2026-05-05',
+        agendas: [{ id: 'g1', title: '승강기 주차 관련 건' }] }], 분류표, 자동태그, 지금);
+      var 겹B = {}; 겹침.topics.forEach(function (t) { 겹B[t.label] = t; });
+      assert.equal((겹B['주차'].갈래 || []).some(function (g) { return g.label === '승강기'; }), true, '주차의 갈래에 승강기');
+      assert.equal((겹B['승강기'].갈래 || []).some(function (g) { return g.label === '주차'; }), true, '승강기의 갈래에 주차');
+      assert.equal(겹B['주차'].records[0][6].indexOf('승강기') >= 0, true, '안건도 자기 갈래를 들고 있다');
 
       // 최근 기록
       assert.equal(r.recentRecords.length > 0, true, '최근 기록이 있다');
