@@ -105,7 +105,11 @@ main{flex:1 1 auto;position:relative;min-height:0}
 </head>
 <body>
 <aside class="rail" id="rail">
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small>v287 · 2026.09.02 17:02:30 갱신</small></div></div>
+  <!-- 갱신 시각은 **손으로 적지 않는다** (2026-09-02 사용자 지적).
+       내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
+       이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
+       v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v288</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -152,7 +156,7 @@ var GROUPS = [
     // Archive 시험판(2026-09-02, 사용자 요청 "왔다갔다 하게"). 같은 호스트라 iframe으로 띄운다.
     // 회의록과는 **다른 앱**이므로 service를 따로 준다 — minutes로 두면 postMessage로 화면 전환을
     // 시도해 엉뚱한 곳을 건드린다. 아직 시험판이라 이름에 그대로 적는다.
-    { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=287" },
+    { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=288" },
     { id: "setupView",  label: "회의 설정",   view: "setupView",  adminOnly: true },
     { id: "repsView",   label: "동대표 명단", view: "repsView",   adminOnly: true },
     { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true }
@@ -182,14 +186,30 @@ var GROUPS = [
  * 다르면 조용히 띠를 띄운다 — 자동으로 새로고침하지 않는다. 보던 화면이 갑자기 날아가면 더 나쁘다.
  */
 (function () {
-  var 지금표기 = (document.querySelector(".brand small") || {}).textContent || "";
-  if (!지금표기) return;
+  var 번호칸 = document.getElementById("verNo"), 시각칸 = document.getElementById("verTime");
+  var 지금번호 = 번호칸 ? 번호칸.textContent.trim() : "";
+  if (!지금번호) return;
   setTimeout(function () {
     fetch(location.pathname + "?_=" + Date.now(), { cache: "no-store" })
-      .then(function (r) { return r.ok ? r.text() : ""; })
+      .then(function (r) {
+        /* 갱신 시각은 **파일이 실제로 배포된 시각**(Last-Modified)에서 가져온다.
+           사람이 적으면 틀린다 — 실제로 미래 시각이 적힌 적이 있다(2026-09-02). */
+        var lm = r.headers.get("Last-Modified");
+        if (lm && 시각칸) {
+          var d = new Date(lm);
+          if (!isNaN(d)) {
+            시각칸.textContent = d.toLocaleString("ko-KR", {
+              timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
+              hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+            }).replace(/\.\s*/g, ".").replace(/\.$/, "") + " 갱신";
+          }
+        }
+        return r.ok ? r.text() : "";
+      })
       .then(function (html) {
-        var m = html.match(/<small>(v[^<]*갱신)<\/small>/);
-        if (!m || m[1] === 지금표기.trim()) return;
+        // 새 판이 나왔는지는 **번호**로 본다(시각은 캐시 상태에 따라 달라질 수 있다).
+        var m = html.match(/id="verNo">\s*(v\d+)\s*</);
+        if (!m || m[1] === 지금번호) return;
         var bar = document.createElement("div");
         bar.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:60;background:#b5841a;color:#fff;padding:9px 14px;font-size:13px;display:flex;gap:10px;align-items:center;justify-content:center";
         bar.innerHTML = '새로 고친 판이 있어요 <b style="font-weight:800">' + m[1].replace(/</g, "&lt;") + '</b>' +
@@ -217,7 +237,7 @@ var SERVICES = {
   community: { url: BASE + "/CommunityNotice/" },
   // iframe src 는 **이곳**에서 읽는다(항목의 url 은 '새 창으로 열기' 단추용).
   // 여기 등록을 빠뜨리면 메뉴를 눌러도 아무 일이 일어나지 않는다 — 2026-09-02에 실제로 그랬다.
-  archive:   { url: BASE + "/archive-v1/?v=287" }
+  archive:   { url: BASE + "/archive-v1/?v=288" }
 };
 // 모바일 하단 바(서비스 단위)
 var BOTTOM = [
