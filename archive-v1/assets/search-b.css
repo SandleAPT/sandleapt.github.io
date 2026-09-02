@@ -207,3 +207,10 @@
 @media (max-width: 760px) {
   .search-b-summary [data-brief] { padding: 13px 15px 15px 15px; }
 }
+
+/* 회의체를 골랐을 때, 요약은 두 회의체를 함께 다룬다는 안내 (2026-09-02) */
+.search-b-summary .tb-both {
+  margin: 12px 0 0; padding: 8px 11px;
+  border: 1px dashed var(--line, #e3e0d8); border-radius: 8px;
+  font-size: .82em; line-height: 1.6; opacity: .8;
+}
