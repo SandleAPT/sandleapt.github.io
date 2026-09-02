@@ -165,7 +165,33 @@ function 좁힌것(t0){
  * 회의록 앱이 이미 갖고 있던 것을 그대로 보여준다. 기계가 만든 「N건 · 기간」보다 이것이 먼저다.
  * 아직 안 받았으면 자리만 비워 두고, 도착하면 그 자리에 끼워 넣는다(화면 전체를 다시 그리지 않는다). */
 let 요약표=null;
-function 요약HTML(label, 기계요약){
+/* 회의체를 골랐을 때 그 회의체가 이 주제를 언제까지 다뤘는지 (사용자 지적 2026-09-02).
+ *
+ * 임차는 주차를 2024년까지만 다뤘는데, 요약은 두 회의체를 합쳐 쓴 글이라
+ * 2026년 차단기 교체 이야기를 한다. 임차로 좁혀 놓고 그 요약을 읽으면 **틀린 정보**가 된다.
+ *
+ * 회의체별로 요약을 따로 쓰지는 않는다 — 나누면 「입대의는 의결, 임차는 부결」 같은
+ * 갈린 지점이 오히려 안 보인다. 대신 **자료에서 계산한 사실**을 덧붙인다:
+ * 이 회의체는 몇 건을 언제부터 언제까지 다뤘고, 그 뒤로는 다루지 않았다는 것.
+ * 지어내지 않고 기록에 있는 날짜만 쓴다. */
+function 회의체안내(t0){
+  const B=window.SandleBody;
+  if(!B||!B.값) return '';
+  const 이름=B.값==='임차'?'임차인대표회의':'입주자대표회의';
+  const 반대이름=B.값==='임차'?'입주자대표회의':'임차인대표회의';
+  const recs=(t0.records||[]).filter(r=>B.맞나(r[1]));
+  if(!recs.length) return `「${esc(이름)}」에서는 이 주제를 다룬 기록이 없습니다. 위 요약은 ${esc(반대이름)} 기록으로 쓴 것입니다.`;
+  const ym=recs.map(r=>r[0]).filter(Boolean).sort();
+  const 내최신=ym[ym.length-1];
+  const 전체=(t0.records||[]).map(r=>r[0]).filter(Boolean).sort();
+  const 전체최신=전체[전체.length-1];
+  let s=`「${esc(이름)}」 기록은 <b>${recs.length}건 · ${esc(ym[0])} ~ ${esc(내최신)}</b>입니다. `;
+  s+= (내최신<전체최신)
+    ? `${esc(내최신)} 이후로는 이 주제를 다루지 않았고, <b>위 요약의 최근 내용은 ${esc(반대이름)} 쪽</b>입니다.`
+    : `위 요약은 두 회의체를 함께 다룹니다.`;
+  return s;
+}
+function 요약HTML(label, 기계요약, 회의체안내){
   const S=window.SandleTopicSummary;
   const r=(S&&요약표)?S.파싱((요약표[label]||{}).text):null;
   /* 사람이 쓴 요약이 **핵심 요약 자리의 본체**다 (5.5f, 사용자 지적 2026-09-02:
@@ -194,8 +220,7 @@ function 요약HTML(label, 기계요약){
      * 아래 목록만 줄어드니 요약도 그 회의체 것처럼 읽힌다 — 그건 잘못된 읽힘이라 밝혀 둔다.
      * 회의체별로 따로 쓰지 않는 이유: 두 회의가 같은 사안을 각각 다루므로 나누면
      * 「입대의는 의결, 임차는 부결」 같은 **갈린 지점이 오히려 안 보인다.** */
-    +(window.SandleBody&&window.SandleBody.값
-      ? `<p class="tb-both">이 요약은 <b>입주자대표회의·임차인대표회의를 함께</b> 다룹니다. 아래 목록만 「${esc(window.SandleBody.값==='임차'?'임차인대표회의':'입주자대표회의')}」로 좁혀져 있습니다.</p>` : '')
+    +(회의체안내?`<p class="tb-both">${회의체안내}</p>`:'')
     +`<p class="tb-src">회의록 앱의 주제 흐름 요약에서 가져왔습니다</p>`;
 }
 function 요약채우기(label){
@@ -205,7 +230,7 @@ function 요약채우기(label){
     if(!m) return;
     요약표=m;
     const 자리=view.querySelector('[data-brief]');
-    if(자리) 자리.innerHTML=요약HTML(label, 자리.dataset.machine||'');
+    if(자리) 자리.innerHTML=요약HTML(label, 자리.dataset.machine||'', 자리.dataset.body||'');
   }).catch(function(){});
 }
 /* 타임라인을 연도별로 접는다 (5.5d).
@@ -294,7 +319,7 @@ function renderB(t0,query,제자리){
    * 규약·계약·보험처럼 **회의록이 아닌 자료**가 들어오면 그때 다시 만든다(6단계). 그 전엔 중복일 뿐이다. */
   const counts=Object.entries(t.counts||{}).map(([k,v])=>`<span>${esc(k)} ${esc(v)}</span>`).join('');
   home.classList.add('is-hidden');view.classList.remove('is-hidden');input.value=query||t.label;
-  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>${esc(query||t.label)}</h2><p><b>${esc(t.label)}</b>에 관한 안건을 모았습니다. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인 순으로 이어집니다.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<section class="search-b-summary"><div class="search-b-section-head"><span>1</span><div><h3>핵심 요약</h3><small>지금 어떤 상태이고, 어떻게 여기까지 왔나</small></div></div><div data-brief data-machine="${esc(summary)}">${요약HTML(t0.label, summary)}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>2</span><div><h3>타임라인</h3><small>연도별 · 최근 해부터</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">아직 기록이 없습니다.</p>'}</div></section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
+  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>${esc(query||t.label)}</h2><p><b>${esc(t.label)}</b>에 관한 안건을 모았습니다. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인 순으로 이어집니다.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<section class="search-b-summary"><div class="search-b-section-head"><span>1</span><div><h3>핵심 요약</h3><small>지금 어떤 상태이고, 어떻게 여기까지 왔나</small></div></div><div data-brief data-machine="${esc(summary)}" data-body="${esc(회의체안내(t0))}">${요약HTML(t0.label, summary, 회의체안내(t0))}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>2</span><div><h3>타임라인</h3><small>연도별 · 최근 해부터</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">아직 기록이 없습니다.</p>'}</div></section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
   요약채우기(t0.label);
   attachBInteractions(t,t0);try{history.replaceState(null,'','#search-b-'+encodeURIComponent(t.id));}catch(e){}
   // 주제를 처음 열 때만 위로 올린다. 같은 화면에서 접었다 폈다 할 때는 그 자리에 둔다.
