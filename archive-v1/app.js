@@ -85,6 +85,42 @@ function renderSearchA(t,query,doScroll=true){
   try{history.replaceState(null,'','#search-a-'+encodeURIComponent(t.id));}catch(e){}
   if(doScroll)view.scrollIntoView({behavior:'smooth',block:'start'});
 }
+/* 회의체 고르기 — 전체 / 입주자대표회의 / 임차인대표회의 (사용자 요청 2026-09-02).
+ *
+ * 두 회의체는 같은 단지의 서로 다른 회의라, 「임차 쪽에서 이 주제를 어떻게 다뤘나」를
+ * 따로 보고 싶을 때가 있다. 회의록 앱 ③도 위에 전체/입대의/임차 건수를 나눠 보여준다.
+ *
+ * 고른 값은 **주제 목록의 건수와 주제 안 목록에 모두** 적용된다 — 한쪽에만 걸면
+ * 목록에는 12건이라 적혀 있는데 들어가면 3건인 일이 생긴다.
+ * 화면 상태로만 들고 있는다(주소에 넣지 않는다). 새로고침하면 전체로 돌아간다.
+ */
+window.SandleBody = { 값: '' };
+window.SandleBody.맞나 = function (kind) {
+  var v = window.SandleBody.값;
+  if (!v) return true;
+  var 임차 = String(kind || '').indexOf('임차') === 0;
+  return v === '임차' ? 임차 : !임차;
+};
+window.SandleBody.건수 = function (t) {
+  return (t.records || []).filter(function (r) { return window.SandleBody.맞나(r[1]); }).length;
+};
+function renderBodyFilter(){
+  const 자리=document.getElementById('bodyFilter');
+  if(!자리)return;
+  const 셈=(v)=>{const 옛=window.SandleBody.값;window.SandleBody.값=v;
+    const n=(DATA.topics||[]).reduce((s,t)=>s+window.SandleBody.건수(t),0);window.SandleBody.값=옛;return n;};
+  // 안건 하나가 여러 주제에 걸리므로 이 합계는 '주제에 걸린 횟수'다. 통계 대신 크기 감각용.
+  const 목록=[['','전체'],['입대의','입주자대표회의'],['임차','임차인대표회의']];
+  자리.innerHTML=목록.map(([v,이름])=>
+    `<button type="button" class="bf${window.SandleBody.값===v?' on':''}" data-body="${v}">${이름}</button>`).join('');
+  자리.querySelectorAll('[data-body]').forEach(b=>b.onclick=()=>{
+    window.SandleBody.값=b.dataset.body;
+    renderBodyFilter();renderAllTopics();renderRecent();
+    // 주제 화면이 열려 있으면 그쪽도 다시 그린다(같은 값이 두 화면에서 달라지면 안 된다).
+    try{document.dispatchEvent(new CustomEvent('sandle:body'));}catch(e){}
+  });
+}
+
 /* 전체 주제 목록 (5.5c).
  *
  * 가나다순 + 건수 없음이었다. 그러면 39개가 다 똑같아 보이고, **찾을 이름을 이미 아는 사람**
@@ -123,8 +159,9 @@ function renderSearchA(t,query,doScroll=true){
 })();
 function renderAllTopics(){
   allTopics.innerHTML='';
-  const 건수=t=>(t.records||[]).length;
+  const 건수=t=>window.SandleBody.건수(t);
   const topics=DATA.topics.filter(t=>t.visibility!=='private')
+    .filter(t=>!window.SandleBody.값||건수(t)>0)   // 고른 회의체에 기록이 없는 주제는 뺀다
     .slice().sort((a,b)=>건수(b)-건수(a)||String(a.label).localeCompare(String(b.label),'ko'));
   topics.forEach((t,i)=>{
     const b=document.createElement('button');b.type='button';b.className='topic-text-btn';
@@ -161,7 +198,7 @@ form.addEventListener('submit',e=>{
 });
 detailClose.onclick=closeDetail;
 detailDialog.addEventListener('click',e=>{if(e.target===detailDialog)closeDetail();});
-renderAllTopics();renderRecent();
+renderBodyFilter();renderAllTopics();renderRecent();
 // 실제 자료가 준비되면 갈아끼우고 다시 그린다. 첫 화면에 있을 때만 바꿔서
 // 사용자가 이미 어떤 주제를 열어 보고 있으면 밑에서 화면이 바뀌지 않게 한다.
 if(window.SandleArchiveLive&&window.SandleArchiveLive.준비){
@@ -181,7 +218,7 @@ if(window.SandleArchiveLive&&window.SandleArchiveLive.준비){
     }
     const 부제=document.querySelector('.brand small');
     if(부제)부제.textContent='실제 회의록 '+자료.통계.회의+'건';
-    if(!home.classList.contains('is-hidden')){renderAllTopics();renderRecent();}
+    if(!home.classList.contains('is-hidden')){renderBodyFilter();renderAllTopics();renderRecent();}
   }).catch(function(){});
 }
 const rawHash=location.hash||'';

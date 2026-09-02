@@ -92,13 +92,19 @@ function attachBInteractions(t,t0){
  * 기록이 없는 주제는 눌러도 빈 화면이라 넣지 않는다.
  */
 function 주제줄(현재){
-  var 목록=(자료().topics||[]).filter(function(x){return (x.records||[]).length;});
+  // 회의체를 고르면 그 회의체 건수로 세고, 없는 주제는 뺀다(첫 화면과 같은 규칙).
+  var 셈=function(x){ var B=window.SandleBody; return B&&B.건수?B.건수(x):(x.records||[]).length; };
+  var 목록=(자료().topics||[]).filter(function(x){return 셈(x)>0;});
   if(목록.length<2) return '';
-  목록=목록.slice().sort(function(a,b){return String(a.label).localeCompare(String(b.label),'ko');});
+  /* 첫 화면과 **같은 순서**로 (사용자 지적 2026-09-02: 메인은 안건 수 순인데 들어오면 갑자기 가나다순).
+     같은 목록이 화면마다 다른 순서로 나오면 눈이 기억한 자리를 잃는다. 둘 다 안건 수 순으로 맞춘다. */
+  목록=목록.slice().sort(function(a,b){
+    return 셈(b)-셈(a) || String(a.label).localeCompare(String(b.label),'ko');
+  });
   var 칩=목록.map(function(x){
     var on = x.id===현재.id;
     return '<button type="button" class="tswitch'+(on?' on':'')+'" data-tswitch="'+esc(x.id)+'"'+(on?' aria-current="true"':'')+'>'
-      + esc(x.label) + '<i>' + (x.records||[]).length + '</i></button>';
+      + esc(x.label) + '<i>' + 셈(x) + '</i></button>';
   }).join('');
   return '<nav class="tswitch-bar" aria-label="다른 주제로 바로 가기">'+칩+'</nav>';
 }
@@ -118,7 +124,22 @@ function 갈래줄(t){
   const 칩=목록.slice(0,14).map(g=>`<button type="button" class="narrow${좁힘===g.label?' on':''}" data-narrow="${esc(g.label)}" title="${esc(t.label)}이면서 ${esc(g.label)}이기도 한 안건 ${g.count}건">${esc(g.label)}<i>${g.count}</i></button>`).join('');
   return `<div class="search-b-narrow"><p class="nlabel"><b>「${esc(t.label)}」 안에서 다시 좁히기</b><span>숫자는 두 주제에 함께 걸린 안건 수입니다. 그 주제 전체 건수와는 다릅니다.</span></p><div class="nchips">${칩}${좁힘?`<button type="button" class="narrow clear" data-narrow="">좁히기 해제</button>`:''}</div></div>`;
 }
-function 좁힌것(t){
+/* 회의체 고르기와 갈래 좁히기를 **함께** 건다 (사용자 요청 2026-09-02).
+ * 한쪽만 걸면 첫 화면 목록에는 12건이라 적혀 있는데 들어가면 다른 수가 나온다. */
+function 회의체거름(t){
+  const B=window.SandleBody;
+  if(!B||!B.값) return t;
+  const recs=(t.records||[]).filter(r=>B.맞나(r[1]));
+  const 열쇠=new Set(recs.map(r=>r[5]+'|'+r[2]));
+  return Object.assign({},t,{
+    records:recs,
+    current:(t.current||[]).filter(c=>열쇠.has(c.회의+'|'+c.title)),
+    timeline:(t.timeline||[]).filter(e=>열쇠.has(e.회의+'|'+e.title)),
+    counts:{'안건':recs.length}
+  });
+}
+function 좁힌것(t0){
+  const t=회의체거름(t0);
   if(!좁힘) return t;
   const recs=(t.records||[]).filter(r=>(r[6]||[]).indexOf(좁힘)>=0);
   const 열쇠=new Set(recs.map(r=>r[5]+'|'+r[2]));
@@ -229,6 +250,7 @@ function 제자리로(누른것, 다시그리기){
   if(새것) window.scrollBy(0, 새것.getBoundingClientRect().top - 전);
 }
 function renderB(t0,query,제자리){
+  지금주제=t0;                      // 회의체를 바꿀 때 이 주제를 다시 그리려고 기억해 둔다
   const t=좁힌것(t0);
   const layout=LAYOUTS.B||{preview:{current:3,timeline:6,records:12}};
   const p=layout.preview||{};
@@ -265,6 +287,15 @@ form.addEventListener('submit',function(e){
  * 정했다(2026-09-02). 같은 자료를 두 가지 모양으로 보여줄 이유가 없다.
  * app.js의 주제 화면은 남겨 둔다 — 이 파일이 빠져도 화면이 비지 않게.
  */
+/* 회의체를 바꾸면 열려 있는 주제 화면도 같이 다시 그린다.
+   안 그러면 위에서는 임차를 골랐는데 아래 목록은 전체인 채로 남는다. */
+let 지금주제=null;
+document.addEventListener('sandle:body',function(){
+  if(!지금주제||view.classList.contains('is-hidden'))return;
+  좁힘=null; 접은연도.clear();
+  var 갱신=(자료().topics||[]).find(function(x){return x.id===지금주제.id;})||지금주제;
+  renderB(갱신,갱신.label,true);
+});
 document.addEventListener('click',function(e){
   if(mode!=='B')return;
   var btn=e.target.closest&&e.target.closest('#allTopics .topic-text-btn');

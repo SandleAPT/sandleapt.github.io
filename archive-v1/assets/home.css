@@ -31,3 +31,16 @@ body.embedded .wrap { padding-top: 8px; }
 
 /* 자료 기준 시각 · 클라우드 대조 (화면 아래) */
 .meta-strip { margin: 22px 0 10px; padding-top: 14px; border-top: 1px solid var(--line, #e6e1d6); }
+
+/* 회의체 고르기 — 전체 / 입주자대표회의 / 임차인대표회의 (2026-09-02) */
+.body-filter { display: flex; justify-content: center; gap: 6px; margin: 14px 0 0; flex-wrap: wrap; }
+.body-filter .bf {
+  border: 1px solid var(--line, #e3e0d8); background: transparent; color: inherit;
+  font: inherit; font-size: .86em; cursor: pointer;
+  padding: 6px 14px; border-radius: 999px;
+}
+.body-filter .bf:hover { border-color: var(--gold, #b08d3f); }
+.body-filter .bf.on {
+  background: var(--gold, #b08d3f); border-color: var(--gold, #b08d3f);
+  color: #fff; font-weight: 700;
+}
