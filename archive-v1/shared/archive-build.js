@@ -224,7 +224,7 @@
         aliases: (def && def.kw) ? def.kw.slice(0, 8) : [],
         description: 목록.length
           ? 목록.length + '건 · ' + (목록[목록.length - 1].ym || '') + ' ~ ' + (목록[0].ym || '')
-          : '아직 이 주제로 분류된 기록이 없어',
+          : '아직 이 주제로 분류된 기록이 없습니다',
         counts: (function () {
           var c = {};
           c['안건'] = 목록.length;
@@ -294,7 +294,7 @@
        * 들어오기 전까지는 **최근 기록**이라고만 말한다. */
       currentHeading: '가장 최근 기록',
       currentLabel: '최근',
-      currentNote: '규약·계약 자료를 붙이기 전이라 지금은 최근 안건만 보여준다',
+      currentNote: '규약·계약 자료를 연결하기 전이라 최근 안건만 보여드립니다',
       topics: topics,
       recentRecords: 최근.slice(0, 12).map(function (x) {
         return {

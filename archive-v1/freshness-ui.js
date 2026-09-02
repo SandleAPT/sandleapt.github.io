@@ -40,12 +40,12 @@
 
   function 확인() {
     var b = 자리.querySelector('[data-check]');
-    b.disabled = true; b.textContent = '클라우드에 물어보는 중…';
+    b.disabled = true; b.textContent = '클라우드에 확인하는 중…';
 
     var 사본 = window.SANDLE_ARCHIVE_COPY;
     if (!사본) {
       버튼('지금 클라우드에 물어보기');
-      알림('아직 사본을 다 못 읽었어. 잠시 뒤 다시 눌러줘.', true);
+      알림('아직 사본을 다 읽지 못했습니다. 잠시 뒤 다시 눌러 주세요.', true);
       return;
     }
 
@@ -72,8 +72,8 @@
       .catch(function (e) {
         // 못 물어봤으면 못 물어봤다고 한다. 조용히 '최신'처럼 보이게 두지 않는다.
         버튼('다시 확인');
-        알림('클라우드에 물어보지 못했어 — ' + esc(e && e.message ? e.message : '연결 실패') +
-          '. 사본에 있는 자료는 그대로 볼 수 있어.', true);
+        알림('클라우드에 확인하지 못했습니다 — ' + esc(e && e.message ? e.message : '연결 실패') +
+          '. 사본에 있는 자료는 그대로 볼 수 있습니다.', true);
       });
   }
 

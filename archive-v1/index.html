@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="./assets/home.css?v=20260902-3100">
 <link rel="stylesheet" href="./assets/detail.css?v=20260902-2100">
 <link rel="stylesheet" href="./assets/search-a.css?v=20260901-152900">
-<link rel="stylesheet" href="./assets/search-b.css?v=20260902-3100">
+<link rel="stylesheet" href="./assets/search-b.css?v=20260902-3200">
 <link rel="stylesheet" href="./assets/review-1-8.css?v=20260901-152900">
 <link rel="stylesheet" href="./assets/progress-1-9.css?v=20260901-152900">
 <link rel="stylesheet" href="./assets/admin-entry.css?v=20260901-152900">
@@ -31,8 +31,8 @@
 <main class="wrap">
   <section class="hero">
     <p class="eyebrow">지난 기록에서 지금의 기준까지</p>
-    <h1>어떤 주제를 볼까?</h1>
-    <p class="lead">회의록 한 장을 찾는 대신, 하나의 주제에 얽힌 <b>과거 논의 · 현재 기준 · 계약 · 비용 · 후속 결과</b>를 함께 찾는 아카이브를 시험하고 있어. <b>아래 주제를 누르면</b> 그 주제의 지금 상태와 11년 흐름이 나와.</p>
+    <h1>주제별로 모아 보기</h1>
+    <p class="lead">회의록을 한 장씩 찾는 대신, 한 주제에 얽힌 <b>지난 논의와 결정</b>을 모아서 봅니다. 아래에서 <b>주제를 누르면</b> 그 주제의 현재 상태와 그동안의 흐름이 나옵니다.</p>
     <!-- 검색창은 감췄다 (사용자 지적 2026-09-02: "결국 주제를 클릭하는 것이 주된 거라서 검색창이 있는 게 필요없단 생각이 들었어").
          맞다. 게다가 이건 **검색처럼 보이지만 주제 이름만 찾았다** — 안건 제목을 쳐도 안 나온다.
          겉모습이 약속하는 것과 하는 일이 달랐으니 없느니만 못했다.
@@ -41,7 +41,7 @@
     <form id="searchForm" class="search" hidden>
       <span>⌕</span><input id="searchInput" autocomplete="off" placeholder="예: 헬스장, GX, 도서관, 주차, 선거"><button>검색</button>
     </form>
-    <p class="search-help">회의록을 불러오는 중…</p>
+    <p class="search-help">회의록을 불러오는 중입니다.</p>
   </section>
 
   <!-- 위에서부터 전체 주제 → 최신 정보 (사용자 요청 2026-09-02).
@@ -55,7 +55,7 @@
           <div><p class="section-kicker">TOPICS</p><h2>전체 주제</h2></div>
           <span class="sample-badge soft">건수 순</span>
         </div>
-        <p class="section-note">많이 다룬 주제부터 늘어놨어. 옆 숫자는 안건 수야. 이름을 누르면 그 주제로 바로 들어가.</p>
+        <p class="section-note">안건이 많은 주제부터 나옵니다. 옆의 숫자는 안건 수입니다.</p>
         <div id="allTopics" class="topic-text-list" aria-label="전체 주제 — 안건 많은 순"></div>
       </section>
 
@@ -64,7 +64,7 @@
           <div><p class="section-kicker">LATEST</p><h2>최근 추가 · 변경 기록</h2></div>
           <span class="sample-badge soft" id="recentBadge">실제 회의록</span>
         </div>
-        <p class="section-note">회의가 열린 날짜순이야. Archive에 언제 정리했는지는 아직 따로 보여주지 않아.</p>
+        <p class="section-note">회의가 열린 날짜순입니다.</p>
         <div id="recentRecords" class="recent-list"></div>
       </section>
     </div>
@@ -81,7 +81,7 @@
 
   <section class="notice">
     <strong>아직 만들어 가는 중이야</strong>
-    <p>지금 여기 있는 것은 <b>회의록에서 뽑은 안건</b>뿐이야. 규약·계약·보험 같은 자료는 아직 안 붙였고, 그래서 「지금 적용되는 기준」은 보여주지 못해. 원문은 언제나 회의록 앱이 보여주니까 안건을 누르면 그쪽으로 넘어가.</p>
+    <p>현재 이곳에는 <b>회의록에서 뽑은 안건</b>만 있습니다. 규약·계약·보험 자료는 아직 연결하지 않아, 「지금 적용되는 기준」은 보여드리지 못합니다. 안건을 누르면 회의록 원문으로 이동합니다.</p>
   </section>
 </main>
 
@@ -94,18 +94,18 @@
 
 <script src="./data/sample.js?v=20260901-152900"></script>
 <script src="/minutes/assets/js/app/topic-defs.js?v=98"></script>
-<script src="./shared/archive-build.js?v=20260902-2700"></script>
+<script src="./shared/archive-build.js?v=20260902-3200"></script>
 <script src="./data/live.js?v=20260902-1330"></script>
 <script src="./config/search-layouts.js?v=20260901-152900"></script>
-<script src="./app.js?v=20260902-2510"></script>
+<script src="./app.js?v=20260902-3200"></script>
 <script src="./shared/auth-session.js?v=20260902-1520"></script>
 <script src="./shared/access-control.js?v=20260902-1100"></script>
-<script src="./shared/auth-log.js?v=20260902-1520"></script>
+<script src="./shared/auth-log.js?v=20260902-3200"></script>
 <script src="./shared/topic-summary.js?v=20260902-2000"></script>
-<script src="./search-b.js?v=20260902-3000"></script>
-<script src="./shared/freshness.js?v=20260902-1430"></script>
-<script src="./login.js?v=20260902-3100"></script>
-<script src="./freshness-ui.js?v=20260902-1330"></script>
+<script src="./search-b.js?v=20260902-3200"></script>
+<script src="./shared/freshness.js?v=20260902-3200"></script>
+<script src="./login.js?v=20260902-3200"></script>
+<script src="./freshness-ui.js?v=20260902-3200"></script>
 <!-- 개발 비계는 공개 화면에서 뺐다 (5.1, 2026-09-02).
      실제 회의록을 붙인 뒤로 이 두 판이 화면 위 1,000px 가까이를 차지해, 방문자가 내용을 보려면
      한참 스크롤해야 했다. 게다가 문구가 낡아 지금은 **사실이 아닌 것**을 보여주고 있었다 —

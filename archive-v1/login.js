@@ -60,8 +60,8 @@
         '<button type="button" class="login-out" data-logout>나가기</button>' +
         '</div>' +
         /* 지금은 로그인해도 보이는 자료가 늘지 않는다. 숨기지 않고 적는다. */
-        '<p class="login-note">아직 <b>내부공개·비공개 자료를 내려주는 경로가 없어서</b>, 로그인해도 지금 보이는 회의록은 같아. ' +
-        '그 자료를 붙이는 일은 따로 남아 있어(4.1 외부 저장소).</p>' +
+        '<p class="login-note">아직 <b>내부공개·비공개 자료를 내려주는 경로가 없어서</b>, 로그인해도 지금 보이는 회의록은 같습니다. ' +
+        '그 자료를 연결하는 일은 아직 남아 있습니다.</p>' +
         /* 인증 기록은 관리자만. 입주민에게 접근 기록을 보여주지 않는다(서버도 같은 판정을 한다). */
         (role === 'edit' ? '<div class="login-audit"><button type="button" class="fresh-btn" data-audit>인증 기록 보기</button></div>' : '') +
         '</div>';
@@ -75,7 +75,7 @@
         '<button type="submit">확인</button>' +
         '</form>' +
         (안내 ? '<p class="login-note bad">' + esc(안내) + '</p>' :
-          '<p class="login-note">회의록은 누구나 볼 수 있어. 비밀번호는 <b>입주민 전용 자료</b>를 붙였을 때를 위한 거야.</p>') +
+          '<p class="login-note">회의록은 누구나 볼 수 있습니다. 비밀번호는 <b>입주민 전용 자료</b>를 위한 것입니다.</p>') +
         '</div>';
       if (안내) 자리.classList.add('open');
     }
@@ -104,9 +104,9 @@
       S.signIn(pw).then(function (res) {
         var role = 역할(res);
         if (role) 그리기(role);
-        else 그리기('', '비밀번호가 맞지 않아. 회의록 앱에서 쓰는 것과 같은 비밀번호야.');
+        else 그리기('', '비밀번호가 맞지 않습니다. 회의록 앱과 같은 비밀번호입니다.');
       }).catch(function () {
-        그리기('', '확인하지 못했어. 잠시 뒤 다시 해줘.');
+        그리기('', '확인하지 못했습니다. 잠시 뒤 다시 시도해 주세요.');
       });
     };
     var out = 자리.querySelector('[data-logout]');
@@ -129,9 +129,9 @@
       if (!res || !res.ok) {
         var 왜 = (res && res.error) || '알 수 없음';
         box.innerHTML = '<p class="fresh-line">' + esc(
-          왜 === 'unknown action' ? '서버에 아직 기록 기능이 안 올라갔어. Apps Script 코드를 새 버전으로 배포하면 그때부터 쌓여.' :
-          왜 === 'admin_required' ? '수정용 비밀번호가 필요해.' :
-          '기록을 못 불러왔어 — ' + 왜) + '</p>';
+          왜 === 'unknown action' ? '서버에 기록 기능이 아직 없습니다. Apps Script를 새 버전으로 배포하면 그때부터 쌓입니다.' :
+          왜 === 'admin_required' ? '수정용 비밀번호가 필요합니다.' :
+          '기록을 불러오지 못했습니다 — ' + 왜) + '</p>';
         통.appendChild(box); return;
       }
 

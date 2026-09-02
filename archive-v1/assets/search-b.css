@@ -134,3 +134,12 @@
 .search-b-summary .tb-fallback li::before {
   content: '·'; margin-right: 7px; opacity: .45; font-weight: 700;
 }
+
+/* 갈래 줄을 주제 전환 줄과 확실히 구분한다 (2026-09-02)
+   둘이 나란히 붙어 있고 같은 이름이 다른 숫자로 나와 오해를 샀다.
+   갈래 줄은 설명을 한 줄 달고 칩을 아래에 둔다. */
+.search-b-narrow { display: block; padding: 10px 12px; }
+.search-b-narrow .nlabel { display: block; margin: 0 0 8px; }
+.search-b-narrow .nlabel b { display: block; font-size: .88em; }
+.search-b-narrow .nlabel span { display: block; margin-top: 2px; font-size: .76em; opacity: .6; line-height: 1.5; }
+.search-b-narrow .nchips { display: flex; flex-wrap: wrap; gap: 5px; }

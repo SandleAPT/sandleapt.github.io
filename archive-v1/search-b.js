@@ -27,10 +27,10 @@ function openTopic(t){const buttons=[...document.querySelectorAll('#allTopics .t
 function openDetail(meta,title,note,원문,회의,본문){
   const 발 = 원문
     ? `<div class="detail-foot"><a class="detail-open" href="${esc(원문)}">회의록 원문 열기 →</a>${회의?`<small>${esc(회의)}</small>`:''}</div>`
-    : `<div class="detail-foot">이 항목은 아직 원문으로 이어지지 않아.</div>`;
+    : `<div class="detail-foot">이 항목은 아직 원문과 연결되지 않았습니다.</div>`;
   const 몸통 = (본문&&본문.length)
     ? `<div class="detail-body">${본문.map(c=>`<section><h3>${esc(c.이름)}</h3><p>${esc(c.글)}</p></section>`).join('')}</div>`
-    : `<p>${esc(note||'세부 설명이 아직 연결되지 않았어.')}</p>`;
+    : `<p>${esc(note||'세부 설명이 아직 연결되지 않았습니다.')}</p>`;
   const 회의줄 = (본문&&본문.length&&회의) ? `<p class="detail-where">${esc(회의)}</p>` : '';
   detailContent.innerHTML=`<div class="detail-meta">${meta.map(v=>`<span>${esc(v)}</span>`).join('')}</div><h2>${esc(title)}</h2>${회의줄}${몸통}${발}`;
   if(typeof detailDialog.showModal==='function')detailDialog.showModal();else detailDialog.setAttribute('open','');
@@ -111,8 +111,12 @@ let 좁힘=null;
 function 갈래줄(t){
   const 목록=(t.갈래||[]).filter(g=>g.count>=2);          // 1건짜리는 좁히는 의미가 없다
   if(목록.length<2) return '';                            // 나눌 것이 없으면 줄 자체를 안 만든다
-  const 칩=목록.slice(0,14).map(g=>`<button type="button" class="narrow${좁힘===g.label?' on':''}" data-narrow="${esc(g.label)}">${esc(g.label)}<i>${g.count}</i></button>`).join('');
-  return `<div class="search-b-narrow"><span class="nlabel">무엇에 대한 것인지로 좁히기</span>${칩}${좁힘?`<button type="button" class="narrow clear" data-narrow="">전체 보기</button>`:''}</div>`;
+  /* 숫자가 헷갈린다는 지적(2026-09-02): 「관리규약」을 열고 갈래에서 LH·관리이관 3을 보고
+   * "LH·관리이관이 3건뿐"으로 읽었다. 실은 **두 주제에 함께 걸린 수**다(LH·관리이관 자체는 36건).
+   * 바로 위 주제 전환 줄에 같은 이름이 36으로 적혀 있으니 오해할 수밖에 없다.
+   * 그래서 ① 줄 이름에 지금 주제를 넣고 ② 숫자가 무엇인지 한 줄로 밝힌다. */
+  const 칩=목록.slice(0,14).map(g=>`<button type="button" class="narrow${좁힘===g.label?' on':''}" data-narrow="${esc(g.label)}" title="${esc(t.label)}이면서 ${esc(g.label)}이기도 한 안건 ${g.count}건">${esc(g.label)}<i>${g.count}</i></button>`).join('');
+  return `<div class="search-b-narrow"><p class="nlabel"><b>「${esc(t.label)}」 안에서 다시 좁히기</b><span>숫자는 두 주제에 함께 걸린 안건 수입니다. 그 주제 전체 건수와는 다릅니다.</span></p><div class="nchips">${칩}${좁힘?`<button type="button" class="narrow clear" data-narrow="">좁히기 해제</button>`:''}</div></div>`;
 }
 function 좁힌것(t){
   if(!좁힘) return t;
@@ -139,13 +143,13 @@ function 요약HTML(label, 기계요약){
    * 사람이 쓴 것은 그 위에 따로 떠 있었다. 자리를 바꾼다.
    * 요점은 **자르지 않는다** — 깊이를 원한다고 했다. 기계 문구는 아래 작은 줄로 내린다. */
   if(!r){
-    return 기계요약?`<ul class="tb-fallback">${기계요약}</ul>`:'<p class="search-b-empty">이 주제는 아직 요약이 없어.</p>';
+    return 기계요약?`<ul class="tb-fallback">${기계요약}</ul>`:'<p class="search-b-empty">이 주제는 아직 요약이 없습니다.</p>';
   }
   const 요점=r.요점.map(x=>`<li>${esc(x)}</li>`).join('');
   return (r.현재상태?`<p class="tb-now"><b>지금</b> ${esc(r.현재상태)}</p>`:'')
     +(요점?`<ul class="tb-points">${요점}</ul>`:'')
     +(기계요약?`<ul class="tb-meta">${기계요약}</ul>`:'')
-    +`<p class="tb-src">회의록 앱의 주제 흐름 요약에서 가져왔어</p>`;
+    +`<p class="tb-src">회의록 앱의 주제 흐름 요약에서 가져왔습니다</p>`;
 }
 function 요약채우기(label){
   const S=window.SandleTopicSummary;
@@ -242,7 +246,7 @@ function renderB(t0,query,제자리){
    * 규약·계약·보험처럼 **회의록이 아닌 자료**가 들어오면 그때 다시 만든다(6단계). 그 전엔 중복일 뿐이다. */
   const counts=Object.entries(t.counts||{}).map(([k,v])=>`<span>${esc(k)} ${esc(v)}</span>`).join('');
   home.classList.add('is-hidden');view.classList.remove('is-hidden');input.value=query||t.label;
-  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>${esc(query||t.label)}</h2><p><b>${esc(t.label)}</b>에 얽힌 안건을 모았어. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인 순으로 내려가.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<section class="search-b-summary"><div class="search-b-section-head"><span>1</span><div><h3>핵심 요약</h3><small>지금 어떤 상태이고, 어떻게 여기까지 왔나</small></div></div><div data-brief data-machine="${esc(summary)}">${요약HTML(t0.label, summary)}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>2</span><div><h3>타임라인</h3><small>연도별 · 최근 해부터</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">아직 기록이 없어.</p>'}</div></section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
+  view.innerHTML=`<div class="search-b"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button><header class="search-b-head"><div><p class="search-b-kicker">주제로 모아 보기</p><h2>${esc(query||t.label)}</h2><p><b>${esc(t.label)}</b>에 관한 안건을 모았습니다. ${esc(자료().currentLabel||'현재 기준')}을 먼저 보고, 핵심 요약과 타임라인 순으로 이어집니다.</p><div class="search-b-counts">${counts}</div></div><div class="search-compare"><button type="button" data-b-mode="A">A안</button><button type="button" class="active" data-b-mode="B">B안</button></div></header>${주제줄(t0)}${갈래줄(t0)}<section class="search-b-summary"><div class="search-b-section-head"><span>1</span><div><h3>핵심 요약</h3><small>지금 어떤 상태이고, 어떻게 여기까지 왔나</small></div></div><div data-brief data-machine="${esc(summary)}">${요약HTML(t0.label, summary)}</div></section><section class="search-b-section"><div class="search-b-section-head"><span>2</span><div><h3>타임라인</h3><small>연도별 · 최근 해부터</small></div></div><div class="search-b-timeline">${timeline||'<p class="search-b-empty">아직 기록이 없습니다.</p>'}</div></section><div class="search-b-footer"><button type="button" data-b-topic>이 주제 전체 화면 보기</button></div></div>`;
   요약채우기(t0.label);
   attachBInteractions(t,t0);try{history.replaceState(null,'','#search-b-'+encodeURIComponent(t.id));}catch(e){}
   // 주제를 처음 열 때만 위로 올린다. 같은 화면에서 접었다 폈다 할 때는 그 자리에 둔다.
