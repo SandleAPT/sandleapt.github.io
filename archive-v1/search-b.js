@@ -166,9 +166,17 @@ function 요약HTML(label, 기계요약){
   if(!r){
     return 기계요약?`<ul class="tb-fallback">${기계요약}</ul>`:'<p class="search-b-empty">이 주제는 아직 요약이 없습니다.</p>';
   }
+  /* 「지금」을 뱃지로 글 앞에 붙였더니 그 줄만 오른쪽으로 밀려 아래 목록과 어긋났다
+   * (2026-09-02 사용자 지적: "왼쪽으로 쏠리고 정렬도 안되어 있잖아").
+   * 이름표를 윗줄로 올려 **모든 줄이 같은 선에서 시작**하게 한다. */
   const 요점=r.요점.map(x=>`<li>${esc(x)}</li>`).join('');
-  return (r.현재상태?`<p class="tb-now"><b>지금</b> ${esc(r.현재상태)}</p>`:'')
-    +(요점?`<ul class="tb-points">${요점}</ul>`:'')
+  /* 「시간 흐름」을 안 보여줘서 요약이 최근 이야기만 남았다 — 주차는 83건이 2016~2026인데
+   * 요점 3줄이 25~26년뿐이었다("제대로 요약된 것도 아니고"). 회의록 앱 요약에는
+   * 2016년부터 41줄이 들어 있었다. **자르지 않고 전부** 보여준다. */
+  const 흐름=r.흐름.map(x=>`<li>${esc(x)}</li>`).join('');
+  return (r.현재상태?`<p class="tb-label">지금</p><p class="tb-now">${esc(r.현재상태)}</p>`:'')
+    +(요점?`<p class="tb-label">요점</p><ul class="tb-points">${요점}</ul>`:'')
+    +(흐름?`<p class="tb-label">지나온 흐름 <i>${r.흐름.length}</i></p><ul class="tb-flow">${흐름}</ul>`:'')
     +(기계요약?`<ul class="tb-meta">${기계요약}</ul>`:'')
     +`<p class="tb-src">회의록 앱의 주제 흐름 요약에서 가져왔습니다</p>`;
 }

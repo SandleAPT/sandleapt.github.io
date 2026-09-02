@@ -143,3 +143,26 @@
 .search-b-narrow .nlabel b { display: block; font-size: .88em; }
 .search-b-narrow .nlabel span { display: block; margin-top: 2px; font-size: .76em; opacity: .6; line-height: 1.5; }
 .search-b-narrow .nchips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* 핵심 요약 정렬 다시 (2026-09-02 사용자 지적: "왼쪽으로 쏠리고 정렬도 안되어 있잖아")
+   「지금」을 뱃지로 글 앞에 붙였더니 그 줄만 오른쪽으로 밀려 아래 목록과 어긋났다.
+   이름표를 윗줄로 올리고 모든 블록을 같은 왼쪽 선에 세운다. */
+.search-b-summary .tb-label,
+.search-b-summary .tb-now,
+.search-b-summary .tb-points,
+.search-b-summary .tb-flow,
+.search-b-summary .tb-meta,
+.search-b-summary .tb-fallback,
+.search-b-summary .tb-src { margin-left: 0; padding-left: 0; }
+
+.search-b-summary .tb-label {
+  margin: 16px 0 5px; font-size: .72em; font-weight: 800;
+  letter-spacing: .08em; color: var(--gold, #b08d3f);
+}
+.search-b-summary .tb-label:first-child { margin-top: 0; }
+.search-b-summary .tb-label i { font-style: normal; font-weight: 600; opacity: .55; }
+.search-b-summary .tb-now { margin: 0; font-size: 1.04em; line-height: 1.7; font-weight: 600; }
+.search-b-summary .tb-now b { display: none; }   /* 옛 뱃지 자리 — 이제 이름표가 윗줄에 있다 */
+.search-b-summary .tb-flow { list-style: none; margin: 0; padding-left: 0; line-height: 1.75; font-size: .92em; }
+.search-b-summary .tb-flow li { margin: 5px 0; }
+.search-b-summary .tb-flow li::before { content: '·'; margin-right: 7px; opacity: .45; font-weight: 700; }
