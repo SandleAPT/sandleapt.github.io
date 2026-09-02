@@ -7,3 +7,12 @@
   margin-left: 3px; vertical-align: 1px;
 }
 .topic-text-btn:hover .tcount { opacity: .75; }
+
+/* 포털 안(iframe)에 끼워졌을 때 (2026-09-02)
+   포털이 이미 위에 제목줄과 새로고침·새 창 단추를 갖고 있다.
+   여기 머리말까지 두면 같은 성격의 줄이 두 겹이 된다. */
+body.embedded header.top { display: none; }
+body.embedded .wrap { padding-top: 8px; }
+.notice-admin { margin: 10px 0 0; }
+.notice-admin a { font-size: .88em; font-weight: 700; color: var(--gold, #b08d3f); text-decoration: none; }
+.notice-admin a:hover { text-decoration: underline; }

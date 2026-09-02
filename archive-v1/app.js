@@ -95,14 +95,30 @@ function renderSearchA(t,query,doScroll=true){
  * 기록이 없는 주제는 맨 뒤로 보낸다(지우지는 않는다 — "이 주제는 기록이 없다"도 정보다).
  */
 /* 포털 안(iframe)에서 열렸을 때 (2026-09-02).
- * 포털 왼쪽 메뉴에 Archive를 넣었더니, 이 화면의 「← 현재 포털」을 누르면
- * **포털 안에 포털이 다시 열렸다.** 액자 속 액자다.
- * 끼워져 있으면 그 링크만 바깥 창을 바꾸게 한다 — 링크를 없애지는 않는다.
- * 나머지 머리말은 그대로 둔다. 관리 화면(🔒)으로 가는 유일한 입구가 거기 있다. */
+ *
+ * 포털 왼쪽 메뉴에 Archive를 넣고 보니 두 가지가 어긋났다.
+ *  ① 「← 현재 포털」을 누르면 **포털 안에 포털이 다시 열렸다.** 액자 속 액자다.
+ *  ② 머리말이 두 겹이 됐다. 포털이 이미 위에 제목줄("Archive 시험판")과
+ *     새로고침·새 창 단추를 갖고 있는데, 그 아래에 같은 성격의 줄이 또 있었다.
+ *
+ * 그래서 끼워져 있으면 **이 화면의 머리말은 숨긴다.** 바깥 껍데기가 이미 그 일을 하고 있다.
+ * 대신 거기 있던 관리 화면(🔒) 입구는 잃으면 안 되므로 아래 안내 칸으로 옮긴다 —
+ * 링크를 그냥 없애면 관리 화면으로 가는 길이 사라진다.
+ * 「← 현재 포털」은 남겨 두되 바깥 창을 바꾸게 한다(끼운 채로 열면 ①이 된다).
+ */
 (function(){
   try{
     if(window.top===window.self)return;
+    document.body.classList.add('embedded');
     document.querySelectorAll('.top a.back').forEach(function(a){ a.target='_top'; });
+    var 안내=document.querySelector('.notice');
+    var 관리=document.querySelector('.top .admin-entry-link');
+    if(안내&&관리){
+      var p=document.createElement('p');
+      p.className='notice-admin';
+      p.innerHTML='<a href="'+관리.getAttribute('href')+'" target="_top">🔒 저장 · 권한 보기</a>';
+      안내.appendChild(p);
+    }
   }catch(e){ /* 다른 출처에 끼워졌으면 top 접근이 막힌다 — 그대로 둔다 */ }
 })();
 function renderAllTopics(){
