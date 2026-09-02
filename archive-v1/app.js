@@ -85,11 +85,25 @@ function renderSearchA(t,query,doScroll=true){
   try{history.replaceState(null,'','#search-a-'+encodeURIComponent(t.id));}catch(e){}
   if(doScroll)view.scrollIntoView({behavior:'smooth',block:'start'});
 }
+/* 전체 주제 목록 (5.5c).
+ *
+ * 가나다순 + 건수 없음이었다. 그러면 39개가 다 똑같아 보이고, **찾을 이름을 이미 아는 사람**
+ * 에게만 쓸모가 있다. 회의록 앱 ③은 건수 순으로 늘어놓아서 목록 자체가 정보다 —
+ * 계약·입찰 230 … 제설·동절기 4 를 보면 이 단지가 무엇을 많이 다루는지 한눈에 들어온다.
+ *
+ * 그래서 **건수 순 + 건수 표시**로 바꾼다. 이름으로 찾는 길은 검색창이 이미 있다.
+ * 기록이 없는 주제는 맨 뒤로 보낸다(지우지는 않는다 — "이 주제는 기록이 없다"도 정보다).
+ */
 function renderAllTopics(){
   allTopics.innerHTML='';
-  const topics=DATA.topics.filter(t=>t.visibility!=='private').sort(topicSort);
+  const 건수=t=>(t.records||[]).length;
+  const topics=DATA.topics.filter(t=>t.visibility!=='private')
+    .slice().sort((a,b)=>건수(b)-건수(a)||String(a.label).localeCompare(String(b.label),'ko'));
   topics.forEach((t,i)=>{
-    const b=document.createElement('button');b.type='button';b.className='topic-text-btn';b.textContent=t.label;b.title=t.description||t.label;
+    const b=document.createElement('button');b.type='button';b.className='topic-text-btn';
+    b.title=t.description||t.label;
+    b.appendChild(document.createTextNode(t.label));
+    if(건수(t)){const n=document.createElement('i');n.className='tcount';n.textContent=건수(t);b.appendChild(n);}
     b.onclick=()=>renderTopic(t);allTopics.appendChild(b);
     if(i<topics.length-1){const sep=document.createElement('span');sep.className='topic-sep';sep.textContent='·';sep.setAttribute('aria-hidden','true');allTopics.appendChild(sep);}
   });

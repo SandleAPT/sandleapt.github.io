@@ -152,13 +152,25 @@
         id: 'v1', title: '주차 표결 건', decision: '가결',
         votes: { '202': 'for', '204': 'for', '206': 'against' }, remarks: { '202': '', '204': '' }
       }] }], 분류표, 자동태그, 지금).topics.filter(function (t) { return t.label === '주차'; })[0].records[0];
-      assert.equal(찾기(표결건, '표결').글, '찬성 2 · 반대 1', '동별 표를 세어 보여준다');
+      assert.equal(찾기(표결건, '표결 (동별 기록)').글, '찬성 2 · 반대 1', '반대가 있으면 세어 보여준다');
+      /* 칸 이름에 무엇을 센 것인지 밝힌다. 의결문의 「찬성5/반대5」는 안건 안의 개별 사안별
+         표결을 사람이 적은 것이고, 이 숫자는 동별 기록이라 서로 다를 수 있다. */
+      assert.equal(칸이름(표결건).indexOf('표결 (동별 기록)') >= 0, true, '무엇을 센 숫자인지 이름에 밝힌다');
       assert.equal(칸이름(표결건).indexOf('비고') < 0, true, '비고가 전부 빈 문자열이면 칸을 만들지 않는다');
+
+      /* 만장일치는 보여주지 않는다 (사용자 결정 2026-09-02).
+         전체 4,692표 중 4,657표가 찬성이라, 「반대 0」은 거의 모든 안건에 붙으면서
+         아무것도 말해주지 않는다. 반대가 나온 35번이 오히려 눈에 띄어야 한다. */
+      var 만장일치 = B.build([{ id: 'm_u', name: 'u회의', date: '2026-03-03', agendas: [{
+        id: 'u1', title: '주차 만장일치 건', decision: '가결', votes: { '202': 'for', '204': 'for' }
+      }] }], 분류표, 자동태그, 지금).topics.filter(function (t) { return t.label === '주차'; })[0].records[0];
+      assert.equal(칸이름(만장일치).indexOf('표결 (동별 기록)') < 0, true, '만장일치면 표결 칸을 만들지 않는다');
+      assert.equal(칸이름(만장일치).join(','), '의결', '남는 것은 의결뿐');
 
       var 표없음 = B.build([{ id: 'm_w', name: 'w회의', date: '2026-03-03', agendas: [{
         id: 'w1', title: '주차 표 없는 건', decision: '보류', votes: {}, remarks: {}
       }] }], 분류표, 자동태그, 지금).topics.filter(function (t) { return t.label === '주차'; })[0].records[0];
-      assert.equal(칸이름(표없음).indexOf('표결') < 0, true, '표가 하나도 없으면 표결 칸을 만들지 않는다 — 0/0을 보여주지 않는다');
+      assert.equal(칸이름(표없음).indexOf('표결 (동별 기록)') < 0, true, '표가 하나도 없어도 칸을 만들지 않는다');
       assert.equal(칸이름(표없음).join(','), '의결', '남는 것은 의결뿐');
 
       // 최근 기록
