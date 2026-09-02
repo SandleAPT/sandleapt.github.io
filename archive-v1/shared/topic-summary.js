@@ -83,16 +83,60 @@
     return (obj && obj.topics) ? obj.topics : null;
   }
 
+  /*
+   * 다시 쓴 요약 덮어쓰기 (2026-09-02)
+   *
+   * 원본은 회의록 앱의 `topic_summaries`(클라우드)다. 그것을 고치려면 관리자 비밀번호가 필요한데,
+   * 사용자가 집이 아니라 지금 넣을 수 없었다. **요약을 쓰는 일까지 멈출 이유는 없어서**
+   * 다시 쓴 것을 `data/topic-summaries.json`에 두고 여기서 덮어쓴다(깃허브 배포로 끝난다).
+   *
+   * 덮어쓰는 것은 **「요점」과 「현재 상태」뿐**이다. 「시간 흐름」은 손대지 않고 클라우드 원본을 쓴다.
+   * 한 곳만 덮어써야 나중에 원본으로 되돌릴 때 무엇이 바뀐 것인지 분명하다.
+   *
+   * 비밀번호를 넣을 수 있게 되면 이 내용을 클라우드로 옮기고 그 파일을 비운다.
+   * **두 곳에 같은 글이 남아 있으면 언젠가 어긋난다.**
+   */
+  function 글로만들기(o) {
+    var out = [];
+    if (o.요점 && o.요점.length) {
+      out.push('## 요점');
+      o.요점.forEach(function (x) { out.push('- ' + x); });
+    }
+    if (o.현재상태) out.push('- 현재 상태: ' + o.현재상태);
+    return out.join('\n');
+  }
+  function 덮어쓰기(원본, 덮을것) {
+    if (!덮을것) return 원본;
+    var map = 원본 || {};
+    Object.keys(덮을것).forEach(function (label) {
+      if (label.charAt(0) === '_') return;          // _설명 같은 메모 줄은 건너뛴다
+      var o = 덮을것[label];
+      if (!o || (!o.요점 && !o.현재상태)) return;
+      var 옛글 = String((map[label] || {}).text || '');
+      // 원본에서 「시간 흐름」 이후는 그대로 살린다.
+      var 흐름 = '';
+      var m = 옛글.match(/^##\s*시간 흐름\s*$[\s\S]*/m);
+      if (m) 흐름 = '\n' + m[0].replace(/^[-*]\s*현재\s*상태\s*[:：].*$/m, '').replace(/\n{3,}/g, '\n\n');
+      map[label] = { text: 글로만들기(o) + 흐름 };
+    });
+    return map;
+  }
+
   // 네트워크는 주입받는다(검사에서 실제 요청 없이 돌리기 위함).
   var 캐시 = null;
   function 불러오기(fetchFn) {
     if (캐시) return 캐시;
-    캐시 = fetchFn('/minutes/system-backup.json', { cache: 'force-cache' })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) { return j ? 조립(j.items) : null; })
-      .catch(function () { return null; });   // 못 읽으면 요약 없이 그냥 돈다
+    캐시 = Promise.all([
+      fetchFn('/minutes/system-backup.json', { cache: 'force-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return j ? 조립(j.items) : null; })
+        .catch(function () { return null; }),
+      fetchFn('./data/topic-summaries.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; })        // 덮어쓸 것이 없으면 원본만 쓴다
+    ]).then(function (a) { return 덮어쓰기(a[0], a[1]); });
     return 캐시;
   }
 
-  return { 파싱: 파싱, 조립: 조립, 불러오기: 불러오기 };
+  return { 파싱: 파싱, 조립: 조립, 불러오기: 불러오기, 덮어쓰기: 덮어쓰기, 글로만들기: 글로만들기 };
 });
