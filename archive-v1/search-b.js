@@ -14,7 +14,8 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;',
 function topicByQuery(q){q=(q||'').trim().toLowerCase();if(!q)return null;return (자료().topics||[]).find(t=>[t.label].concat(t.aliases||[]).some(v=>String(v).toLowerCase().includes(q)||q.includes(String(v).toLowerCase())));}
 function tagClass(tag){return tag==='rule'?'rule':tag==='contract'?'contract':tag==='current'?'current':'history';}
 function showHome(){home.classList.remove('is-hidden');view.classList.add('is-hidden');view.innerHTML='';input.value='';try{history.replaceState(null,'',location.pathname);}catch(e){}window.scrollTo({top:0,behavior:'smooth'});}
-function openTopic(t){const buttons=[...document.querySelectorAll('#allTopics .topic-text-btn')];const b=buttons.find(x=>x.textContent.trim()===String(t.label).trim());if(b){b.click();return;}location.hash='#topic-'+encodeURIComponent(t.id);location.reload();}
+// 단추를 찾을 때도 글자가 아니라 id로 (위 2026-09-02 사고와 같은 이유).
+function openTopic(t){const buttons=[...document.querySelectorAll('#allTopics .topic-text-btn')];const b=buttons.find(x=>x.dataset.topicId===t.id)||buttons.find(x=>x.textContent.trim()===String(t.label).trim());if(b){b.click();return;}location.hash='#topic-'+encodeURIComponent(t.id);location.reload();}
 /* 원문 링크(2026-09-02): Archive는 회의록을 복제하지 않고 찾아가게 하는 것이 목적이라,
  * 안건을 누르면 회의록 앱의 그 회의를 연다. 링크가 없으면 예전 안내를 그대로 둔다. */
 /* 안건 상세 팝업.
@@ -223,7 +224,11 @@ document.addEventListener('click',function(e){
   if(mode!=='B')return;
   var btn=e.target.closest&&e.target.closest('#allTopics .topic-text-btn');
   if(!btn)return;
-  var t=(자료().topics||[]).find(function(x){return String(x.label).trim()===btn.textContent.trim();});
+  /* id로 찾는다. 예전에는 단추 글자로 찾았는데, 이름 옆에 건수를 붙이자
+     "승강기" ≠ "승강기61"이 되어 이 연결이 조용히 끊겼다(2026-09-02).
+     글자는 화면 사정으로 언제든 바뀐다 — 잇는 것은 id여야 한다. */
+  var t=(자료().topics||[]).find(function(x){return x.id===btn.dataset.topicId;})
+     || (자료().topics||[]).find(function(x){return String(x.label).trim()===btn.textContent.trim();});
   if(!t)return;
   if(!(t.current||[]).length&&!(t.timeline||[]).length&&!(t.records||[]).length)return; // 빈 주제는 원래 안내로
   e.preventDefault();e.stopImmediatePropagation();

@@ -128,6 +128,10 @@ function renderAllTopics(){
     .slice().sort((a,b)=>건수(b)-건수(a)||String(a.label).localeCompare(String(b.label),'ko'));
   topics.forEach((t,i)=>{
     const b=document.createElement('button');b.type='button';b.className='topic-text-btn';
+    /* 다른 코드가 이 단추에서 주제를 찾는다(search-b.js). **글자가 아니라 id로 찾게 한다** —
+       2026-09-02에 이름 옆에 건수를 붙였더니 "승강기" ≠ "승강기61"이 되어 연결이 조용히 끊겼다.
+       검색 화면으로 가야 할 클릭이 옛 주제 화면으로 갔다. */
+    b.dataset.topicId=t.id;
     b.title=t.description||t.label;
     b.appendChild(document.createTextNode(t.label));
     if(건수(t)){const n=document.createElement('i');n.className='tcount';n.textContent=건수(t);b.appendChild(n);}
