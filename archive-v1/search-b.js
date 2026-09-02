@@ -53,6 +53,7 @@ function attachBInteractions(t,t0){
   view.querySelectorAll('[data-narrow]').forEach(b=>b.onclick=()=>{
     const v=b.dataset.narrow||'';
     좁힘=(v&&v!==좁힘)?v:null;
+    펼친연도=null;   // 좁히면 남는 해가 달라진다 — 가장 최근 해부터 다시 편다
     renderB(t0||t,input.value||(t0||t).label);
   });
   view.querySelectorAll('[data-b-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.bMode;form.requestSubmit();});
@@ -61,6 +62,7 @@ function attachBInteractions(t,t0){
     const n=(자료().topics||[]).find(x=>x.id===b.dataset.tswitch);
     if(!n)return;
     좁힘=null;          // 다른 주제로 가면 좁힘은 푼다 — 그 주제엔 없는 갈래일 수 있다
+    펼친연도=null;      // 펼친 해도 초기화 — 그 주제엔 없는 해일 수 있다
     input.value=n.label;
     renderB(n,n.label);
     // 누른 주제가 화면 밖에 있으면 그 자리로 스크롤해 둔다.
@@ -69,7 +71,14 @@ function attachBInteractions(t,t0){
   });
   view.querySelectorAll('[data-b-topic]').forEach(b=>b.onclick=()=>openTopic(t));
   view.querySelectorAll('[data-b-current]').forEach(b=>{b.onclick=()=>{const c=t.current[+b.dataset.bCurrent];openDetail([자료().currentLabel||'현재 기준',c.kind],c.title,c.note,c.원문,c.회의,c.본문);};});
-  view.querySelectorAll('[data-b-timeline]').forEach(b=>{b.onclick=()=>{const e=t.timeline[+b.dataset.bTimeline];openDetail([e.date,'타임라인'],e.title,e.note,e.원문,e.회의,e.본문);};});
+  // 펼친 해의 항목만 번호를 받는다 — 화면에 그린 순서와 같은 배열을 써야 엉뚱한 안건이 안 열린다.
+  const 보이는타임라인=펼친항목(t.timeline);
+  view.querySelectorAll('[data-b-timeline]').forEach(b=>{b.onclick=()=>{const e=보이는타임라인[+b.dataset.bTimeline];if(!e)return;openDetail([e.date,'타임라인'],e.title,e.note,e.원문,e.회의,e.본문);};});
+  // 연도 머리를 누르면 그 해를 펼친다(한 번에 한 해).
+  view.querySelectorAll('[data-year]').forEach(b=>b.onclick=()=>{
+    펼친연도=(펼친연도===b.dataset.year)?null:b.dataset.year;
+    renderB(t0||t,input.value||(t0||t).label);
+  });
   view.querySelectorAll('[data-b-record]').forEach(b=>{b.onclick=()=>{const r=t.records[+b.dataset.bRecord];openDetail([r[0],r[1],r[3]],r[2],r[5]?('회의: '+r[5]):'',r[4],r[5],r[7]);};});
 }
 /* 주제 전환 줄 (사용자 요청 2026-09-02)
@@ -137,16 +146,58 @@ function 요약채우기(label){
     if(자리) 자리.innerHTML=요약HTML(label);
   }).catch(function(){});
 }
+/* 타임라인을 연도별로 접는다 (5.5d).
+ *
+ * 사용자 지적에서 나왔다 — 회의록 앱 ③은 최근 연도만 펼치고 옛 연도는
+ * `09 정기 · 07 정기 · 06 정기` 한 줄로 접어서 **11년치가 한 화면에 들어온다.**
+ * Archive는 최신 6건만 자르고 나머지를 숨겨서 전체 모양이 안 보였다(게다가 자료 자체가 40건에서 잘렸다).
+ *
+ * 규칙: 가장 최근 연도는 펼치고 나머지는 접는다. 접힌 해도 **몇 건인지와 몇 월인지**는 보여준다 —
+ * 접는 것과 숨기는 것은 다르다. 눌러서 펼칠 수 있다.
+ */
+let 펼친연도=null;
+function 연도(ym){ return String(ym||'').slice(0,4); }
+function 타임라인HTML(items){
+  if(!items||!items.length) return '';
+  const 해별=[];
+  items.forEach(e=>{
+    const y=연도(e.date); if(!y) return;
+    let g=해별.find(x=>x.해===y); if(!g){g={해:y,항목:[]};해별.push(g);}
+    g.항목.push(e);
+  });
+  해별.sort((a,b)=>b.해.localeCompare(a.해));
+  if(!펼친연도||!해별.some(g=>g.해===펼친연도)) 펼친연도=해별[0].해;
+  let n=0;
+  return 해별.map(g=>{
+    const 펼침=g.해===펼친연도;
+    const 머리=`<button type="button" class="tl-year${펼침?' open':''}" data-year="${esc(g.해)}"><b>${esc(g.해)}년</b><i>${g.항목.length}건</i><span class="tl-caret">${펼침?'▾':'▸'}</span></button>`;
+    if(!펼침){
+      // 접힌 해 — 몇 월에 무엇이 있었는지는 남긴다. 숨기는 게 아니라 접는 것이다.
+      const 달=g.항목.map(e=>esc(String(e.date).slice(5))).join(' · ');
+      return `<div class="tl-group">${머리}<div class="tl-months">${달}</div></div>`;
+    }
+    const 줄=g.항목.map(e=>{
+      const i=n++;
+      return `<button type="button" class="search-b-event" data-b-timeline="${i}"><time>${esc(e.date)}</time><div><b>${esc(e.title)}</b><p>${esc(e.note)}</p></div></button>`;
+    }).join('');
+    return `<div class="tl-group">${머리}<div class="tl-items">${줄}</div></div>`;
+  }).join('');
+}
+/* 펼친 해의 항목만 data-b-timeline 번호를 받으므로, 클릭 처리도 같은 순서로 맞춰야 한다.
+   화면과 다른 배열을 쓰면 엉뚱한 안건이 열린다. */
+function 펼친항목(items){
+  return (items||[]).filter(e=>연도(e.date)===펼친연도);
+}
 function renderB(t0,query){
   const t=좁힌것(t0);
   const layout=LAYOUTS.B||{preview:{current:3,timeline:6,records:12}};
   const p=layout.preview||{};
   const currentItems=(t.current||[]).slice(0,p.current||3);
-  const timelineItems=(t.timeline||[]).slice(0,p.timeline||6);
+  const timelineItems=t.timeline||[];   // 연도별로 접으므로 여기서 자르지 않는다 (5.5d)
   const recordItems=(t.records||[]).slice(0,p.records||12);
   const current=currentItems.map((c,i)=>`<button type="button" class="search-b-current" data-b-current="${i}"><div class="meta"><span class="tag current">${esc(자료().currentLabel||'현재 기준')}</span><span class="tag ${tagClass(c.tags&&c.tags[1])}">${esc(c.kind)}</span></div><strong>${esc(c.title)}</strong><p>${esc(c.note)}</p></button>`).join('');
   const summary=summaryItems(t).map(x=>`<li>${esc(x)}</li>`).join('');
-  const timeline=timelineItems.map((e,i)=>`<button type="button" class="search-b-event" data-b-timeline="${i}"><time>${esc(e.date)}</time><div><b>${esc(e.title)}</b><p>${esc(e.note)}</p></div></button>`).join('');
+  const timeline=타임라인HTML(timelineItems);
   const records=recordItems.map((r,i)=>`<button type="button" class="search-b-record" data-b-record="${i}"><span class="date">${esc(r[0])}</span><span class="kind">${esc(r[1])}</span><span class="title">${esc(r[2])}</span><span class="status">${esc(r[3])}</span></button>`).join('');
   const counts=Object.entries(t.counts||{}).map(([k,v])=>`<span>${esc(k)} ${esc(v)}</span>`).join('');
   const extraRecords=(t.records||[]).length>recordItems.length?`<div class="search-b-more">전체 ${(t.records||[]).length}건 중 ${recordItems.length}건 표시 · <button type="button" data-b-topic>주제 전체 보기</button></div>`:'';

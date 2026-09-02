@@ -65,3 +65,22 @@
 .tb-points { margin: 10px 0 0; padding-left: 18px; font-size: .9em; line-height: 1.75; }
 .tb-points li { margin: 2px 0; }
 .tb-src { margin: 8px 0 0; font-size: .74em; opacity: .5; }
+
+/* 타임라인 연도별 접기 (5.5d, 2026-09-02)
+   회의록 앱 3번처럼 최근 해만 펼치고 나머지는 한 줄로 접어 11년치를 한 화면에. */
+.tl-group { margin-bottom: 6px; }
+.tl-year {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  border: 0; border-top: 1px solid var(--line, #e3e0d8); background: transparent; color: inherit;
+  font: inherit; cursor: pointer; padding: 8px 2px 6px; text-align: left;
+}
+.tl-year:hover { background: var(--aw-soft, #f7f7f4); }
+.tl-year b { font-size: .95em; font-weight: 800; }
+.tl-year i { font-style: normal; font-size: .78em; opacity: .5; }
+.tl-year .tl-caret { margin-left: auto; opacity: .45; font-size: .8em; }
+.tl-year.open b { color: var(--gold, #b08d3f); }
+.tl-months {
+  padding: 0 2px 8px 4px; font-size: .82em; opacity: .55; line-height: 1.8;
+  word-break: keep-all;
+}
+.tl-items { padding-left: 2px; }

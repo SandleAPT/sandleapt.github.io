@@ -184,7 +184,10 @@
         current: 목록.slice(0, 2).map(function (x) {
           return { kind: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), tags: ['history'], 원문: 원문주소(x), 회의: x.회의, 본문: x.본문 };
         }),
-        timeline: 목록.slice(0, 40).map(function (x) {
+        /* 타임라인은 **전부** 넘긴다(예전엔 40건에서 잘랐다).
+         * 화면이 연도별로 접어 보여주므로(5.5d) 여기서 미리 자르면 옛 연도가 통째로 사라진다.
+         * 계약·입찰 230건이 가장 많고 한 건이 200자 남짓이라 양은 문제가 되지 않는다. */
+        timeline: 목록.map(function (x) {
           return { date: x.ym, title: x.제목, note: x.회의 + (x.요지 ? ' — ' + x.요지 : ''), 원문: 원문주소(x), 회의: x.회의, 본문: x.본문 };
         }),
         /*
