@@ -105,3 +105,17 @@
 }
 .search-b-event.big b { font-size: 1.06em; }
 .search-b-event.big { background: var(--aw-soft, #f9f7f1); border-radius: 8px; }
+
+/* 핵심 요약 = 사람이 쓴 주제 흐름 요약 (5.5f, 2026-09-02)
+   기계가 센 건수는 아래 작은 줄로 내렸다. 건수는 사실이지만 요약은 아니다. */
+.search-b-summary .tb-now { margin: 0 0 10px; font-size: 1.05em; line-height: 1.7; }
+.search-b-summary .tb-now b {
+  display: inline-block; margin-right: 6px; padding: 1px 9px;
+  border-radius: 999px; background: var(--gold, #b08d3f); color: #fff;
+  font-size: .68em; vertical-align: 2px; letter-spacing: .04em;
+}
+.search-b-summary .tb-points { margin: 0; padding-left: 18px; line-height: 1.8; }
+.search-b-summary .tb-points li { margin: 3px 0; }
+.search-b-summary .tb-meta,
+.search-b-summary .tb-fallback { margin: 12px 0 0; padding-left: 18px; font-size: .84em; opacity: .55; line-height: 1.7; }
+.search-b-summary .tb-src { margin: 8px 0 0; font-size: .74em; opacity: .42; }
