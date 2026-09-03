@@ -109,7 +109,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v339</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v340</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -147,9 +147,9 @@ var BASE = (location.protocol === "http:" || location.protocol === "https:") ? l
 var MIN = BASE + "/minutes/";
 var MINQ = "?embed=1&v=339"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
 var FEES = BASE + "/fees/?v=46";
-// 2026-08-26 재편(v38): 내용 기준 4그룹, 번호 없음. 작성용 화면은 회의록 그룹 안에서 관리자 기기에만 표시.
+// 2026-09-03 재편(v340): 기존 화면은 그대로 두고 왼쪽 메뉴만 이용 목적에 따라 다시 묶는다.
 var GROUPS = [
-  { id: "minutes", title: "회의록", cls: "", service: "minutes", items: [
+  { id: "minutes", title: "회의", cls: "", service: "minutes", items: [
     { id: "previewView", label: "회의록 미리보기", view: "previewView" },
     { id: "archiveView", label: "이전 회의록",     view: "archiveView" },
     { id: "topicView",   label: "주제별 보기",     view: "topicView" },
@@ -161,11 +161,16 @@ var GROUPS = [
     { id: "repsView",   label: "동대표 명단", view: "repsView",   adminOnly: true },
     { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true }
   ]},
-  { id: "rules", title: "규약 · 기록", cls: "", service: "minutes", items: [
-    { id: "noticeView", label: "규약 · 계약 · 공고", view: "noticeView" },
+  { id: "rules", title: "기준 · 문서", cls: "", service: "minutes", items: [
+    // noticeView 본문과 그 안의 기존 탭은 재사용한다. #noticeView는 예전 링크 호환을 위해 관리규약에 남긴다.
+    { id: "noticeView",          label: "관리규약",       view: "noticeView", noticeSub: "rules" },
+    { id: "noticeContracts",     label: "계약 · 기준문서", view: "noticeView", noticeSub: "contracts" },
+    { id: "noticeElections",     label: "선거 · 선관위",   view: "noticeView", noticeSub: "elections" },
+    { id: "noticeAnnouncements", label: "공고 · 안내",     view: "noticeView", noticeSub: "notices" },
     { id: "privateView", label: "비공개 자료", view: "privateView", adminOnly: true }
   ]},
-  { id: "finance", title: "재정 · 회계", cls: "green", items: [
+  { id: "management", title: "점검 · 관리", cls: "green", items: [
+    { id: "noticeChecks", label: "절차 점검", view: "noticeView", noticeSub: "checks", service: "minutes" },
     { id: "fees",     label: "관리비 추적", service: "fees", url: FEES },
     { id: "hajaView", label: "하자판결금",  service: "minutes", view: "hajaView" }
   ]},
@@ -319,18 +324,36 @@ function ensureExternal(it) {
 
 // 회의록 앱에 화면 전환 요청 — 앱이 준비(ready)되기 전이면 준비된 뒤 보낸다
 var pendingView = null;
-function tellMinutes(view) {
+function selectNoticeSub(frame, sub) {
+  if (!sub) return;
+  var tries = 0;
+  (function apply() {
+    tries++;
+    try {
+      if (frame.contentWindow.Notices && typeof frame.contentWindow.Notices.sub === "function") {
+        frame.contentWindow.Notices.sub(sub);
+        return;
+      }
+    } catch (e) {}
+    // ready 신호 직후 하위 스크립트가 아직 실행 중인 경우에만 잠깐 다시 시도한다.
+    if (tries < 20) setTimeout(apply, 50);
+  })();
+}
+function tellMinutes(view, noticeSub) {
   var f = frames.minutes; if (!f) return;
-  if (!ready.minutes) { pendingView = view; return; }
+  if (!ready.minutes) { pendingView = { view: view, noticeSub: noticeSub }; return; }
   try { f.contentWindow.postMessage({ source: "sandle-portal", type: "show", view: view }, location.origin); } catch (e) {}
+  if (view === "noticeView") selectNoticeSub(f, noticeSub);
 }
 window.addEventListener("message", function (e) {
   if (e.origin !== location.origin || !e.data || e.data.source !== "sandle-minutes") return;
   if (e.data.type === "ready") {
     ready.minutes = true;
-    if (pendingView) { var v = pendingView; pendingView = null; tellMinutes(v); }
+    if (pendingView) { var v = pendingView; pendingView = null; tellMinutes(v.view, v.noticeSub); }
   } else if (e.data.type === "view" && e.data.view) {
     // 앱 안에서 화면이 바뀌면(예: 시작 시 자동 열기) 메뉴 표시를 맞춘다
+    // 같은 noticeView 안의 하위 탭을 왼쪽 메뉴로 연 경우에는 구체적인 메뉴 선택을 유지한다.
+    if (current && current.view === e.data.view) return;
     if (ITEMS[e.data.view] && (!current || current.id !== e.data.view)) show(e.data.view, false, true);
   }
 });
@@ -344,6 +367,8 @@ function trackView(it) {
 }
 function directUrl(it) {
   if (it.external || it.url) return it.url;
+  // 하위 탭은 포털 해시를 거쳐야 새 창에서도 같은 탭이 정확히 선택된다.
+  if (it.noticeSub) return BASE + "/#" + it.id;
   return MIN + (it.view && it.view !== "previewView" ? "?tab=" + it.view : "");
 }
 function show(id, push, fromApp) {
@@ -359,7 +384,7 @@ function show(id, push, fromApp) {
   else {
     var svc = svcOf(it);
     ensureService(svc).classList.add("active");
-    if (svc === "minutes" && it.view && !fromApp) tellMinutes(it.view);
+    if (svc === "minutes" && it.view && !fromApp) tellMinutes(it.view, it.noticeSub);
   }
   var u = directUrl(it); openBtn.href = u; openBtnM.href = u;
   topTitle.textContent = it.label;
@@ -371,7 +396,7 @@ document.getElementById("reloadBtn").onclick = function () {
   if (!current || current.external) return;
   var svc = svcOf(current), f = frames[svc]; if (!f) return;
   paneFor("svc-" + svc).classList.add("loading-on");
-  if (svc === "minutes") { ready.minutes = false; pendingView = current.view; f.src = MIN + MINQ + (current.view && current.view !== "previewView" ? "&tab=" + current.view : ""); }
+  if (svc === "minutes") { ready.minutes = false; pendingView = { view: current.view, noticeSub: current.noticeSub }; f.src = MIN + MINQ + (current.view && current.view !== "previewView" ? "&tab=" + current.view : ""); }
   else f.src = f.src;
 };
 // 모바일 서랍
