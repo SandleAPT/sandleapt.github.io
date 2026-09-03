@@ -114,7 +114,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v341</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v342</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -254,13 +254,13 @@ var SERVICES = {
   // 여기 등록을 빠뜨리면 메뉴를 눌러도 아무 일이 일어나지 않는다 — 2026-09-02에 실제로 그랬다.
   archive:   { url: BASE + "/archive-v1/?v=299" }
 };
-// 모바일 하단 바(서비스 단위)
+// 모바일 하단 바(v342): PC 왼쪽 메뉴와 같은 5개 대분류. 누르면 해당 분류 위치로 서랍을 연다.
 var BOTTOM = [
-  { id: "previewView", label: "회의록",   ic: "◆", cls: "" },
-  { id: "fees",        label: "관리비",   ic: "▥", cls: "t-green" },
-  { id: "hajaView",    label: "하자판결금", ic: "₩", cls: "t-green" },
-  { id: "docs",        label: "꿀팁정리", ic: "✦", cls: "t-teal" },
-  { id: "community",   label: "커뮤니티", ic: "◇", cls: "t-teal" }
+  { group: "minutes",    label: "회의",          ic: "◆", cls: "" },
+  { group: "archive",    label: "검색·아카이브", ic: "⌕", cls: "" },
+  { group: "rules",      label: "기준·문서",     ic: "▤", cls: "" },
+  { group: "management", label: "점검·관리",     ic: "✓", cls: "t-green" },
+  { group: "info",       label: "소식·정보",     ic: "◇", cls: "t-teal" }
 ];
 
 var ITEMS = {}; GROUPS.forEach(function (g) { g.items.forEach(function (it) { if (!it.placeholder) { it.group = g; ITEMS[it.id] = it; } }); });
@@ -297,8 +297,12 @@ GROUPS.forEach(function (g) {
   box.appendChild(items); menu.appendChild(box);
 });
 BOTTOM.forEach(function (bt) {
-  var b = document.createElement("button"); b.className = bt.cls; b.dataset.id = bt.id; b.innerHTML = '<span class="ic">' + bt.ic + '</span>' + bt.label;
-  b.onclick = function () { var it = ITEMS[bt.id]; show(bt.id, true); if (it && it.external) window.open(it.url, "_blank", "noopener"); };
+  var b = document.createElement("button"); b.className = bt.cls; b.dataset.group = bt.group; b.innerHTML = '<span class="ic">' + bt.ic + '</span>' + bt.label;
+  b.onclick = function () {
+    document.body.classList.add("drawer");
+    var group = document.getElementById("grp-" + bt.group);
+    if (group) setTimeout(function () { group.scrollIntoView({ block: "start" }); }, 20);
+  };
   bottom.appendChild(b);
 });
 
@@ -385,9 +389,8 @@ function show(id, push, fromApp) {
   var it = ITEMS[id] || ITEMS.previewView;
   current = it;
   document.querySelectorAll(".item").forEach(function (b) { b.classList.toggle("active", b.dataset.id === it.id); });
-  // 하단 바: 하자판결금은 자기 단추, 그 밖의 회의록 화면은 '회의록', 외부/커뮤니티는 같은 id
-  var bottomId = it.id === "hajaView" ? "hajaView" : (!it.external && svcOf(it) === "minutes") ? "previewView" : it.id;
-  document.querySelectorAll(".bottom button").forEach(function (b) { b.classList.toggle("active", b.dataset.id === bottomId); });
+  // 모바일 하단은 현재 화면이 속한 대분류를 표시한다(PC 왼쪽 메뉴와 같은 정보구조).
+  document.querySelectorAll(".bottom button").forEach(function (b) { b.classList.toggle("active", b.dataset.group === it.group.id); });
   if (it.group.collapsible) document.getElementById("grp-" + it.group.id).classList.add("open");
   document.querySelectorAll(".pane").forEach(function (p) { p.classList.remove("active"); });
   if (it.external) ensureExternal(it).classList.add("active");
@@ -397,7 +400,7 @@ function show(id, push, fromApp) {
     if (svc === "minutes" && it.view && !fromApp) tellMinutes(it.view, it.noticeSub);
   }
   var u = directUrl(it); openBtn.href = u; openBtnM.href = u;
-  topTitle.textContent = it.label;
+  topTitle.textContent = it.group.title + " › " + it.label;
   document.title = "산들마을 입주민 포털 — " + it.label;
   trackView(it);
   if (push) { try { history.replaceState(null, "", "#" + it.id); } catch (e) {} }
