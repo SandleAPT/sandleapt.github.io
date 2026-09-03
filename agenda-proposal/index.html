@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 안건 제안서</title>
 <meta name="description" content="산들마을 입주자대표회의 안건 제안서를 A4 한 장으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=3">
+<link rel="stylesheet" href="./app.css?v=4">
 </head>
 <body>
 <header class="topbar">
@@ -36,29 +36,27 @@
       <div class="library-list" id="libraryList"><div class="library-empty">저장된 제안서가 없습니다.</div></div>
     </section>
 
-    <div class="field-grid two">
-      <label class="field">
-        <span>안건 제목</span>
-        <input id="title" type="text" placeholder="예: 커뮤니티센터 누수·곰팡이 보수의 건">
-      </label>
+    <label class="field">
+      <span>안건 제목</span>
+      <input id="title" type="text" placeholder="예: 커뮤니티센터 누수·곰팡이 보수의 건">
+    </label>
+
+    <div class="field-grid two compact-row">
       <label class="field">
         <span>제안자</span>
         <input id="proposer" type="text" placeholder="예: 211동 동별대표자 유은혜">
       </label>
-    </div>
-
-    <div class="field-grid two compact-row">
       <label class="field">
         <span>제출일</span>
         <input id="date" type="date">
       </label>
-      <div class="page-state" id="pageState" aria-live="polite">A4 한 장 안에 들어갑니다.</div>
     </div>
+    <div class="page-state" id="pageState" aria-live="polite">A4 한 장 안에 들어갑니다.</div>
 
     <label class="field">
       <span>1. 제안 배경</span>
-      <small>왜 이 안건을 올리는지 쉽게 적어주세요.</small>
-      <textarea id="background" rows="5" placeholder="예: 커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 문제가 생기고 있습니다."></textarea>
+      <small>왜 이 안건을 올리는지 쉽게 적어주세요. 상황과 이유를 두세 문단으로 적어도 됩니다.</small>
+      <textarea id="background" rows="6" placeholder="예: 커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 문제가 생기고 있습니다."></textarea>
     </label>
 
     <label class="field">
@@ -106,9 +104,9 @@
         </div>
 
         <div class="meta-table">
-          <div class="meta-label">안건 제목</div><div class="meta-value strong" id="pTitle">안건 제목을 입력해 주세요.</div>
-          <div class="meta-label">제안자</div><div class="meta-value" id="pProposer">-</div>
-          <div class="meta-label">제출일</div><div class="meta-value" id="pDate">-</div>
+          <div class="meta-label title-label">안건 제목</div><div class="meta-value strong title-value" id="pTitle">안건 제목을 입력해 주세요.</div>
+          <div class="meta-label proposer-label">제안자</div><div class="meta-value proposer-value" id="pProposer">-</div>
+          <div class="meta-label date-label">제출일</div><div class="meta-value date-value" id="pDate">-</div>
         </div>
 
         <section class="doc-section">
@@ -143,6 +141,6 @@
   </section>
 </main>
 
-<script src="./app.js?v=3"></script>
+<script src="./app.js?v=4"></script>
 </body>
 </html>
