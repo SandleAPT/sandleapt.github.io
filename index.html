@@ -22,7 +22,7 @@ window.GA_MEASUREMENT_ID = "G-MH479X0GSE";
 })();
 </script>
 <style>
-:root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--bg:#f4f1ea;--paper:#fffdf8;--gold:#b5841a;--gold-ink:#6a4d0f;--gold-soft:#f6eccf;--gold-line:#e7cf8e;--teal:#2f5f80;--teal-soft:#e3eef5;--teal-line:#b9d0e0;--green:#3c6134;--green-soft:#e8efe5;--green-line:#b9d3ae;--rail:232px;--top:52px;--bottom:56px}
+:root{--ink:#2b2a26;--muted:#6f6b62;--line:#e6e1d6;--bg:#f4f1ea;--paper:#fffdf8;--gold:#b5841a;--gold-ink:#6a4d0f;--gold-soft:#f6eccf;--gold-line:#e7cf8e;--rail:232px;--top:52px;--bottom:56px}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
 body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;overflow:hidden}
@@ -37,8 +37,6 @@ nav.menu{padding:4px 10px 12px;flex:1 1 auto}
 .grp{margin-top:10px}
 .grp-title{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.06em;padding:6px 8px 4px;display:flex;align-items:center;gap:6px}
 .grp-title .dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
-.grp.teal .grp-title .dot{background:var(--teal)}
-.grp.green .grp-title .dot{background:#4f7a47}
 .grp-title.toggle{width:100%;background:none;border:0;cursor:pointer;font:inherit;font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.06em;text-align:left;border-radius:8px}
 .grp-title.toggle:hover{background:#f2eee5}
 .grp-title .arrow{margin-left:auto;transition:transform .15s}
@@ -49,8 +47,6 @@ nav.menu{padding:4px 10px 12px;flex:1 1 auto}
 .item{display:flex;align-items:center;gap:8px;width:100%;border:1px solid transparent;background:transparent;border-radius:10px;padding:8px 10px;font-size:13.5px;font-weight:600;color:#4a4841;cursor:pointer;text-align:left;text-decoration:none;white-space:nowrap}
 .item:hover{background:#f2eee5}
 .item.active{background:var(--gold-soft);color:var(--gold-ink);border-color:var(--gold-line);font-weight:800}
-.grp.teal .item.active{background:var(--teal-soft);color:var(--teal);border-color:var(--teal-line)}
-.grp.green .item.active{background:var(--green-soft);color:var(--green);border-color:var(--green-line)}
 .item .ext{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
 .item .num{font-weight:800;opacity:.85}
 .items-divider{border-top:1px dashed var(--line);margin:5px 8px 3px}
@@ -76,8 +72,6 @@ nav.menu{padding:4px 10px 12px;flex:1 1 auto}
 .context-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font:inherit;font-size:12.5px;font-weight:700;color:#57544d;white-space:nowrap;cursor:pointer}
 .context-btn:hover{background:#f7f4ec}
 .context-btn.active{background:var(--gold-soft);border-color:var(--gold-line);color:var(--gold-ink);font-weight:900}
-.context-btn.t-teal.active{background:var(--teal-soft);border-color:var(--teal-line);color:var(--teal)}
-.context-btn.t-green.active{background:var(--green-soft);border-color:var(--green-line);color:var(--green)}
 .context-btn:disabled{color:#9a968d;background:#f7f6f2;cursor:default}
 .icon-btn{border:1px solid var(--line);background:#fff;border-radius:9px;width:34px;height:34px;display:grid;place-items:center;font-size:15px;color:#5c5b56;cursor:pointer;text-decoration:none;flex:0 0 auto}
 .icon-btn:hover{background:#f7f4ec}
@@ -106,8 +100,6 @@ main{flex:1 1 auto;position:relative;min-height:0}
 .bottom button{flex:1;border:0;background:none;font:inherit;font-size:11px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer}
 .bottom button .ic{font-size:17px;line-height:1}
 .bottom button.active{color:var(--gold-ink)}
-.bottom button.t-teal.active{color:var(--teal)}
-.bottom button.t-green.active{color:var(--green)}
 @media (max-width:860px){
   aside.rail{position:fixed;left:0;top:0;bottom:0;z-index:21;transform:translateX(-100%);transition:transform .18s;box-shadow:0 0 0 rgba(0,0,0,0)}
   body.drawer aside.rail{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.15)}
@@ -128,7 +120,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v343</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v344</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -196,12 +188,12 @@ var GROUPS = [
     { id: "noticeAnnouncements", label: "공고 · 안내",     view: "noticeView", noticeSub: "notices" },
     { id: "privateView", label: "비공개 자료", view: "privateView", adminOnly: true }
   ]},
-  { id: "management", title: "점검 · 관리", cls: "green", items: [
+  { id: "management", title: "점검 · 관리", cls: "", items: [
     { id: "noticeChecks", label: "절차 점검", view: "noticeView", noticeSub: "checks", service: "minutes" },
     { id: "fees",     label: "관리비 추적", service: "fees", url: FEES },
     { id: "hajaView", label: "하자판결금",  service: "minutes", view: "hajaView" }
   ]},
-  { id: "info", title: "소식 · 정보", cls: "teal", items: [
+  { id: "info", title: "소식 · 정보", cls: "", items: [
     { id: "work", label: "업무현황", external: true, url: "https://valuable-silicon-f1f.notion.site/3b15f4b3bcdd81f9a550e8d3cf46e48d", note: "진행 중인 일반업무·커뮤니티센터 업무를 카드로 정리한 노션 페이지입니다." },
     { id: "docs", label: "꿀팁정리", external: true, url: "https://valuable-silicon-f1f.notion.site/3b25f4b3bcdd811c8b36d98110d9ef79", note: "산들마을 생활에 도움이 되는 꿀팁을 모아 둔 노션 페이지입니다." },
     { id: "community", label: "커뮤니티센터 이용 안내", service: "community", url: BASE + "/CommunityNotice/" }
@@ -278,8 +270,8 @@ var BOTTOM = [
   { group: "minutes",    label: "회의",          ic: "◆", cls: "" },
   { group: "archive",    label: "검색·아카이브", ic: "⌕", cls: "" },
   { group: "rules",      label: "기준·문서",     ic: "▤", cls: "" },
-  { group: "management", label: "점검·관리",     ic: "✓", cls: "t-green" },
-  { group: "info",       label: "소식·정보",     ic: "◇", cls: "t-teal" }
+  { group: "management", label: "점검·관리",     ic: "✓", cls: "" },
+  { group: "info",       label: "소식·정보",     ic: "◇", cls: "" }
 ];
 
 var ITEMS = {}; GROUPS.forEach(function (g) { g.items.forEach(function (it) { if (!it.placeholder) { it.group = g; ITEMS[it.id] = it; } }); });
@@ -319,14 +311,14 @@ function buttonFor(label, active, cls, onclick, disabled) {
 function renderContext(it) {
   contextGroups.innerHTML = "";
   GROUPS.forEach(function (g) {
-    contextGroups.appendChild(buttonFor(g.title, g.id === it.group.id, g.cls === "green" ? "t-green" : (g.cls === "teal" ? "t-teal" : ""), function () { goItem(firstItem(g)); }));
+    contextGroups.appendChild(buttonFor(g.title, g.id === it.group.id, "", function () { goItem(firstItem(g)); }));
   });
 
   contextMids.innerHTML = "";
   var activeSubgroup = it.child ? (it.subgroup || "회의 관리") : "";
   midEntries(it.group).forEach(function (entry) {
     var active = entry.subgroup ? entry.subgroup === activeSubgroup : entry.target.id === it.id;
-    contextMids.appendChild(buttonFor(entry.label, active, it.group.cls === "green" ? "t-green" : (it.group.cls === "teal" ? "t-teal" : ""), function () { goItem(entry.target); }, entry.target.placeholder));
+    contextMids.appendChild(buttonFor(entry.label, active, "", function () { goItem(entry.target); }, entry.target.placeholder));
   });
 
   contextSubs.innerHTML = "";
