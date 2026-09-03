@@ -54,8 +54,13 @@
    * Archive는 회의록을 다시 쓰지 않고 "찾아가게" 하는 것이 목적이므로,
    * 원문은 언제나 회의록 앱이 보여준다. 여기서 본문을 복제하지 않는다.
    */
+  /* 안건 id까지 실어 보낸다 (2026-09-03). 회의만 열어 주면 안건이 열댓 개인 회의에서는
+   * 사용자가 다시 눈으로 찾아야 한다 — 찾아 준 의미가 없다. 회의록 앱이 `ag`를 받아
+   * 그 안건 자리로 스크롤한다. 주소 문자열에 붙이므로 records 배열의 칸 수는 그대로다. */
   function 원문주소(x) {
-    return x.회의id ? '/minutes/?open=' + encodeURIComponent(x.회의id) : '';
+    if (!x.회의id) return '';
+    return '/minutes/?open=' + encodeURIComponent(x.회의id) +
+      (x.안건id ? '&ag=' + encodeURIComponent(x.안건id) : '');
   }
 
   /*
@@ -81,7 +86,7 @@
         if (taxonomy && taxonomy.resolveStored) tags = taxonomy.resolveStored(a, autoTags);
         if (!tags || !tags.length) tags = autoTags ? autoTags(a) : ['기타'];
         var 항목 = {
-          날짜: 날짜, ym: ym, 제목: String(a.title).trim(),
+          날짜: 날짜, ym: ym, 제목: String(a.title).trim(), 안건id: a.id || '',
           회의: m.name || '', 회의id: m.id, 회의체: 회의체(m.id),
           /* 목록에 한 줄로 스쳐 보여줄 것. 여기서는 줄여도 된다 — 목록은 훑는 자리다. */
           요지: String(a.summary || a.decision || '').replace(/\s+/g, ' ').slice(0, 160),
