@@ -2,7 +2,7 @@
   "schemaVersion": 5,
   "dataset": "sandle-fees",
   "title": "산들마을 관리비 월별 데이터",
-  "updatedAt": "2026-08-25",
+  "updatedAt": "2026-09-04",
   "currency": "KRW",
   "description": "10년 이상 누적을 전제로 원문, 항목 사전, 월별 관측값, 분석 결과를 분리한다.",
   "catalog": "categories.json",
@@ -11,10 +11,12 @@
     {
       "year": 2026,
       "file": "data-2026.json",
+      "detailFile": "detail-2026.json",
       "from": "2026-01",
-      "to": "2026-06",
-      "monthCount": 6,
-      "status": "billing-summary-and-management-expense-complete"
+      "to": "2026-07",
+      "monthCount": 7,
+      "status": "billing-summary-and-management-expense-complete; full-document-for-2026-07",
+      "fullDocumentPeriods": ["2026-07"]
     }
   ],
   "primaryKey": {
@@ -30,6 +32,14 @@
       "period",
       "sourceTable",
       "sourceName"
+    ],
+    "supplementalTables": [
+      "period",
+      "sourceTable"
+    ],
+    "detailSections": [
+      "period",
+      "no"
     ]
   },
   "valueSemantics": {
@@ -52,6 +62,11 @@
   "noteSemantics": {
     "sourceNotes": "관리비 원문 비고를 의미 변경 없이 보존하는 선택 필드. text, sourcePage, sourceField를 기록한다.",
     "analysisNotes": "검토자 판단과 분석 메모는 reviews.json에만 저장하며 sourceNotes와 섞지 않는다."
+  },
+  "detailSemantics": {
+    "file": "detail-YYYY.json — 원문 5~13쪽 항목별 산출내역·계약업체·계약기간·면적별 부과내역을 표 단위로 보존한다.",
+    "supplementalTables": "data-YYYY.json.supplementalTables — 원문 14쪽 관리외 비용(management-expense)·관리외 수익(management-income), 15쪽 예금 잔액(deposit-balance).",
+    "privacy": "예금 계좌번호, 세대 호수가 드러나는 개인 식별 정보는 옮기지 않는다. 원문 비고에 있는 동·호수 표기(수선 위치 등)는 원문 그대로 둔다."
   },
   "policies": [
     "원문 금액과 분석·판단을 같은 객체에 섞지 않는다.",
