@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>산들마을 안건 제안서</title>
+<meta name="description" content="산들마을 입주자대표회의 안건 제안서를 A4 한 장으로 작성하는 도구">
+<link rel="stylesheet" href="./app.css?v=1">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1>안건 제안서</h1>
+    <p>짧고 쉽게 쓰면 A4 한 장으로 바로 정리돼요.</p>
+  </div>
+  <div class="top-actions">
+    <button type="button" class="ghost" id="sampleBtn">누수 예시</button>
+    <button type="button" class="ghost danger" id="resetBtn">내용 지우기</button>
+    <button type="button" class="primary" id="printBtn">인쇄 · PDF</button>
+  </div>
+</header>
+
+<main class="workspace">
+  <section class="editor" aria-label="안건 제안서 작성">
+    <div class="hint-card">
+      <b>작성 기준</b>
+      <span>무슨 문제인지 → 무엇을 하자는지 → 비용은 어떻게 확인할지만 적으면 됩니다.</span>
+    </div>
+
+    <div class="field-grid two">
+      <label class="field">
+        <span>안건 제목</span>
+        <input id="title" type="text" placeholder="예: 커뮤니티센터 누수·곰팡이 보수의 건">
+      </label>
+      <label class="field">
+        <span>제안자</span>
+        <input id="proposer" type="text" placeholder="예: 211동 동별대표자 유은혜">
+      </label>
+    </div>
+
+    <div class="field-grid two compact-row">
+      <label class="field">
+        <span>제출일</span>
+        <input id="date" type="date">
+      </label>
+      <div class="page-state" id="pageState" aria-live="polite">A4 한 장 안에 들어갑니다.</div>
+    </div>
+
+    <label class="field">
+      <span>1. 제안 배경</span>
+      <small>왜 이 안건을 올리는지 쉽게 적어주세요.</small>
+      <textarea id="background" rows="5" placeholder="예: 커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 문제가 생기고 있습니다."></textarea>
+    </label>
+
+    <label class="field">
+      <span>2. 주요 내용</span>
+      <small>해야 할 일을 한 줄씩 적어주세요. 줄 맨 앞에 - 를 쓰면 목록으로 보여요.</small>
+      <textarea id="details" rows="7" placeholder="- LH에서 바로 공사할 수 있으면 LH 공사로 진행\n- 계속 늦어지면 우리 단지에서 먼저 보수하는 방법 검토"></textarea>
+    </label>
+
+    <label class="field">
+      <span>3. 의결 내용</span>
+      <small>회의에서 무엇을 결정하면 되는지 적어주세요.</small>
+      <textarea id="decision" rows="5" placeholder="예: 누수와 곰팡이를 더 이상 오래 두지 않고 빠르게 보수한다."></textarea>
+    </label>
+
+    <div class="field-grid two">
+      <label class="field">
+        <span>4. 비용</span>
+        <textarea id="cost" rows="4" placeholder="예: 관리사무소에서 보수 비용 확인 후 결정"></textarea>
+      </label>
+      <label class="field">
+        <span>5. 참고할 자료</span>
+        <textarea id="refs" rows="4" placeholder="예: LH 관리이관 자료, 현장 사진, 견적서"></textarea>
+      </label>
+    </div>
+
+    <p class="save-note">입력한 내용은 이 기기에만 자동 저장됩니다.</p>
+  </section>
+
+  <section class="preview-area" aria-label="A4 미리보기">
+    <div class="paper-wrap">
+      <article class="paper" id="paper">
+        <div class="doc-head">
+          <div class="apt">산들마을아파트 입주자대표회의</div>
+          <h2>안 건 제 안 서</h2>
+        </div>
+
+        <div class="meta-table">
+          <div class="meta-label">안건 제목</div><div class="meta-value strong" id="pTitle">안건 제목을 입력해 주세요.</div>
+          <div class="meta-label">제안자</div><div class="meta-value" id="pProposer">-</div>
+          <div class="meta-label">제출일</div><div class="meta-value" id="pDate">-</div>
+        </div>
+
+        <section class="doc-section">
+          <h3>1. 제안 배경</h3>
+          <div class="doc-text empty" id="pBackground">내용을 입력해 주세요.</div>
+        </section>
+
+        <section class="doc-section">
+          <h3>2. 주요 내용</h3>
+          <div class="doc-text empty" id="pDetails">내용을 입력해 주세요.</div>
+        </section>
+
+        <section class="doc-section">
+          <h3>3. 의결 내용</h3>
+          <div class="doc-text empty" id="pDecision">내용을 입력해 주세요.</div>
+        </section>
+
+        <section class="doc-section compact-section">
+          <h3>4. 비용</h3>
+          <div class="doc-text empty" id="pCost">내용을 입력해 주세요.</div>
+        </section>
+
+        <section class="doc-section compact-section">
+          <h3>5. 참고할 자료</h3>
+          <div class="doc-text empty" id="pRefs">내용을 입력해 주세요.</div>
+        </section>
+
+        <footer class="doc-foot">산들마을아파트</footer>
+      </article>
+    </div>
+  </section>
+</main>
+
+<script src="./app.js?v=1"></script>
+</body>
+</html>
