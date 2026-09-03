@@ -1,0 +1,46 @@
+/* 통합검색 결과 — 한 낱말로 찾은 것을 갈래별로 늘어놓는다.
+ * 갈래를 섞어 하나로 늘어놓으면 무엇이 걸렸는지는 보여도
+ * 어느 갈래에 몇 건인지가 안 보인다. 판단에는 갈래별 건수가 먼저 필요하다. */
+.uni { max-width: 980px; margin: 0 auto; padding: 4px 0 40px; }
+.uni-head { margin: 8px 0 18px; }
+.uni-head h2 { margin: 6px 0 4px; font-size: 26px; }
+.uni-kicker { margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .08em; color: #9a937f; }
+.uni-sub { margin: 4px 0 0; color: #6b6656; font-size: 14px; }
+
+/* 갈래별 건수 — 누르면 그 갈래로 건너뛴다 */
+.uni-counts { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+.uni-counts button {
+  border: 1px solid #ddd6c7; background: #fff; border-radius: 999px;
+  padding: 7px 13px; font-size: 13px; font-weight: 700; color: #4a463d; cursor: pointer;
+}
+.uni-counts button:hover { background: #f7f4ec; }
+.uni-counts button b { color: #8a6410; margin-left: 4px; }
+.uni-counts button[disabled] { opacity: .38; cursor: default; }
+
+.uni-sec { margin: 26px 0 0; }
+.uni-sec-head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 10px; }
+.uni-sec-head h3 { margin: 0; font-size: 17px; }
+.uni-sec-head small { color: #8a8476; font-size: 12px; }
+
+.uni-list { display: grid; gap: 8px; }
+.uni-item {
+  display: block; width: 100%; text-align: left;
+  border: 1px solid #e6e0d4; border-radius: 12px; background: #fff;
+  padding: 12px 14px; cursor: pointer; font: inherit; color: inherit;
+}
+.uni-item:hover { border-color: #d8a944; background: #fffdf6; }
+.uni-item b { display: block; font-size: 14.5px; line-height: 1.4; }
+.uni-item .uni-meta { display: block; margin-top: 3px; font-size: 12px; color: #8a8476; }
+.uni-item .uni-snip {
+  display: block; margin-top: 7px; font-size: 13px; color: #55514a; line-height: 1.6;
+  background: #faf8f3; border-radius: 8px; padding: 7px 9px;
+}
+.uni-item mark { background: #f6e2a8; color: inherit; padding: 0 1px; border-radius: 2px; }
+
+.uni-more {
+  border: 1px dashed #ddd6c7; background: #fbf9f4; border-radius: 10px;
+  padding: 9px; font-size: 13px; color: #6b6656; cursor: pointer; width: 100%; font: inherit;
+}
+.uni-empty { color: #8a8476; font-size: 14px; padding: 20px 0; }
+.uni-loading { color: #6b6656; font-size: 14px; padding: 24px 0; }
+.uni-locked { margin: 22px 0 0; padding: 12px 14px; border: 1px solid #e6e0d4; border-radius: 12px; background: #faf8f3; color: #6b6656; font-size: 13px; line-height: 1.6; }

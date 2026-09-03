@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="./assets/progress-1-9.css?v=20260901-152900">
 <link rel="stylesheet" href="./assets/admin-entry.css?v=20260901-152900">
 <link rel="stylesheet" href="./assets/login.css?v=20260902-4200">
+<link rel="stylesheet" href="./assets/unified.css?v=20260903-5200">
 </head>
 <body>
 <header class="top">
@@ -32,14 +33,12 @@
   <section class="hero">
     <p class="eyebrow">지난 기록에서 지금의 기준까지</p>
     <h1>주제별로 모아 보기</h1>
-    <p class="lead">회의록을 한 장씩 찾는 대신, 한 주제에 얽힌 <b>지난 논의와 결정</b>을 모아서 봅니다. 아래에서 <b>주제를 누르면</b> 그 주제의 현재 상태와 그동안의 흐름이 나옵니다.</p>
-    <!-- 검색창은 감췄다 (사용자 지적 2026-09-02: "결국 주제를 클릭하는 것이 주된 거라서 검색창이 있는 게 필요없단 생각이 들었어").
-         맞다. 게다가 이건 **검색처럼 보이지만 주제 이름만 찾았다** — 안건 제목을 쳐도 안 나온다.
-         겉모습이 약속하는 것과 하는 일이 달랐으니 없느니만 못했다.
-         요소는 남긴다: A/B 전환과 주제 화면이 이 form·input을 쓴다. 지우면 화면이 죽는다.
-         나중에 **본문까지 뒤지는 진짜 검색**을 만들면 그때 다시 꺼낸다. -->
-    <form id="searchForm" class="search" hidden>
-      <span>⌕</span><input id="searchInput" autocomplete="off" placeholder="예: 헬스장, GX, 도서관, 주차, 선거"><button>검색</button>
+    <!-- 2026-09-02에 감췄다가 2026-09-03에 다시 꺼냈다.
+         감춘 이유는 "검색처럼 보이지만 주제 이름만 찾았다"였다 — 겉모습이 약속하는 것과
+         하는 일이 달랐다. 이제 unified-ui.js가 회의 안건 본문·계약 조문·선거 기록·관리규약
+         조문까지 한 번에 뒤지므로, 약속과 하는 일이 같아졌다. 그래서 되살린다. -->
+    <form id="searchForm" class="search">
+      <span>⌕</span><input id="searchInput" autocomplete="off" placeholder="안건·계약 조문·선거·관리규약을 한 번에 (예: 승강기, 방문투표, 장기수선충당금)"><button>검색</button>
     </form>
     <p class="search-help">회의록을 불러오는 중입니다.</p>
     <!-- 회의체 전환 (사용자 요청 2026-09-02). 히어로에 두는 이유: 주제 화면에서도 이 줄은
@@ -105,6 +104,8 @@
 <script src="./shared/access-control.js?v=20260902-1100"></script>
 <script src="./shared/auth-log.js?v=20260902-3200"></script>
 <script src="./shared/topic-summary.js?v=20260902-4600"></script>
+<script src="./shared/unified-search.js?v=20260903-5200"></script>
+<script src="./unified-ui.js?v=20260903-5200"></script>
 <script src="./search-b.js?v=20260902-4800"></script>
 <script src="./shared/freshness.js?v=20260902-3200"></script>
 <script src="./login.js?v=20260902-4200"></script>
