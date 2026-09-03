@@ -3,6 +3,13 @@
   var KEY="sandle_agenda_proposal_v1";
   var ids=["title","proposer","date","background","details","decision","cost","refs"];
   var el={}; ids.forEach(function(id){el[id]=document.getElementById(id);});
+  var noRefs=document.getElementById("noRefs");
+  var attachmentsInput=document.getElementById("attachments");
+  var attachmentList=document.getElementById("attachmentList");
+  var refsField=document.getElementById("refsField");
+  var refsSection=document.getElementById("refsSection");
+  var pAttachments=document.getElementById("pAttachments");
+  var attachmentFiles=[];
   var paper=document.getElementById("paper");
   var pageState=document.getElementById("pageState");
   var printBtn=document.getElementById("printBtn");
@@ -20,10 +27,10 @@
     var p=v.split("-"); return p.length===3 ? p[0]+". "+Number(p[1])+". "+Number(p[2])+"." : v;
   }
   function escapeHtml(s){return String(s||"").replace(/[&<>\"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
-  function renderText(node,value){
+  function renderText(node,value,emptyText){
     var text=(value||"").trim();
     node.classList.toggle("empty",!text);
-    if(!text){node.textContent="내용을 입력해 주세요.";return;}
+    if(!text){node.textContent=emptyText===undefined?"내용을 입력해 주세요.":emptyText;return;}
     var lines=text.split(/\r?\n/), hasBullets=lines.some(function(x){return /^\s*[-•]\s+/.test(x);});
     if(hasBullets){
       var html=[],buffer=[];
@@ -35,12 +42,50 @@
   }
   function save(){
     var data={}; ids.forEach(function(id){data[id]=el[id].value;});
+    data.noRefs=!!noRefs.checked;
     try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
   }
   function load(){
     var data=null; try{data=JSON.parse(localStorage.getItem(KEY)||"null");}catch(e){}
-    if(data){ids.forEach(function(id){if(typeof data[id]==="string")el[id].value=data[id];});}
+    if(data){
+      ids.forEach(function(id){if(typeof data[id]==="string")el[id].value=data[id];});
+      noRefs.checked=!!data.noRefs;
+    }
     if(!el.date.value)el.date.value=today();
+  }
+  function fileAllowed(file){
+    var name=(file&&file.name||"").toLowerCase();
+    return /\.(pdf|png|jpe?g)$/.test(name);
+  }
+  function fileSize(size){
+    if(size<1024)return size+" B";
+    if(size<1024*1024)return Math.round(size/1024)+" KB";
+    return (size/(1024*1024)).toFixed(1)+" MB";
+  }
+  function renderAttachmentList(){
+    attachmentList.innerHTML="";
+    attachmentFiles.forEach(function(file,index){
+      var row=document.createElement("div"); row.className="attachment-item";
+      var name=document.createElement("span"); name.className="file-name"; name.textContent=file.name;
+      var size=document.createElement("span"); size.className="file-size"; size.textContent=fileSize(file.size||0);
+      var remove=document.createElement("button"); remove.type="button"; remove.textContent="제거";
+      remove.addEventListener("click",function(){attachmentFiles.splice(index,1);renderAttachmentList();update();});
+      row.appendChild(name); row.appendChild(size); row.appendChild(remove); attachmentList.appendChild(row);
+    });
+  }
+  function renderAttachmentPreview(){
+    pAttachments.innerHTML="";
+    if(!attachmentFiles.length)return;
+    var ul=document.createElement("ul");
+    attachmentFiles.forEach(function(file){var li=document.createElement("li");li.textContent="첨부: "+file.name;ul.appendChild(li);});
+    pAttachments.appendChild(ul);
+  }
+  function updateRefControls(){
+    var off=!!noRefs.checked;
+    refsField.classList.toggle("omitted",off);
+    el.refs.disabled=off;
+    attachmentsInput.disabled=off;
+    refsSection.hidden=off;
   }
   function update(){
     preview.title.textContent=el.title.value.trim()||"안건 제목을 입력해 주세요.";
@@ -50,7 +95,11 @@
     renderText(preview.details,el.details.value);
     renderText(preview.decision,el.decision.value);
     renderText(preview.cost,el.cost.value);
-    renderText(preview.refs,el.refs.value);
+    updateRefControls();
+    var hasAttachments=attachmentFiles.length>0;
+    renderText(preview.refs,el.refs.value,hasAttachments?"":"내용을 입력해 주세요.");
+    preview.refs.classList.toggle("empty",!el.refs.value.trim()&&!hasAttachments);
+    renderAttachmentPreview();
     save();
     requestAnimationFrame(fit);
   }
@@ -79,14 +128,27 @@
       cost:"관리사무소에서 보수 비용 확인 후 결정",
       refs:"LH 관리이관 자료, 현장 사진, 보수 견적"
     };
-    ids.forEach(function(id){el[id].value=data[id]||"";}); update();
+    ids.forEach(function(id){el[id].value=data[id]||"";}); noRefs.checked=false; update();
   }
   function reset(){
     if(!confirm("작성한 내용을 모두 지울까요?"))return;
-    ids.forEach(function(id){el[id].value="";}); el.date.value=today();
+    ids.forEach(function(id){el[id].value="";}); el.date.value=today(); noRefs.checked=false; attachmentFiles=[]; attachmentsInput.value=""; renderAttachmentList();
     try{localStorage.removeItem(KEY);}catch(e){} update();
   }
   ids.forEach(function(id){el[id].addEventListener("input",update);el[id].addEventListener("change",update);});
+  noRefs.addEventListener("change",update);
+  attachmentsInput.addEventListener("change",function(){
+    var files=Array.prototype.slice.call(attachmentsInput.files||[]);
+    var rejected=files.filter(function(file){return !fileAllowed(file);});
+    var accepted=files.filter(fileAllowed);
+    accepted.forEach(function(file){
+      var duplicate=attachmentFiles.some(function(old){return old.name===file.name&&old.size===file.size&&old.lastModified===file.lastModified;});
+      if(!duplicate)attachmentFiles.push(file);
+    });
+    attachmentsInput.value="";
+    renderAttachmentList(); update();
+    if(rejected.length)alert("PDF, JPG, PNG 파일만 추가할 수 있어요.");
+  });
   document.getElementById("sampleBtn").addEventListener("click",sample);
   document.getElementById("resetBtn").addEventListener("click",reset);
   printBtn.addEventListener("click",function(){if(fit())window.print();});
