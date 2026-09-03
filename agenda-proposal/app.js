@@ -124,16 +124,17 @@
     requestAnimationFrame(fit);
   }
   function fit(){
-    var sizes=[13.5,13,12.5,12,11.5,11], lines=[1.52,1.49,1.46,1.43,1.40,1.37], gaps=[11,10,9,8,7,6];
-    var fits=false;
+    var sizes=[11.5,11.25,11], lines=[1.55,1.50,1.45], gaps=[14,12,10];
+    var fits=false, used=sizes[sizes.length-1];
     for(var i=0;i<sizes.length;i++){
-      paper.style.setProperty("--doc-size",sizes[i]+"px");
+      paper.style.setProperty("--doc-size",sizes[i]+"pt");
       paper.style.setProperty("--doc-line",lines[i]);
       paper.style.setProperty("--section-gap",gaps[i]+"px");
+      used=sizes[i];
       if(paper.scrollHeight<=paper.clientHeight+1){fits=true;break;}
     }
     pageState.classList.toggle("over",!fits);
-    pageState.textContent=fits ? "A4 한 장 안에 들어갑니다." : "A4 한 장을 넘습니다. 내용을 조금 줄여 주세요.";
+    pageState.textContent=fits ? "A4 한 장 · 본문 "+used+"pt" : "11pt로도 A4 한 장을 넘습니다. 내용을 조금 줄여 주세요.";
     printBtn.disabled=!fits;
     return fits;
   }
@@ -268,11 +269,11 @@
     applyData({
       title:"커뮤니티센터 누수·곰팡이 보수의 건",
       proposer:"", date:today(),
-      background:"커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 문제가 생기고 있습니다.\n\nLH 관리이관 내용에는 누수 보수도 들어가 있지만, 아직 관리이관 시기가 정해지지 않아 실제 공사가 언제 시작될지 알기 어렵습니다. 누수와 곰팡이는 오래 둘수록 상태가 더 나빠질 수 있어 보수 방법을 정하고자 합니다.",
-      details:"- LH 관리이관을 통해 바로 보수할 수 있으면 LH 공사로 진행\n- 관리이관이 계속 늦어지면 우리 단지에서 먼저 보수하는 방법 검토\n- 누수 원인을 잡고 젖은 곳을 말린 뒤 곰팡이를 없애고 필요한 부분만 고침\n- 공사 전 현재 상태를 사진으로 남김\n- 벽 설치나 공간 변경은 누수 공사 후 다시 판단",
-      decision:"커뮤니티센터 누수와 곰팡이를 더 이상 오래 두지 않고 빠르게 보수한다.\n\nLH를 통한 빠른 보수가 어렵다고 판단되면 관리사무소에서 우리 단지가 먼저 보수할 때 필요한 비용과 일정을 확인해 회의에 보고한다.",
-      cost:"관리사무소에서 보수 비용 확인 후 결정",
-      refs:"LH 관리이관 자료, 현장 사진, 보수 견적", noRefs:false
+      background:"커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 영향을 주고 있습니다. 현재 누수 보수는 LH 관리이관 내용에 포함되어 있으나, 관리이관 시기가 정해지지 않아 실제 공사가 언제 시작될지는 알기 어려운 상태입니다.\n\n누수와 곰팡이는 오래 둘수록 마감재 손상이나 냄새, 습기 문제가 더 커질 수 있습니다. LH 보수를 기다리되 일정이 계속 늦어질 경우에는 단지에서 먼저 필요한 보수를 할 수 있도록 기준을 정하고자 합니다.",
+      details:"- LH 관리이관을 통해 빠르게 보수할 수 있으면 LH 공사로 진행\n- 관리이관이 계속 늦어지면 우리 단지에서 먼저 보수하는 방법과 비용 확인\n- 누수 원인을 잡고 젖은 곳을 충분히 말린 뒤 곰팡이를 없애고 필요한 부분만 고침\n- 공사 전 현재 누수와 곰팡이 상태를 사진으로 남김\n- 벽 설치나 공간 변경은 이번 보수와 나누어 보고, 누수 공사 후 상태를 확인해 다시 판단",
+      decision:"커뮤니티센터 누수와 곰팡이를 더 이상 오래 두지 않고 빠르게 보수한다.\n\nLH를 통한 빠른 보수가 어렵다고 판단되면 관리사무소에서 우리 단지가 먼저 보수할 때 필요한 범위, 비용과 일정을 확인해 회의에 보고한다.",
+      cost:"관리사무소에서 보수 범위와 예상 비용을 확인한 뒤 결정",
+      refs:"LH 관리이관 자료, 현재 상태 사진, 보수 견적", noRefs:false
     });
     update(); saveNote.textContent="예시를 불러왔습니다. 필요한 부분을 고친 뒤 ‘문서 저장’을 눌러주세요."; renderLibrary();
   }
