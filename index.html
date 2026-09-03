@@ -54,8 +54,13 @@ nav.menu{padding:4px 10px 12px;flex:1 1 auto}
 .item .ext{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
 .item .num{font-weight:800;opacity:.85}
 .items-divider{border-top:1px dashed var(--line);margin:5px 8px 3px}
+.nav-subtitle{padding:7px 10px 2px;font-size:12px;font-weight:800;color:var(--muted)}
+.item.child{padding-left:18px}
+.item.child::before{content:"›";color:var(--muted);font-weight:900}
 .item.locked{color:#8b867a;font-size:12.5px}
 .item.locked .num{font-size:11px}
+.item.placeholder{color:#9a968d;cursor:default;font-size:12.5px}
+.item.placeholder:hover{background:transparent}
 .rail-foot{padding:12px 16px 16px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);line-height:1.5}
 .rail-foot a{color:var(--muted)}
 
@@ -109,7 +114,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v340</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v341</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -147,19 +152,22 @@ var BASE = (location.protocol === "http:" || location.protocol === "https:") ? l
 var MIN = BASE + "/minutes/";
 var MINQ = "?embed=1&v=339"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
 var FEES = BASE + "/fees/?v=46";
-// 2026-09-03 재편(v340): 기존 화면은 그대로 두고 왼쪽 메뉴만 이용 목적에 따라 다시 묶는다.
+// 2026-09-03 재편(v341): 기존 화면·해시는 그대로 두고 탐색 목적에 따라 왼쪽 메뉴만 다시 묶는다.
 var GROUPS = [
   { id: "minutes", title: "회의", cls: "", service: "minutes", items: [
     { id: "previewView", label: "회의록 미리보기", view: "previewView" },
     { id: "archiveView", label: "이전 회의록",     view: "archiveView" },
-    { id: "topicView",   label: "주제별 보기",     view: "topicView" },
+    { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true, subgroup: "회의 관리", child: true },
+    { id: "setupView",  label: "회의 설정",   view: "setupView",  adminOnly: true, child: true },
+    { id: "repsView",   label: "동대표 명단", view: "repsView",   adminOnly: true, child: true }
+  ]},
+  { id: "archive", title: "검색 · 아카이브", cls: "", items: [
     // Archive 시험판(2026-09-02, 사용자 요청 "왔다갔다 하게"). 같은 호스트라 iframe으로 띄운다.
     // 회의록과는 **다른 앱**이므로 service를 따로 준다 — minutes로 두면 postMessage로 화면 전환을
     // 시도해 엉뚱한 곳을 건드린다. 아직 시험판이라 이름에 그대로 적는다.
     { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=299" },
-    { id: "setupView",  label: "회의 설정",   view: "setupView",  adminOnly: true },
-    { id: "repsView",   label: "동대표 명단", view: "repsView",   adminOnly: true },
-    { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true }
+    { id: "topicView", label: "주제별 보기", service: "minutes", view: "topicView" },
+    { id: "futureSearch", label: "통합검색 (준비 중)", placeholder: true }
   ]},
   { id: "rules", title: "기준 · 문서", cls: "", service: "minutes", items: [
     // noticeView 본문과 그 안의 기존 탭은 재사용한다. #noticeView는 예전 링크 호환을 위해 관리규약에 남긴다.
@@ -255,7 +263,7 @@ var BOTTOM = [
   { id: "community",   label: "커뮤니티", ic: "◇", cls: "t-teal" }
 ];
 
-var ITEMS = {}; GROUPS.forEach(function (g) { g.items.forEach(function (it) { it.group = g; ITEMS[it.id] = it; }); });
+var ITEMS = {}; GROUPS.forEach(function (g) { g.items.forEach(function (it) { if (!it.placeholder) { it.group = g; ITEMS[it.id] = it; } }); });
 var menu = document.getElementById("menu"), main = document.getElementById("main"), bottom = document.getElementById("bottom");
 var openBtn = document.getElementById("openBtn"), openBtnM = document.getElementById("openBtnM"), topTitle = document.getElementById("topTitle");
 var current = null, frames = {}, ready = {};
@@ -279,9 +287,11 @@ GROUPS.forEach(function (g) {
     // v62: 관리자 메뉴도 항상 표시(🔒 포함) — 숨기면 키 만료 후 비밀번호를 넣을 입구가 없어짐(사용자 요청).
     //      화면 자체는 회의록 앱이 서버 검증으로 잠근다(v69~), 열람/수정 2단계 키는 v92~.
     if (it.adminOnly && !dividerAdded) { var d = document.createElement("div"); d.className = "items-divider"; items.appendChild(d); dividerAdded = true; }
-    var b = document.createElement("button"); b.type = "button"; b.className = "item" + (it.adminOnly ? " locked" : ""); b.dataset.id = it.id;
+    if (it.subgroup) { var st = document.createElement("div"); st.className = "nav-subtitle"; st.textContent = it.subgroup; items.appendChild(st); }
+    var b = document.createElement("button"); b.type = "button"; b.className = "item" + (it.child ? " child" : "") + (it.adminOnly ? " locked" : "") + (it.placeholder ? " placeholder" : ""); b.dataset.id = it.id;
     b.innerHTML = (it.adminOnly ? '<span class="num">🔒</span>' : "") + '<span>' + it.label + '</span>' + (it.external ? '<span class="ext">새 창 ↗</span>' : "");
-    b.onclick = function () { show(it.id, true); if (it.external) window.open(it.url, "_blank", "noopener"); closeDrawer(); };
+    if (it.placeholder) { b.disabled = true; b.setAttribute("aria-disabled", "true"); }
+    else b.onclick = function () { show(it.id, true); if (it.external) window.open(it.url, "_blank", "noopener"); closeDrawer(); };
     items.appendChild(b);
   });
   box.appendChild(items); menu.appendChild(box);
