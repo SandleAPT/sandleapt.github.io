@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 안건 제안서</title>
 <meta name="description" content="산들마을 입주자대표회의 안건 제안서를 A4 한 장으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=1">
+<link rel="stylesheet" href="./app.css?v=2">
 </head>
 <body>
 <header class="topbar">
@@ -64,18 +64,28 @@
       <textarea id="decision" rows="5" placeholder="예: 누수와 곰팡이를 더 이상 오래 두지 않고 빠르게 보수한다."></textarea>
     </label>
 
-    <div class="field-grid two">
-      <label class="field">
-        <span>4. 비용</span>
-        <textarea id="cost" rows="4" placeholder="예: 관리사무소에서 보수 비용 확인 후 결정"></textarea>
-      </label>
-      <label class="field">
+    <label class="field">
+      <span>4. 비용</span>
+      <textarea id="cost" rows="4" placeholder="예: 관리사무소에서 보수 비용 확인 후 결정"></textarea>
+    </label>
+
+    <div class="field ref-field" id="refsField">
+      <div class="field-title-row">
         <span>5. 참고할 자료</span>
-        <textarea id="refs" rows="4" placeholder="예: LH 관리이관 자료, 현장 사진, 견적서"></textarea>
-      </label>
+        <label class="omit-check"><input id="noRefs" type="checkbox"> 참고자료 없음</label>
+      </div>
+      <small>글로 적거나 PDF, JPG, PNG 파일을 추가할 수 있어요. 참고자료가 없으면 오른쪽 체크를 눌러주세요.</small>
+      <textarea id="refs" rows="4" placeholder="예: LH 관리이관 자료, 현장 사진, 견적서"></textarea>
+      <div class="attach-row">
+        <label class="attach-button" for="attachments">파일 추가</label>
+        <input id="attachments" class="file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" multiple>
+        <span>PDF · JPG · PNG</span>
+      </div>
+      <div class="attachment-list" id="attachmentList" aria-live="polite"></div>
+      <small class="file-note">선택한 파일명은 제안서에 표시됩니다. 파일 자체는 자동 저장되지 않으니 원본은 제안서와 함께 따로 제출해 주세요.</small>
     </div>
 
-    <p class="save-note">입력한 내용은 이 기기에만 자동 저장됩니다.</p>
+    <p class="save-note">글로 입력한 내용은 이 기기에만 자동 저장됩니다.</p>
   </section>
 
   <section class="preview-area" aria-label="A4 미리보기">
@@ -112,9 +122,10 @@
           <div class="doc-text empty" id="pCost">내용을 입력해 주세요.</div>
         </section>
 
-        <section class="doc-section compact-section">
+        <section class="doc-section compact-section" id="refsSection">
           <h3>5. 참고할 자료</h3>
           <div class="doc-text empty" id="pRefs">내용을 입력해 주세요.</div>
+          <div class="doc-attachments" id="pAttachments"></div>
         </section>
 
         <footer class="doc-foot">산들마을아파트</footer>
@@ -123,6 +134,6 @@
   </section>
 </main>
 
-<script src="./app.js?v=1"></script>
+<script src="./app.js?v=2"></script>
 </body>
 </html>
