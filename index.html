@@ -68,6 +68,17 @@ nav.menu{padding:4px 10px 12px;flex:1 1 auto}
 .stage{flex:1 1 auto;min-width:0;height:100%;display:flex;flex-direction:column}
 .topbar{height:var(--top);display:none;align-items:center;gap:8px;padding:0 10px;background:var(--paper);border-bottom:1px solid var(--line);flex:0 0 auto}
 .topbar .title{font-weight:900;font-size:15px;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.context-nav{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);padding:9px 12px 10px;display:grid;gap:7px}
+.context-row{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:thin;padding-bottom:1px}
+.context-row[hidden]{display:none}
+.context-label{flex:0 0 auto;width:44px;font-size:11px;font-weight:800;color:var(--muted)}
+.context-options{display:flex;gap:6px;min-width:max-content}
+.context-btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font:inherit;font-size:12.5px;font-weight:700;color:#57544d;white-space:nowrap;cursor:pointer}
+.context-btn:hover{background:#f7f4ec}
+.context-btn.active{background:var(--gold-soft);border-color:var(--gold-line);color:var(--gold-ink);font-weight:900}
+.context-btn.t-teal.active{background:var(--teal-soft);border-color:var(--teal-line);color:var(--teal)}
+.context-btn.t-green.active{background:var(--green-soft);border-color:var(--green-line);color:var(--green)}
+.context-btn:disabled{color:#9a968d;background:#f7f6f2;cursor:default}
 .icon-btn{border:1px solid var(--line);background:#fff;border-radius:9px;width:34px;height:34px;display:grid;place-items:center;font-size:15px;color:#5c5b56;cursor:pointer;text-decoration:none;flex:0 0 auto}
 .icon-btn:hover{background:#f7f4ec}
 .tools{position:absolute;right:10px;top:8px;display:flex;gap:6px;z-index:3;opacity:.55;transition:opacity .15s}
@@ -104,6 +115,9 @@ main{flex:1 1 auto;position:relative;min-height:0}
   .topbar{display:flex}
   .tools{display:none}
   .bottom{display:flex}
+  .context-nav{padding:7px 8px 8px;gap:5px}
+  .context-label{width:38px;font-size:10.5px}
+  .context-btn{padding:6px 9px;font-size:12px}
 }
 @media (prefers-reduced-motion:reduce){aside.rail,.grp-title .arrow{transition:none}.loading{animation:none}}
 </style>
@@ -114,7 +128,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v342</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v343</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.</div>
 </aside>
@@ -125,6 +139,11 @@ main{flex:1 1 auto;position:relative;min-height:0}
     <div class="title" id="topTitle">산들마을 입주민 포털</div>
     <a class="icon-btn" id="openBtnM" href="#" target="_blank" rel="noopener" title="새 창으로">↗</a>
   </div>
+  <nav class="context-nav" id="contextNav" aria-label="현재 위치와 빠른 이동">
+    <div class="context-row"><span class="context-label">대분류</span><div class="context-options" id="contextGroups"></div></div>
+    <div class="context-row"><span class="context-label">중분류</span><div class="context-options" id="contextMids"></div></div>
+    <div class="context-row" id="contextSubRow" hidden><span class="context-label">소분류</span><div class="context-options" id="contextSubs"></div></div>
+  </nav>
   <main id="main">
     <div class="tools">
       <button id="reloadBtn" title="현재 화면 새로고침">↻</button>
@@ -254,7 +273,7 @@ var SERVICES = {
   // 여기 등록을 빠뜨리면 메뉴를 눌러도 아무 일이 일어나지 않는다 — 2026-09-02에 실제로 그랬다.
   archive:   { url: BASE + "/archive-v1/?v=299" }
 };
-// 모바일 하단 바(v342): PC 왼쪽 메뉴와 같은 5개 대분류. 누르면 해당 분류 위치로 서랍을 연다.
+// 모바일 하단 바(v343): PC·상단과 같은 5개 대분류. 누르면 해당 분류의 첫 화면으로 바로 간다.
 var BOTTOM = [
   { group: "minutes",    label: "회의",          ic: "◆", cls: "" },
   { group: "archive",    label: "검색·아카이브", ic: "⌕", cls: "" },
@@ -266,7 +285,57 @@ var BOTTOM = [
 var ITEMS = {}; GROUPS.forEach(function (g) { g.items.forEach(function (it) { if (!it.placeholder) { it.group = g; ITEMS[it.id] = it; } }); });
 var menu = document.getElementById("menu"), main = document.getElementById("main"), bottom = document.getElementById("bottom");
 var openBtn = document.getElementById("openBtn"), openBtnM = document.getElementById("openBtnM"), topTitle = document.getElementById("topTitle");
+var contextGroups = document.getElementById("contextGroups"), contextMids = document.getElementById("contextMids");
+var contextSubRow = document.getElementById("contextSubRow"), contextSubs = document.getElementById("contextSubs");
 var current = null, frames = {}, ready = {};
+
+function firstItem(g) { return g.items.find(function (it) { return !it.placeholder; }); }
+function goItem(it) {
+  if (!it || it.placeholder) return;
+  show(it.id, true);
+  closeDrawer();
+}
+function midEntries(g) {
+  var out = [], seenSubgroups = {};
+  g.items.forEach(function (it) {
+    if (it.child) {
+      var subgroup = it.subgroup || "회의 관리";
+      if (!seenSubgroups[subgroup]) {
+        seenSubgroups[subgroup] = true;
+        out.push({ label: subgroup, subgroup: subgroup, target: it });
+      }
+    } else out.push({ label: it.label, target: it });
+  });
+  return out;
+}
+function buttonFor(label, active, cls, onclick, disabled) {
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "context-btn " + (cls || "") + (active ? " active" : "");
+  b.textContent = label; b.disabled = !!disabled;
+  if (active) b.setAttribute("aria-current", "page");
+  if (!disabled) b.onclick = onclick;
+  return b;
+}
+function renderContext(it) {
+  contextGroups.innerHTML = "";
+  GROUPS.forEach(function (g) {
+    contextGroups.appendChild(buttonFor(g.title, g.id === it.group.id, g.cls === "green" ? "t-green" : (g.cls === "teal" ? "t-teal" : ""), function () { goItem(firstItem(g)); }));
+  });
+
+  contextMids.innerHTML = "";
+  var activeSubgroup = it.child ? (it.subgroup || "회의 관리") : "";
+  midEntries(it.group).forEach(function (entry) {
+    var active = entry.subgroup ? entry.subgroup === activeSubgroup : entry.target.id === it.id;
+    contextMids.appendChild(buttonFor(entry.label, active, it.group.cls === "green" ? "t-green" : (it.group.cls === "teal" ? "t-teal" : ""), function () { goItem(entry.target); }, entry.target.placeholder));
+  });
+
+  contextSubs.innerHTML = "";
+  var subItems = activeSubgroup ? it.group.items.filter(function (candidate) { return candidate.child; }) : [];
+  contextSubRow.hidden = !subItems.length;
+  subItems.forEach(function (sub) {
+    contextSubs.appendChild(buttonFor(sub.label, sub.id === it.id, "", function () { goItem(sub); }));
+  });
+}
 
 // 메뉴 그리기
 GROUPS.forEach(function (g) {
@@ -299,9 +368,8 @@ GROUPS.forEach(function (g) {
 BOTTOM.forEach(function (bt) {
   var b = document.createElement("button"); b.className = bt.cls; b.dataset.group = bt.group; b.innerHTML = '<span class="ic">' + bt.ic + '</span>' + bt.label;
   b.onclick = function () {
-    document.body.classList.add("drawer");
-    var group = document.getElementById("grp-" + bt.group);
-    if (group) setTimeout(function () { group.scrollIntoView({ block: "start" }); }, 20);
+    var group = GROUPS.find(function (g) { return g.id === bt.group; });
+    goItem(firstItem(group));
   };
   bottom.appendChild(b);
 });
@@ -401,6 +469,7 @@ function show(id, push, fromApp) {
   }
   var u = directUrl(it); openBtn.href = u; openBtnM.href = u;
   topTitle.textContent = it.group.title + " › " + it.label;
+  renderContext(it);
   document.title = "산들마을 입주민 포털 — " + it.label;
   trackView(it);
   if (push) { try { history.replaceState(null, "", "#" + it.id); } catch (e) {} }
