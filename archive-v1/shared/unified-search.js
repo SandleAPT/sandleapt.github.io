@@ -33,7 +33,6 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  var 받아온것 = null;   // Promise 하나만 둔다 — 여러 번 검색해도 한 번만 받는다.
 
   function 읽기(fetchFn, 주소) {
     return fetchFn(주소, { cache: 'force-cache' })
@@ -41,18 +40,31 @@
       .catch(function () { return null; });   // 하나가 없어도 나머지는 찾을 수 있어야 한다
   }
 
-  function 준비(fetchFn) {
-    if (받아온것) return 받아온것;
+  /*
+   * `계약허용`이 참일 때만 contracts.json을 받는다.
+   *
+   * 회의록 앱이 2026-09-03부터 계약·기준문서 탭을 열람 비밀번호 뒤로 옮겼다. 그런데 이 검색은
+   * 정적 파일을 곧바로 읽으므로, 그냥 두면 아무나 검색 한 번으로 계약 조문 전문을 보게 된다 —
+   * 저쪽 잠금이 시늉이 되어 버린다. 잠금은 **자료를 받는 쪽에서** 지켜야 한다.
+   * 화면에서 숨기기만 하면 네트워크 탭에 그대로 남는다.
+   *
+   * 열쇠가 바뀔 수 있으므로(로그인하면 허용으로 바뀐다) 캐시를 허용 여부별로 따로 둔다.
+   */
+  var 받아온것 = { 열림: null, 잠김: null };
+
+  function 준비(fetchFn, 계약허용) {
+    var 칸 = 계약허용 ? '열림' : '잠김';
+    if (받아온것[칸]) return 받아온것[칸];
     var f = fetchFn || function (u, o) { return fetch(u, o); };
-    받아온것 = Promise.all([
-      읽기(f, '/minutes/contracts.json'),
+    받아온것[칸] = Promise.all([
+      계약허용 ? 읽기(f, '/minutes/contracts.json') : Promise.resolve(null),
       읽기(f, '/minutes/elections.json'),
       읽기(f, '/minutes/rules.json'),
       읽기(f, '/minutes/trules.json')
     ]).then(function (a) {
-      return { 계약: a[0], 선거: a[1], 분양규약: a[2], 임차규약: a[3] };
+      return { 계약: a[0], 선거: a[1], 분양규약: a[2], 임차규약: a[3], 계약잠김: !계약허용 };
     });
-    return 받아온것;
+    return 받아온것[칸];
   }
 
   // 낱말이 나온 자리를 앞뒤로 잘라 온다. 어디에 걸렸는지 눈으로 보여주기 위한 것이다.

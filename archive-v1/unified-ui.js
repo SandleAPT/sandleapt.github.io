@@ -62,10 +62,21 @@
     return h;
   }
 
+  // 열람 역할. 로그인한 적 없거나 확인이 안 되면 빈 문자열 — 그때는 계약을 안 읽는다.
+  function 역할() {
+    var A = window.SandleAuthSession;
+    if (!A || !A.savedKey || !A.savedKey()) return Promise.resolve('');
+    try { return Promise.resolve(A.currentRole()).catch(function () { return ''; }); }
+    catch (e) { return Promise.resolve(''); }
+  }
+
   var 마지막결과 = null;
 
-  function 그리기(r) {
+  function 그리기(r, 계약잠김) {
     마지막결과 = r;
+    // 「더 보기」로 다시 그릴 때는 인자 없이 부른다. 그때 잠금 상태를 잃지 않게 결과에 붙여 둔다.
+    if (계약잠김 !== undefined) r.계약잠김 = !!계약잠김;
+    계약잠김 = !!r.계약잠김;
     var q = r.질의;
     var 총 = window.UnifiedSearch.건수(r);
     var 갈래 = [
@@ -76,6 +87,9 @@
       ['규약', '관리규약 조문', r.규약, '분양 ◆ / 임차 ◇'],
       ['안건', '회의 안건', r.안건, '최근 회의부터']
     ];
+    /* 잠겨 있으면 계약 칸을 아예 뺀다. 「계약 0」이라고 적으면 계약이 없다는 뜻으로 읽히는데,
+       사실은 안 찾아본 것이다. 없는 것과 안 본 것은 다르다. */
+    if (계약잠김) 갈래 = 갈래.filter(function (g) { return g[0] !== '계약' && g[0] !== '계약묶음'; });
     var 칩 = 갈래.map(function (g) {
       return '<button type="button" data-jump="' + esc(g[0]) + '"' + (g[2].length ? '' : ' disabled') + '>' +
         esc(g[1]) + '<b>' + g[2].length + '</b></button>';
@@ -83,13 +97,16 @@
 
     var 본문 = 갈래.map(function (g) { return 목록HTML(g[0], g[1], g[3], g[2], q); }).join('');
     if (!총) 본문 = '<p class="uni-empty">「' + esc(q) + '」로 찾은 것이 없습니다. 낱말을 줄여서 다시 찾아보세요 — 예를 들어 「승강기 유지관리」 대신 「승강기」.</p>';
+    if (계약잠김)
+      본문 += '<section class="uni-sec"><div class="uni-sec-head"><h3>계약 🔒</h3><small>열람 비밀번호 필요</small></div>' +
+        '<p class="uni-empty">계약·기준문서는 이 검색에서 빠져 있습니다. 열람 비밀번호를 넣은 기기에서 찾으면 계약서 조문 본문까지 함께 나옵니다.</p></section>';
 
     home.classList.add('is-hidden');
     view.classList.remove('is-hidden');
     view.innerHTML =
       '<div class="uni"><button type="button" class="home-link" data-b-home>← 첫 화면으로</button>' +
       '<header class="uni-head"><p class="uni-kicker">통합 검색</p><h2>' + esc(q) + '</h2>' +
-      '<p class="uni-sub">' + (총 ? '회의 안건 · 계약 · 선거 · 관리규약에서 <b>' + 총 + '건</b>을 찾았습니다.' : '찾은 것이 없습니다.') + '</p>' +
+      '<p class="uni-sub">' + (총 ? '회의 안건 · ' + (계약잠김 ? '' : '계약 · ') + '선거 · 관리규약에서 <b>' + 총 + '건</b>을 찾았습니다.' : '찾은 것이 없습니다.') + '</p>' +
       '<div class="uni-counts">' + 칩 + '</div></header>' + 본문 +
       '<div class="uni-locked">특정 세대나 개인이 드러나는 기록(제기된 절차 문제, 관리규약 대조)은 이 검색에 넣지 않습니다. 그 자료는 회의록 앱의 <b>⑤ 규약·공고 → 선거·선관위</b>에서 관리자 비밀번호를 넣은 기기에서만 보입니다.</div>' +
       '</div>';
@@ -144,8 +161,13 @@
     home.classList.add('is-hidden');
     view.classList.remove('is-hidden');
     view.innerHTML = '<div class="uni"><p class="uni-loading">「' + esc(q) + '」 찾는 중… 계약·선거·규약 자료를 처음 한 번만 받아옵니다.</p></div>';
-    window.UnifiedSearch.준비().then(function (묶음) {
-      그리기(window.UnifiedSearch.찾기(q, 묶음, window.SANDLE_ARCHIVE_SAMPLE || { topics: [] }));
+    /* 계약은 열람 비밀번호가 있는 사람에게만 찾아 준다 (2026-09-03).
+       회의록 앱이 계약·기준문서 탭을 잠갔는데 여기서 그냥 읽으면 그 잠금이 시늉이 된다.
+       역할 확인이 실패하면 잠긴 쪽으로 간다 — 모를 때는 안 보여주는 쪽이 맞다. */
+    역할().then(function (r) {
+      return window.UnifiedSearch.준비(null, r === 'view' || r === 'edit');
+    }).then(function (묶음) {
+      그리기(window.UnifiedSearch.찾기(q, 묶음, window.SANDLE_ARCHIVE_SAMPLE || { topics: [] }), 묶음.계약잠김);
     }).catch(function () {
       view.innerHTML = '<div class="uni"><p class="uni-empty">자료를 불러오지 못했습니다. 잠시 뒤 다시 찾아보세요.</p></div>';
     });
