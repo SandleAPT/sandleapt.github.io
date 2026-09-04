@@ -15,6 +15,7 @@ foreach ($f in $files) {
   catch { Bad "parse $f : $($_.Exception.Message)" }
 }
 $d = $J["data-2026.json"]; $det = $J["detail-2026.json"]; $cat = $J["categories.json"]
+$suppress = @($J["reviews.json"].reconciliations | Where-Object { $_.suppress } | ForEach-Object { $_.suppress })
 
 # 2. billing summary
 $li = @($d.lineItems | Where-Object { $_.period -eq $Period })
@@ -35,7 +36,11 @@ foreach ($x in $li) {
   if (($x.billed - $x.assessed) -ne $x.adjustment) { Bad ("$($x.categoryCode): billed-assessed != adjustment") }
   if (($x.residentShare + $x.lhShare) -ne $x.billed) { Bad ("$($x.categoryCode): residentShare+lhShare != billed") }
   $p = $liPrev | Where-Object { $_.categoryCode -eq $x.categoryCode }
-  if ($p -and $p.billed -ne $x.previousBilled) { Bad ("$($x.categoryCode): previousBilled $($x.previousBilled) != prev billed $($p.billed)") }
+  if ($p -and $p.billed -ne $x.previousBilled) {
+    $sup = $suppress | Where-Object { $_.check -eq "prev-link" -and $_.period -eq $Period -and $_.categoryCode -eq $x.categoryCode }
+    if ($sup) { Warn ("$($x.categoryCode): previousBilled $($x.previousBilled) != prev billed $($p.billed) — reviews.json reconciliations에 사유 있음") }
+    else { Bad ("$($x.categoryCode): previousBilled $($x.previousBilled) != prev billed $($p.billed)") }
+  }
 }
 Ok "row identities checked (change/adjustment/share split/prev continuity)"
 # group totals (keyed by groupCode sets, matched to sourceName by order-independent lookup)
