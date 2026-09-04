@@ -1,10 +1,20 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-04 16:13:38 KST
+마지막 갱신: 2026-09-04 20:23:13 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
 ## 활성 작업
+
+### FEES-20260904-09 — 관리비 2026년 1월분 원문 전체 재적재 (1~7월 재적재 완료)
+
+- 담당: Claude
+- 상태: `done` — 2026-09-04 20:23:13 KST
+- 수정 범위: `fees/detail-2026.json`, `fees/data-2026.json`, `fees/data.json`, `fees/reviews.json`, `fees/README.md`, `fees/tools/check-fees.ps1`(0원 섹션·usage-total suppress 처리), `docs/WORK_STATUS.md`
+- 변경: 1월분 원문 5~15쪽을 옮김(섹션 19개, 선관위운영비 0원 포함). 게시일 2026-02-25, 납부기한 02-28. 이로써 2026년 1~7월 전 달의 항목별 산출내역·관리외 수익·예금 잔액이 detail-2026.json / data-2026.json에 들어감
+- 1월 원문 불일치: 난방비 발생내역의 공동 소계(4,595,700)가 공동 난방비 4,129,250에 바우처할인 466,450을 더한 값(2~4월은 뺀 값) — reviews.reconciliations `2026-01-heating-voucher-sign`(usage-total suppress). 특이 표기 4건은 `2026-01-source-oddities`
+- 검증: check-fees 1~7월 전부 통과(경고는 모두 reviews.json에 사유 있는 원문 불일치). 로컬 화면에서 1~7월 모두 산출내역 블록 표시, 월별 흐름 '관리외 수익 · 주차수입' 7개월 연속
+- 남은 일: (1) 1~7월 의결 대조 갱신(decisions.json, 4월 경비비 사본 차이 재검토 포함) (2) 경기도 감사 사례집 2018~2025 정리(Downloads에 8권) (3) 인계문서의 자잘한 정리 항목
 
 ### FEES-20260904-08 — 관리비 2026년 2월분 원문 전체 재적재
 
