@@ -56,7 +56,7 @@ foreach ($g in $gt) {
   }
 }
 Ok "groupTotals vs rows"
-if (($mt.billed - $mt.previousManagementFeeBilled) -ne $mt.managementFeeChange) { Bad "managementFeeChange" } else { Ok "managementFeeChange identity" }
+if (($mt.managementFeeBilled - $mt.previousManagementFeeBilled) -ne $mt.managementFeeChange) { Bad "managementFeeChange" } else { Ok "managementFeeChange identity" }
 
 # 3. supplemental tables
 $supp = @($d.supplementalTables | Where-Object { $_.period -eq $Period })
@@ -158,6 +158,6 @@ foreach ($sec in $doc.sections | Where-Object { $_.relatedCategoryCodes }) {
   if ($s -ne $sec.amount) { Bad "sec $($sec.no) $($sec.title): amount $($sec.amount) != related lineItems assessed $s" } else { Ok "sec $($sec.no) $($sec.title) = related lineItems ($s)" }
 }
 # section amounts sum vs monthly assessed (sections 1..18 cover every billing-summary row)
-$secSum = ($doc.sections | Measure-Object -Property amount -Sum).Sum
-if ($secSum -eq $mt.assessed) { Ok "sum of section amounts = monthlyTotals.assessed ($secSum)" } else { Bad "sum of section amounts $secSum != monthlyTotals.assessed $($mt.assessed)" }
+if ($doc) { $secSum = ($doc.sections | Measure-Object -Property amount -Sum).Sum
+if ($secSum -eq $mt.assessed) { Ok "sum of section amounts = monthlyTotals.assessed ($secSum)" } else { Bad "sum of section amounts $secSum != monthlyTotals.assessed $($mt.assessed)" } }
 Write-Output ("=== RESULT: " + $(if ($fail -eq 0) { "ALL CHECKS PASSED" } else { "$fail FAILURE(S)" }) + ", $warn warning(s)")

@@ -11,6 +11,22 @@
   },
   "reconciliations": [
     {
+      "id": "2026-06-general-unit-rate",
+      "period": "2026-06",
+      "field": "detail.general.allocation.unitRate",
+      "amount": 4310,
+      "explanation": "2026-06 일반관리비 부과내역의 원문 ㎡단가는 350.55원(44,634,620÷127,344.02)으로 인쇄되어 있으나 실제 나눗셈 값은 350.50원이다. 타입별 세대당 금액은 인쇄된 단가로 계산되어 부과 합계가 발생금액보다 4,310원 많다(원문 '부과차액'과 일치). 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-04"
+    },
+    {
+      "id": "2026-06-repair-maintenance-unit-rate",
+      "period": "2026-06",
+      "field": "detail.repair-maintenance.allocation.unitRate",
+      "amount": 5340,
+      "explanation": "2026-06 수선유지비 부과내역의 원문 ㎡단가는 분양 98.9원(10,098,820÷102,151.7), 임대 76.75원(1,930,380÷25,192.32)으로 인쇄되어 있으나 실제 나눗셈 값은 98.86원·76.63원이다. 타입별 세대당 금액은 인쇄된 단가로 계산되어 부과 합계가 발생금액보다 분양 5,340원·임대 3,530원 많다(원문 '부과차액'과 일치). 7월분과 같은 양상이며 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-04"
+    },
+    {
       "id": "2026-07-repair-maintenance-unit-rate",
       "period": "2026-07",
       "field": "detail.repair-maintenance.allocation.unitRate",
