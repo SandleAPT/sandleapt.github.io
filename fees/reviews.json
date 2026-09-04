@@ -11,6 +11,14 @@
   },
   "reconciliations": [
     {
+      "id": "2026-05-unit-rate-print-vs-division",
+      "period": "2026-05",
+      "field": "detail.*.allocation.unitRate",
+      "amount": null,
+      "explanation": "2026-05 산출내역의 인쇄된 ㎡단가가 나눗셈 값과 다른 곳: 일반관리비 350.84(계산 350.81, 부과차액 2,300원), 수선유지비 분양 112.63(계산 112.59, 1,090원)·임대 92.80(계산 92.65, 3,810원). 타입별 세대당 금액은 인쇄된 단가로 계산되어 있으며 원문 표기 그대로 옮겼다. 6·7월과 같은 양상.",
+      "checkedAt": "2026-09-04"
+    },
+    {
       "id": "2026-06-general-unit-rate",
       "period": "2026-06",
       "field": "detail.general.allocation.unitRate",
