@@ -52,7 +52,8 @@
       "capturedPages": 18,
       "summarySourcePage": 4,
       "captureSummaryPage": 6,
-      "extractionStatus": "billing-summary-verified",
+      "extractionStatus": "full-document-verified",
+      "detailFile": "detail-2026.json",
       "sourceFileStoredInRepository": false
     },
     {
@@ -3507,6 +3508,67 @@
       }
     },
     {
+      "period": "2026-02",
+      "sourceDocumentId": "fee-statement-2026-02",
+      "sourceTable": "management-income",
+      "sourcePage": 14,
+      "asOf": "2026-02-28",
+      "note": "2026년 2월 관리비부과명세서 원문 14쪽의 '관리외 수익' 표를 원문 열 구조와 비고 그대로 옮긴 자료입니다. group은 원문의 세로 묶음(입주자기여수익·공동기여수익).",
+      "columns": ["구분", "전월잔액", "당월발생액", "당월잔액", "비고"],
+      "rows": [
+        { "group": "입주자기여수익", "name": "장기수선충당금이자수입", "previousBalance": 0, "currentActivity": 0, "currentBalance": 0, "note": "장기수선충당금 만기해지 이자" },
+        { "group": "입주자기여수익", "name": "장기수선충당금이자수입(분전)", "previousBalance": 0, "currentActivity": 0, "currentBalance": 0, "note": "장기수선충당금 만기해지 이자(분전)" },
+        { "group": "입주자기여수익", "name": "하자보수충당예치금이자수입", "previousBalance": 0, "currentActivity": 0, "currentBalance": 0, "note": "하자보수 충당금 예치 이자" },
+        { "group": "입주자기여수익", "name": "중계기수입", "previousBalance": 0, "currentActivity": 0, "currentBalance": 0, "note": "SK, LG, KT 중계기 임대수입" },
+        { "group": "입주자기여수익", "name": "어린이집임대수입", "previousBalance": 0, "currentActivity": 0, "currentBalance": 0, "note": "산들어린이집 임대료" },
+        { "group": "공동기여수익", "name": "이자수입", "previousBalance": 0, "currentActivity": 0, "currentBalance": 0, "note": "예금결산이자" },
+        { "group": "공동기여수익", "name": "주차수입", "previousBalance": 9732600, "currentActivity": 9694300, "currentBalance": 19426900, "note": "1세대 2차량 이상 주차비 부과" },
+        { "group": "공동기여수익", "name": "승강기수입", "previousBalance": 1120000, "currentActivity": 1100000, "currentBalance": 2220000, "note": "전입전출, 세대 내부공사 승강기 사용료" },
+        { "group": "공동기여수익", "name": "광고수입", "previousBalance": 515757, "currentActivity": 665757, "currentBalance": 1181514, "note": "승강기 TV임대료 수입" },
+        { "group": "공동기여수익", "name": "재활용수입", "previousBalance": 20375400, "currentActivity": 0, "currentBalance": 20375400, "note": "1년분 (2026.01.11 ~ 2027.01.10)" },
+        { "group": "공동기여수익", "name": "한전검침수입", "previousBalance": 503530, "currentActivity": 503530, "currentBalance": 1007060, "note": "한전검침지원금" },
+        { "group": "공동기여수익", "name": "연체료수입", "previousBalance": 63780, "currentActivity": 78460, "currentBalance": 142240, "note": "관리비 연체료 수입" },
+        { "group": "공동기여수익", "name": "부과차익", "previousBalance": 6950, "currentActivity": 3787, "currentBalance": 10737, "note": "부과차익" },
+        { "group": "공동기여수익", "name": "주차스티커수입", "previousBalance": 10000, "currentActivity": 6000, "currentBalance": 16000, "note": "차량 스티커 미반납비 수입" },
+        { "group": "공동기여수익", "name": "커뮤니티수입", "previousBalance": 0, "currentActivity": 4808320, "currentBalance": 4808320, "note": "2025년 이익잉여금(26.02.25 입주자대표회의 의결) 커뮤니티비용 사용으로 처분 의결" },
+        { "group": "공동기여수익", "name": "공동주택지원금수익", "previousBalance": 0, "currentActivity": 0, "currentBalance": 0, "note": "" },
+        { "group": "공동기여수익", "name": "기타수익", "previousBalance": 2103, "currentActivity": 400, "currentBalance": 2503, "note": "입주민 복사비" },
+        { "group": "공동기여수익", "name": "잡수입", "previousBalance": 0, "currentActivity": 9283741, "currentBalance": 9283741, "note": "2025년 이익잉여금(26.02.25 입주자대표회의 의결) 수광선비상대책비용 사용으로 처분 의결" }
+      ],
+      "subtotals": [
+        { "group": "입주자기여수익", "previousBalance": 0, "currentActivity": 0, "currentBalance": 0 },
+        { "group": "공동기여수익", "previousBalance": 32330120, "currentActivity": 26144295, "currentBalance": 58474415 }
+      ],
+      "totals": { "previousBalance": 32330120, "currentActivity": 26144295, "currentBalance": 58474415 }
+    },
+    {
+      "period": "2026-02",
+      "sourceDocumentId": "fee-statement-2026-02",
+      "sourceTable": "deposit-balance",
+      "sourcePage": 15,
+      "asOf": "2026-02-28",
+      "note": "2026년 2월 관리비부과명세서 원문 15쪽의 '예금 잔액 현황' 표. 계좌번호는 옮기지 않는다(원문도 일부 가림).",
+      "columns": ["구분", "은행명", "통장잔액", "비고"],
+      "rows": [
+        { "group": "관리비", "name": "관리비", "bank": "국민은행", "balance": 49943273, "note": "" },
+        { "group": "관리비", "name": "관리비", "bank": "신한은행", "balance": 389836175, "note": "" },
+        { "group": "관리비", "name": "관리비", "bank": "우리은행", "balance": 14798461, "note": "" },
+        { "group": "관리비", "name": "관리비", "bank": "하나은행", "balance": 24977655, "note": "" },
+        { "group": "잡수입", "name": "잡수입", "bank": "하나은행", "balance": 40829675, "note": "" },
+        { "group": "예치금", "name": "예치금", "bank": "하나은행", "balance": 6972735, "note": "" },
+        { "group": "분양", "name": "하자보수충당예치금(전유분)", "bank": "하나은행", "balance": 22885314, "note": "" },
+        { "group": "분양", "name": "하자보수충당예치금(공용분)", "bank": "하나은행", "balance": 750319196, "note": "정기예금(1년)-분양동 2026. 06. 09. 만기" },
+        { "group": "분양", "name": "장기수선충당예치금", "bank": "신한은행", "balance": 54032731, "note": "정기예금(1년)-분양동 2026. 02. 10. 만기" },
+        { "group": "분양", "name": "장기수선충당예치금", "bank": "국민은행", "balance": 129000619, "note": "정기예금(1년)-분양동 2026. 04. 14. 만기" },
+        { "group": "분양", "name": "장기수선충당예치금", "bank": "국민은행", "balance": 299189271, "note": "정기예금(1년)-분양동 2026. 11. 28. 만기" },
+        { "group": "분양", "name": "장기수선충당예치금", "bank": "국민은행", "balance": 177587511, "note": "정기예금(1년)-조기분양 2026. 11. 28. 만기" },
+        { "group": "분양", "name": "장기수선충당예치금", "bank": "국민은행", "balance": 15748760, "note": "정기적금(1년)-조기분양 2026. 11. 28. 만기" },
+        { "group": "분양", "name": "장기수선충당예치금", "bank": "국민은행", "balance": 19493040, "note": "정기적금(1년)-분양동 2026. 11. 28. 만기" },
+        { "group": "시재금", "name": "시재금", "bank": "우리은행", "balance": 11076026, "note": "" }
+      ],
+      "totals": { "balance": 2006690442 }
+    },
+    {
       "period": "2026-03",
       "sourceDocumentId": "fee-statement-2026-03",
       "sourceTable": "management-expense",
@@ -4358,10 +4420,10 @@
   "detailExtraction": {
     "billingSummary": "complete-for-2026-01-to-07",
     "managementExpense": "complete-for-2026-01-to-07",
-    "managementIncome": "complete-for-2026-03-to-07",
-    "depositBalance": "complete-for-2026-03-to-07",
-    "sectionDetails": "complete-for-2026-03-to-07 (detail-2026.json)",
+    "managementIncome": "complete-for-2026-02-to-07",
+    "depositBalance": "complete-for-2026-02-to-07",
+    "sectionDetails": "complete-for-2026-02-to-07 (detail-2026.json)",
     "sourceNotes": "management-expense-complete-for-2026-01-to-07",
-    "note": "2026년 3~7월분은 원문 4~15쪽 전체를 옮겼다(부과총괄·항목별 산출내역은 detail-2026.json, 관리외 수익·비용·예금잔액은 supplementalTables). 1~2월은 부과총괄과 관리외 비용만 있으며 나머지 표는 2월부터 거꾸로 월 단위로 옮기는 중이다."
+    "note": "2026년 2~7월분은 원문 4~15쪽 전체를 옮겼다(부과총괄·항목별 산출내역은 detail-2026.json, 관리외 수익·비용·예금잔액은 supplementalTables). 1~1월은 부과총괄과 관리외 비용만 있으며 나머지 표는 1월부터 거꾸로 월 단위로 옮기는 중이다."
   }
 }
