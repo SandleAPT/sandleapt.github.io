@@ -1,7 +1,7 @@
 {
   "schemaVersion": 5,
   "dataset": "sandle-fees",
-  "updatedAt": "2026-08-26",
+  "updatedAt": "2026-09-06",
   "purpose": "원자료와 분리된 점검·분석 계층. 자동 감지나 대조 결과는 원문 금액을 수정하지 않는다. implementedInScreen=true인 규칙은 index.html autoChecks()가 매월 화면에서 실행한다.",
   "fieldSemantics": {
     "status": "점검 전체의 진행 상태(예: 확인중 = 초과액 산정 등 후속 작업이 남음)",
@@ -107,6 +107,14 @@
       "amount": 150340,
       "explanation": "2026-04 부과총괄의 전월부과금액 합계(296,901,400원)가 행별 previousBilled 합(296,751,060원)보다 150,340원 크다. 위탁관리수수료(분전2, management-commission-extra2)가 2026-03에 150,340원 부과된 뒤 2026-04 원문에서 항목이 사라져 행 단위 전월부과에는 잡히지 않기 때문. 원문 기준이며 데이터 오류가 아니다. [2026-09-04 갱신] 2026-09-04 사본의 4월 원문에는 위탁관리수수료(분전2) 행이 '-'(0원)·전월부과 150,340원·증감 -150,340원으로 실려 있어 그 행을 추가했다. 이제 행별 합과 합계가 일치한다.",
       "checkedAt": "2026-09-04"
+    },
+    {
+      "id": "2025-01-repair-maintenance-unit-rate",
+      "period": "2025-01",
+      "field": "detail.repair-maintenance.allocation.unitRate",
+      "amount": -3820,
+      "explanation": "2025-01 수선유지비 분양 부과내역의 원문 ㎡단가는 128.29원(13,107,020÷102,151.7)으로 인쇄되어 있으나 실제 나눗셈 값은 128.31원이다. 타입별 세대당 금액과 부과 합계·부과차액은 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-06"
     }
   ],
   "analysisPolicy": {

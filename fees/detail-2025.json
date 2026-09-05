@@ -1,0 +1,2709 @@
+{
+  "schemaVersion": 1,
+  "dataset": "sandle-fees-detail",
+  "year": 2025,
+  "updatedAt": "2026-09-06",
+  "areaTypes": [
+    {
+      "type": "51A",
+      "area": 106.6712
+    },
+    {
+      "type": "51B",
+      "area": 106.2194
+    },
+    {
+      "type": "51C",
+      "area": 105.8497
+    },
+    {
+      "type": "51D",
+      "area": 106.6301
+    },
+    {
+      "type": "59A",
+      "area": 123.1248
+    },
+    {
+      "type": "59B",
+      "area": 123.2071
+    }
+  ],
+  "allocationScopes": {
+    "all": {
+      "label": "전체 1,171세대",
+      "units": 1171,
+      "area": 127344.02
+    },
+    "sale940": {
+      "label": "분양 517 + 조기분양 423 = 940세대",
+      "units": 940,
+      "area": 102151.7
+    },
+    "rental231": {
+      "label": "임대 231세대",
+      "units": 231,
+      "area": 25192.32
+    },
+    "sale517": {
+      "label": "분양세대 517세대",
+      "units": 517,
+      "area": 56502.66
+    },
+    "early423": {
+      "label": "조기분양 423세대",
+      "units": 423,
+      "area": 45649.04
+    },
+    "foodWaste1152": {
+      "label": "음식물처리 부과 1,152세대(면제세대 제외)",
+      "units": 1152,
+      "area": 125238.95
+    }
+  },
+  "documents": [
+    {
+      "documentId": "fee-statement-2025-01",
+      "period": "2025-01",
+      "title": "2025년 01월 관리비 부과내역서",
+      "cover": {
+        "managementPeriod": {
+          "from": "2025-01-01",
+          "to": "2025-01-31"
+        },
+        "heatingPeriod": {
+          "from": "2025-01-01",
+          "to": "2025-01-31"
+        },
+        "electricityPeriod": {
+          "from": "2024-12-01",
+          "to": "2024-12-31"
+        },
+        "waterPeriod": {
+          "from": "2024-12-18",
+          "to": "2025-01-17"
+        },
+        "dueDate": "2025-02-28",
+        "lateFeeRule": {
+          "sale": "관리비×연체일/365×10%(일할계산)",
+          "rental": "관리비×연체일/365×6.5%(일할계산)"
+        }
+      },
+      "noticePages": [
+        1,
+        2,
+        3
+      ],
+      "sections": [
+        {
+          "no": "1",
+          "categoryCode": "general",
+          "title": "일반관리비",
+          "amount": 44284820,
+          "sourcePage": 5,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "breakdown",
+              "title": "가. 인건비 및 제경비 산출내역",
+              "period": {
+                "from": "2025-01-01",
+                "to": "2025-01-31"
+              },
+              "rows": [
+                {
+                  "group": "인건비",
+                  "name": "급여",
+                  "amount": 29176060,
+                  "detail": "관리직원 기본급(관리실 6명, 기전실 4명)"
+                },
+                {
+                  "group": "인건비",
+                  "name": "제수당",
+                  "amount": 3137580,
+                  "detail": "자격, 직책, 출납, 소방, 반장, 야간근로수당, 연장수당"
+                },
+                {
+                  "group": "인건비",
+                  "name": "연차수당충당전입액",
+                  "amount": 1000000,
+                  "detail": "급여+제수당 ÷209×8×15÷12 (연차추계액적용)"
+                },
+                {
+                  "group": "인건비",
+                  "name": "퇴직급여충당전입액",
+                  "amount": 3000000,
+                  "detail": "급여+제수당+연차÷12개월 (퇴직추계액적용)"
+                },
+                {
+                  "group": "인건비",
+                  "name": "산재보험료",
+                  "amount": 273020,
+                  "detail": "월평균보수총액×1.065% 중 전액 입주자분"
+                },
+                {
+                  "group": "인건비",
+                  "name": "고용보험료",
+                  "amount": 349770,
+                  "detail": "월평균보수총액×1.8% 중 입주자분 0.9%"
+                },
+                {
+                  "group": "인건비",
+                  "name": "국민연금",
+                  "amount": 1104640,
+                  "detail": "월평균보수총액×9.0% 중 입주자분 4.5%"
+                },
+                {
+                  "group": "인건비",
+                  "name": "건강보험료",
+                  "amount": 1229030,
+                  "detail": "월평균보수총액×7.09% 중 (입주자분 3.545% + 건강보험료의 장기요양 12.95%)"
+                },
+                {
+                  "group": "인건비",
+                  "name": "식대등 관리후생비",
+                  "amount": 2924140,
+                  "detail": "관리직원 식대 보조비(10명×200,000원), 기전실 부식비, 설날명절 격려금(1,550,000원 1/2회)"
+                },
+                {
+                  "group": "제사무비",
+                  "name": "사무용품소모품비",
+                  "amount": 278700,
+                  "detail": "복사기·복합기 임대료, A4용지, 무빙테이프 외 4종 구입"
+                },
+                {
+                  "group": "제사무비",
+                  "name": "도서인쇄비",
+                  "amount": 473000,
+                  "detail": "전산 및 고지서 인쇄"
+                },
+                {
+                  "group": "제사무비",
+                  "name": "여비교통비",
+                  "amount": 21000,
+                  "detail": "은행업무, 우체국 업무 교통비"
+                },
+                {
+                  "group": "제세공과금",
+                  "name": "통신료",
+                  "amount": 236070,
+                  "detail": "전화요금(3대), EDI사용료, 업무용 경비원 핸드폰 요금, 비상통화장치전화요금, 홈매니저 통신요금"
+                },
+                {
+                  "group": "제세공과금",
+                  "name": "우편료",
+                  "amount": 4920,
+                  "detail": "미납세대 관리비 독촉장 내용증명 등기"
+                },
+                {
+                  "group": "그 밖의 부대비용",
+                  "name": "회계감사료",
+                  "amount": 0,
+                  "detail": ""
+                },
+                {
+                  "group": "그 밖의 부대비용",
+                  "name": "관리용품소모품비",
+                  "amount": 199000,
+                  "detail": "넉가래(30개) 구입"
+                },
+                {
+                  "group": "그 밖의 부대비용",
+                  "name": "피복비",
+                  "amount": 271300,
+                  "detail": "관리직원 근무복(동복 1,628,000원 3/6회)"
+                },
+                {
+                  "group": "그 밖의 부대비용",
+                  "name": "교육훈련비",
+                  "amount": 264500,
+                  "detail": "2025년 소방안전관리자 회비, 2025년 대한주택관리사협회비(1년분), 2024년 하반기 시설물 안전교육비"
+                },
+                {
+                  "group": "그 밖의 부대비용",
+                  "name": "집기비품감가상각비",
+                  "amount": 48050,
+                  "detail": "관리실 냉장고 구입(521,000원 2/12회), 전기히터 구입(55,600원 2/12회)"
+                },
+                {
+                  "group": "그 밖의 부대비용",
+                  "name": "공기구감가상각비",
+                  "amount": 59870,
+                  "detail": "전동드릴, 절단기, 안전발판 사다리, 전기드릴, 충전임팩드라이버 감가상각"
+                },
+                {
+                  "group": "그 밖의 부대비용",
+                  "name": "잡비",
+                  "amount": 234170,
+                  "detail": "관리실 정수기 렌탈료, 커피, 휴지, 종이컵, 예금잔액증명발급수수료, 도시가스 사용료, 구급약, 제설작업 식대, 미화원 일반쓰레기 봉투"
+                }
+              ],
+              "subtotals": [
+                {
+                  "group": "인건비",
+                  "amount": 42194240
+                },
+                {
+                  "group": "제사무비",
+                  "amount": 772700
+                },
+                {
+                  "group": "제세공과금",
+                  "amount": 240990
+                },
+                {
+                  "group": "그 밖의 부대비용",
+                  "amount": 1076890
+                }
+              ],
+              "total": 44284820
+            },
+            {
+              "kind": "allocation",
+              "title": "부과내역",
+              "scope": "all",
+              "baseAmount": 44284820,
+              "unitRate": 347.75,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 729,
+                  "perUnit": 37090,
+                  "total": 27038610
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 36940,
+                  "total": 4986900
+                },
+                {
+                  "type": "51C",
+                  "units": 135,
+                  "perUnit": 36810,
+                  "total": 4969350
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 37080,
+                  "total": 519120
+                },
+                {
+                  "type": "59A",
+                  "units": 99,
+                  "perUnit": 42820,
+                  "total": 4239180
+                },
+                {
+                  "type": "59B",
+                  "units": 59,
+                  "perUnit": 42850,
+                  "total": 2528150
+                }
+              ],
+              "totalUnits": 1171,
+              "totalAmount": 44281310,
+              "adjustment": -3510
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "2",
+          "categoryCode": "cleaning",
+          "title": "청소비",
+          "amount": 23442810,
+          "sourcePage": 6,
+          "vendor": "㈜리포르",
+          "contractPeriod": {
+            "from": "2025-01-01",
+            "to": "2025-12-31"
+          },
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "면적별 부과액",
+              "scope": "all",
+              "baseAmount": 23442810,
+              "unitRate": 184.09,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 729,
+                  "perUnit": 19640,
+                  "total": 14317560
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 19550,
+                  "total": 2639250
+                },
+                {
+                  "type": "51C",
+                  "units": 135,
+                  "perUnit": 19490,
+                  "total": 2631150
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 19630,
+                  "total": 274820
+                },
+                {
+                  "type": "59A",
+                  "units": 99,
+                  "perUnit": 22670,
+                  "total": 2244330
+                },
+                {
+                  "type": "59B",
+                  "units": 59,
+                  "perUnit": 22680,
+                  "total": 1338120
+                }
+              ],
+              "totalUnits": 1171,
+              "totalAmount": 23445230,
+              "adjustment": 2420
+            },
+            {
+              "kind": "composition",
+              "title": "산출내역",
+              "rows": [
+                {
+                  "name": "미화원용역비",
+                  "amount": 20435590
+                },
+                {
+                  "name": "연차적립금",
+                  "amount": 838640
+                },
+                {
+                  "name": "퇴직적립금",
+                  "amount": 1618580
+                },
+                {
+                  "name": "설날 격려금",
+                  "amount": 550000
+                }
+              ],
+              "total": 23442810
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "3",
+          "categoryCode": "security",
+          "title": "경비비",
+          "amount": 23937340,
+          "sourcePage": 6,
+          "vendor": "삼우안전관리(유)",
+          "contractPeriod": {
+            "from": "2025-01-01",
+            "to": "2025-12-31"
+          },
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "면적별 부과액",
+              "scope": "all",
+              "baseAmount": 23937340,
+              "unitRate": 187.97,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 729,
+                  "perUnit": 20050,
+                  "total": 14616450
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 19970,
+                  "total": 2695950
+                },
+                {
+                  "type": "51C",
+                  "units": 135,
+                  "perUnit": 19900,
+                  "total": 2686500
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 20040,
+                  "total": 280560
+                },
+                {
+                  "type": "59A",
+                  "units": 99,
+                  "perUnit": 23140,
+                  "total": 2290860
+                },
+                {
+                  "type": "59B",
+                  "units": 59,
+                  "perUnit": 23160,
+                  "total": 1366440
+                }
+              ],
+              "totalUnits": 1171,
+              "totalAmount": 23936760,
+              "adjustment": -580
+            },
+            {
+              "kind": "composition",
+              "title": "산출내역",
+              "rows": [
+                {
+                  "name": "경비원용역비",
+                  "amount": 21131600
+                },
+                {
+                  "name": "연차적립금",
+                  "amount": 706260
+                },
+                {
+                  "name": "퇴직적립금",
+                  "amount": 1699480
+                },
+                {
+                  "name": "설날 격려금",
+                  "amount": 400000
+                }
+              ],
+              "total": 23937340
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "4",
+          "categoryCode": "disinfection",
+          "title": "소독비",
+          "amount": 440000,
+          "sourcePage": 6,
+          "vendor": "㈜에스앤산업",
+          "contractPeriod": {
+            "from": "2024-03-01",
+            "to": "2025-02-28"
+          },
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "면적별 부과액",
+              "scope": "all",
+              "baseAmount": 440000,
+              "unitRate": 3.46,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 729,
+                  "perUnit": 370,
+                  "total": 269730
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 370,
+                  "total": 49950
+                },
+                {
+                  "type": "51C",
+                  "units": 135,
+                  "perUnit": 370,
+                  "total": 49950
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 370,
+                  "total": 5180
+                },
+                {
+                  "type": "59A",
+                  "units": 99,
+                  "perUnit": 430,
+                  "total": 42570
+                },
+                {
+                  "type": "59B",
+                  "units": 59,
+                  "perUnit": 430,
+                  "total": 25370
+                }
+              ],
+              "totalUnits": 1171,
+              "totalAmount": 442750,
+              "adjustment": 2750
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "5",
+          "categoryCode": "elevator-maintenance",
+          "title": "승강기유지비",
+          "amount": 5476200,
+          "sourcePage": 7,
+          "vendor": "㈜현대개발공사",
+          "contractPeriod": {
+            "from": "2024-04-26",
+            "to": "2026-04-25"
+          },
+          "tables": [
+            {
+              "kind": "split",
+              "title": "내역",
+              "rows": [
+                {
+                  "name": "승강기 유지관리",
+                  "amount": 3168000,
+                  "sale": 2541280,
+                  "rental": 626720,
+                  "note": ""
+                },
+                {
+                  "name": "승강기 보수비용",
+                  "amount": 1673300,
+                  "sale": 1673300,
+                  "rental": 0,
+                  "note": "2022년도 승강기 지적사항 보수작업(20,079,980원 10/12회)"
+                },
+                {
+                  "name": "승강기 멀티빔 포토센서",
+                  "amount": 323200,
+                  "sale": 259260,
+                  "rental": 63940,
+                  "note": "211동 2호기 승강기 멀티빔 포토센서 교체비용(1,939,200원 5/6회)"
+                },
+                {
+                  "name": "승강기 메인보드 교체",
+                  "amount": 311700,
+                  "sale": 250040,
+                  "rental": 61660,
+                  "note": "202동 2호기 승강기 메인보드 교체비용(1,870,000원 3/6회)"
+                }
+              ],
+              "total": {
+                "amount": 5476200,
+                "sale": 4723880,
+                "rental": 752320
+              }
+            },
+            {
+              "kind": "allocation",
+              "title": "부과내역(분양 517 + 조기분양 423 = 940세대)",
+              "scope": "sale940",
+              "baseAmount": 4723880,
+              "unitRate": 46.24,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 575,
+                  "perUnit": 4930,
+                  "total": 2834750
+                },
+                {
+                  "type": "51B",
+                  "units": 119,
+                  "perUnit": 4910,
+                  "total": 584290
+                },
+                {
+                  "type": "51C",
+                  "units": 112,
+                  "perUnit": 4890,
+                  "total": 547680
+                },
+                {
+                  "type": "51D",
+                  "units": 11,
+                  "perUnit": 4930,
+                  "total": 54230
+                },
+                {
+                  "type": "59A",
+                  "units": 84,
+                  "perUnit": 5690,
+                  "total": 477960
+                },
+                {
+                  "type": "59B",
+                  "units": 39,
+                  "perUnit": 5700,
+                  "total": 222300
+                }
+              ],
+              "totalUnits": 940,
+              "totalAmount": 4721210,
+              "adjustment": -2670
+            },
+            {
+              "kind": "allocation",
+              "title": "부과내역(임대 231세대)",
+              "scope": "rental231",
+              "baseAmount": 752320,
+              "unitRate": 29.86,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 154,
+                  "perUnit": 3190,
+                  "total": 491260
+                },
+                {
+                  "type": "51B",
+                  "units": 16,
+                  "perUnit": 3170,
+                  "total": 50720
+                },
+                {
+                  "type": "51C",
+                  "units": 23,
+                  "perUnit": 3160,
+                  "total": 72680
+                },
+                {
+                  "type": "51D",
+                  "units": 3,
+                  "perUnit": 3180,
+                  "total": 9540
+                },
+                {
+                  "type": "59A",
+                  "units": 15,
+                  "perUnit": 3680,
+                  "total": 55200
+                },
+                {
+                  "type": "59B",
+                  "units": 20,
+                  "perUnit": 3680,
+                  "total": 73600
+                }
+              ],
+              "totalUnits": 231,
+              "totalAmount": 753000,
+              "adjustment": 680
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "6",
+          "categoryCode": "repair-maintenance",
+          "title": "수선유지비",
+          "amount": 15472040,
+          "sourcePage": 7,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "split",
+              "title": "내역",
+              "rows": [
+                {
+                  "group": "수선비",
+                  "amount": 579000,
+                  "sale": 579000,
+                  "rental": 0,
+                  "note": "열교환기 가스켓 교체(분양 3,474,063원 5/6회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 458300,
+                  "sale": 367640,
+                  "rental": 90660,
+                  "note": "204-1501, 1503 외벽방수 및 석고작업(2,750,000원 5/6회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 421670,
+                  "sale": 338250,
+                  "rental": 83420,
+                  "note": "데크용 목재 구입(5,060,000원 4/12회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 357500,
+                  "sale": 286780,
+                  "rental": 70720,
+                  "note": "데크용 목재 구입(4,290,000원 3/12회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 478500,
+                  "sale": 478500,
+                  "rental": 0,
+                  "note": "213-1505세대 내부 및 발코니 천정공사(분양 2,871,000원 4/6회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 232800,
+                  "sale": 186750,
+                  "rental": 46050,
+                  "note": "동절기 염화칼슘 구입(1,397,000원 3/6회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 385000,
+                  "sale": 308840,
+                  "rental": 76160,
+                  "note": "205-B01 외벽방수 및 세대 벽체보수(1,155,000원 3/3회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 491300,
+                  "sale": 394110,
+                  "rental": 97190,
+                  "note": "214동 지하주차장 급탕 환수배관 누수공사 비용(1,474,000원 2/3회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 782800,
+                  "sale": 627940,
+                  "rental": 154860,
+                  "note": "단지내 CCTV 카메라용 POE HUB 장비 교체 비용(4,697,000원 2/6회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 660000,
+                  "sale": 660000,
+                  "rental": 0,
+                  "note": "204동 1504호 욕실 및 외벽누수공사비용(분양 1,980,000원 2/3회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 366700,
+                  "sale": 294160,
+                  "rental": 72540,
+                  "note": "210동 1-2라인 지하1층 천정 누수 유도방수 공사비용(1,100,000원 2/3회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 541630,
+                  "sale": 434480,
+                  "rental": 107150,
+                  "note": "단지내 석회 피해차량 보상 지급(1,624,900원 2/3회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 681000,
+                  "sale": 546280,
+                  "rental": 134720,
+                  "note": "난방 계량기 밧데리 구입(2,043,000원 1/3회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 733300,
+                  "sale": 733300,
+                  "rental": 0,
+                  "note": "207-1505 세탁실, 천정 및 욕실 누수(분양 2,200,000원 1/3회)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 176000,
+                  "sale": 141180,
+                  "rental": 34820,
+                  "note": "소화 배관작업 보상 지급(206-1103)"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 100500,
+                  "sale": 80620,
+                  "rental": 19880,
+                  "note": "207-401 지하 지하주차장 누수 석회물 비용 자기부담금 보험료"
+                },
+                {
+                  "group": "수선비",
+                  "amount": 770000,
+                  "sale": 617670,
+                  "rental": 152330,
+                  "note": "202-304 스프링클러 누수 비용"
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 3575000,
+                  "sale": 2867760,
+                  "rental": 707240,
+                  "note": "조경유지관리비-태인에프지(2023.09.01 ~ 2025.08.31) (85,800,000원 17/24회)"
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 1066220,
+                  "sale": 1066220,
+                  "rental": 0,
+                  "note": "소방시설종합정밀점검비(분양 6,397,310원 4/6회)"
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 293400,
+                  "sale": 235360,
+                  "rental": 58040,
+                  "note": "2024년 하반기 저수조 청소(880,000원 3/3회)"
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 507300,
+                  "sale": 406940,
+                  "rental": 100360,
+                  "note": "승강기 법정 안전검사(6,087,400원 2/12회)"
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 403300,
+                  "sale": 323520,
+                  "rental": 79780,
+                  "note": "승강시설 보수공사 비용(2,420,000원 2/6회)"
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 512520,
+                  "sale": 411130,
+                  "rental": 101390,
+                  "note": "홈 네트워크 서버 교체 비용(6,150,250원 3/12회)"
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 568300,
+                  "sale": 455870,
+                  "rental": 112430,
+                  "note": "지하주차장 카메라 56번 외 6대 교체(1,705,000원 2/3회)"
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 330000,
+                  "sale": 264720,
+                  "rental": 65280,
+                  "note": "전기안전관리자 직무고시 정기점검(2회차)"
+                }
+              ],
+              "total": {
+                "amount": 15472040,
+                "sale": 13107020,
+                "rental": 2365020
+              },
+              "subtotals": [
+                {
+                  "group": "수선비",
+                  "amount": 8216000,
+                  "sale": 7075500,
+                  "rental": 1140500
+                },
+                {
+                  "group": "시설유지비",
+                  "amount": 7256040,
+                  "sale": 6031520,
+                  "rental": 1224520
+                }
+              ]
+            },
+            {
+              "kind": "allocation",
+              "title": "부과내역(분양 517 + 조기분양 423 = 940부과)",
+              "scope": "sale940",
+              "baseAmount": 13107020,
+              "unitRate": 128.29,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 575,
+                  "perUnit": 13680,
+                  "total": 7866000
+                },
+                {
+                  "type": "51B",
+                  "units": 119,
+                  "perUnit": 13630,
+                  "total": 1621970
+                },
+                {
+                  "type": "51C",
+                  "units": 112,
+                  "perUnit": 13580,
+                  "total": 1520960
+                },
+                {
+                  "type": "51D",
+                  "units": 11,
+                  "perUnit": 13680,
+                  "total": 150480
+                },
+                {
+                  "type": "59A",
+                  "units": 84,
+                  "perUnit": 15800,
+                  "total": 1327200
+                },
+                {
+                  "type": "59B",
+                  "units": 39,
+                  "perUnit": 15810,
+                  "total": 616590
+                }
+              ],
+              "totalUnits": 940,
+              "totalAmount": 13103200,
+              "adjustment": -3820
+            },
+            {
+              "kind": "allocation",
+              "title": "부과내역(임대 231세대)",
+              "scope": "rental231",
+              "baseAmount": 2365020,
+              "unitRate": 93.87,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 154,
+                  "perUnit": 10010,
+                  "total": 1541540
+                },
+                {
+                  "type": "51B",
+                  "units": 16,
+                  "perUnit": 9970,
+                  "total": 159520
+                },
+                {
+                  "type": "51C",
+                  "units": 23,
+                  "perUnit": 9940,
+                  "total": 228620
+                },
+                {
+                  "type": "51D",
+                  "units": 3,
+                  "perUnit": 10010,
+                  "total": 30030
+                },
+                {
+                  "type": "59A",
+                  "units": 15,
+                  "perUnit": 11560,
+                  "total": 173400
+                },
+                {
+                  "type": "59B",
+                  "units": 20,
+                  "perUnit": 11570,
+                  "total": 231400
+                }
+              ],
+              "totalUnits": 231,
+              "totalAmount": 2364510,
+              "adjustment": -510
+            }
+          ],
+          "notes": [
+            "♣ 2023년 6월16일 입주자대표회의 결과 6월분부터 조기분양세대 분양세대로 관리비 부과하기로 결의함."
+          ],
+          "sourcePages": [
+            7,
+            8
+          ]
+        },
+        {
+          "no": "7",
+          "categoryCode": "management-commission",
+          "title": "위탁관리수수료",
+          "amount": 313660,
+          "sourcePage": 8,
+          "vendor": "㈜신대한관리",
+          "contractPeriod": {
+            "from": "2024-07-01",
+            "to": "2025-06-30"
+          },
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "부과내역(분양세대 517 부과)",
+              "scope": "sale517",
+              "baseAmount": 313660,
+              "unitRate": 5.55,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 279,
+                  "perUnit": 590,
+                  "total": 164610
+                },
+                {
+                  "type": "51B",
+                  "units": 75,
+                  "perUnit": 590,
+                  "total": 44250
+                },
+                {
+                  "type": "51C",
+                  "units": 75,
+                  "perUnit": 590,
+                  "total": 44250
+                },
+                {
+                  "type": "59A",
+                  "units": 73,
+                  "perUnit": 680,
+                  "total": 49640
+                },
+                {
+                  "type": "59B",
+                  "units": 15,
+                  "perUnit": 680,
+                  "total": 10200
+                }
+              ],
+              "totalUnits": 517,
+              "totalAmount": 312950,
+              "adjustment": -710
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "7-1",
+          "categoryCode": "management-commission-extra",
+          "title": "위탁관리수수료(분전)",
+          "amount": 253353,
+          "sourcePage": 8,
+          "vendor": "㈜신대한관리",
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "부과내역(조기분양세대 423 부과)",
+              "scope": "early423",
+              "baseAmount": 253353,
+              "unitRate": 5.55,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 296,
+                  "perUnit": 590,
+                  "total": 174640
+                },
+                {
+                  "type": "51B",
+                  "units": 44,
+                  "perUnit": 590,
+                  "total": 25960
+                },
+                {
+                  "type": "51C",
+                  "units": 37,
+                  "perUnit": 590,
+                  "total": 21830
+                },
+                {
+                  "type": "51D",
+                  "units": 11,
+                  "perUnit": 590,
+                  "total": 6490
+                },
+                {
+                  "type": "59A",
+                  "units": 11,
+                  "perUnit": 680,
+                  "total": 7480
+                },
+                {
+                  "type": "59B",
+                  "units": 24,
+                  "perUnit": 680,
+                  "total": 16320
+                }
+              ],
+              "totalUnits": 423,
+              "totalAmount": 252720,
+              "adjustment": -633
+            }
+          ],
+          "notes": [
+            "▶ 2024년 10월 입주자대표회의 의결. 조기분양세대 2024년 7월분부터 11월분까지 소급 부과함."
+          ]
+        },
+        {
+          "no": "8",
+          "categoryCode": null,
+          "title": "난방비",
+          "amount": 79189960,
+          "sourcePage": 8,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "usage",
+              "title": "열요금 고지",
+              "columns": [
+                "구분",
+                "사용량",
+                "고지금액",
+                "비고"
+              ],
+              "rows": [
+                {
+                  "name": "사용금액",
+                  "quantity": 1108.8,
+                  "amount": 141156460,
+                  "note": ""
+                },
+                {
+                  "name": "공동열요금",
+                  "quantity": null,
+                  "amount": 4209150,
+                  "note": ""
+                },
+                {
+                  "name": "급탕비",
+                  "quantity": null,
+                  "amount": 61966500,
+                  "note": ""
+                },
+                {
+                  "name": "난방비",
+                  "quantity": null,
+                  "amount": 74980810,
+                  "note": ""
+                }
+              ],
+              "total": null
+            },
+            {
+              "kind": "usage",
+              "title": "가. 발생내역",
+              "columns": [
+                "적요",
+                "사용량",
+                "금액",
+                "비고"
+              ],
+              "rows": [
+                {
+                  "group": "",
+                  "name": "기본요금",
+                  "quantity": null,
+                  "amount": 4162010,
+                  "note": "(난방 + 급탕)"
+                },
+                {
+                  "group": "난방",
+                  "name": "세대 난방",
+                  "quantity": 673.63,
+                  "amount": 70057520,
+                  "note": "104,000 (1MWh)"
+                },
+                {
+                  "group": "난방",
+                  "name": "공가세대 난방",
+                  "quantity": 0,
+                  "amount": 0,
+                  "note": ""
+                },
+                {
+                  "group": "난방",
+                  "name": "어린이집 난방",
+                  "quantity": 7.32,
+                  "amount": 761280,
+                  "note": ""
+                },
+                {
+                  "group": "난방",
+                  "name": "다함께돌봄센터",
+                  "quantity": 0,
+                  "amount": 0,
+                  "note": ""
+                },
+                {
+                  "group": "공동",
+                  "name": "공동 난방비",
+                  "quantity": null,
+                  "amount": 4209150,
+                  "note": "배관 열손실 및 공용부분"
+                }
+              ],
+              "subtotals": [
+                {
+                  "group": "난방",
+                  "quantity": 680.95,
+                  "amount": 70818800
+                },
+                {
+                  "group": "공동",
+                  "quantity": null,
+                  "amount": 4209150
+                }
+              ],
+              "total": {
+                "quantity": 680.95,
+                "amount": 79189960
+              }
+            },
+            {
+              "kind": "allocation",
+              "title": "나. 기본난방비",
+              "scope": "all",
+              "baseAmount": 4162010,
+              "unitRate": 32.68,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 729,
+                  "perUnit": 3490,
+                  "total": 2544210
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 3470,
+                  "total": 468450
+                },
+                {
+                  "type": "51C",
+                  "units": 135,
+                  "perUnit": 3460,
+                  "total": 467100
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 3480,
+                  "total": 48720
+                },
+                {
+                  "type": "59A",
+                  "units": 99,
+                  "perUnit": 4020,
+                  "total": 397980
+                },
+                {
+                  "type": "59B",
+                  "units": 59,
+                  "perUnit": 4030,
+                  "total": 237770
+                }
+              ],
+              "totalUnits": 1171,
+              "totalAmount": 4164230,
+              "adjustment": 2220,
+              "categoryCode": "heating-basic"
+            },
+            {
+              "kind": "allocation",
+              "title": "다. 공동난방비",
+              "scope": "all",
+              "baseAmount": 4209150,
+              "unitRate": 33.05,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 729,
+                  "perUnit": 3530,
+                  "total": 2573370
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 3510,
+                  "total": 473850
+                },
+                {
+                  "type": "51C",
+                  "units": 135,
+                  "perUnit": 3500,
+                  "total": 472500
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 3520,
+                  "total": 49280
+                },
+                {
+                  "type": "59A",
+                  "units": 99,
+                  "perUnit": 4070,
+                  "total": 402930
+                },
+                {
+                  "type": "59B",
+                  "units": 59,
+                  "perUnit": 4070,
+                  "total": 240130
+                }
+              ],
+              "totalUnits": 1171,
+              "totalAmount": 4212060,
+              "adjustment": 2910,
+              "categoryCode": "common-heating"
+            }
+          ],
+          "notes": [],
+          "relatedCategoryCodes": [
+            "heating-basic",
+            "common-heating",
+            "household-heating"
+          ],
+          "sourcePages": [
+            8,
+            9
+          ],
+          "period": {
+            "from": "2025-01-01",
+            "to": "2025-01-31"
+          }
+        },
+        {
+          "no": "9",
+          "categoryCode": "household-hotwater",
+          "title": "급탕비",
+          "amount": 61966500,
+          "sourcePage": 9,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "usage",
+              "title": "급탕 발생내역",
+              "columns": [
+                "적요",
+                "사용량",
+                "금액",
+                "비고"
+              ],
+              "rows": [
+                {
+                  "name": "세대 급탕",
+                  "quantity": 6522,
+                  "amount": 61767000,
+                  "note": "9,500"
+                },
+                {
+                  "name": "어린이집 급탕",
+                  "quantity": 5,
+                  "amount": 47500,
+                  "note": ""
+                },
+                {
+                  "name": "공가세대 급탕",
+                  "quantity": 0,
+                  "amount": 0,
+                  "note": ""
+                },
+                {
+                  "name": "다함께돌봄센터",
+                  "quantity": 16,
+                  "amount": 152000,
+                  "note": ""
+                }
+              ],
+              "total": {
+                "quantity": 6543,
+                "amount": 61966500
+              }
+            }
+          ],
+          "notes": [],
+          "period": {
+            "from": "2025-01-01",
+            "to": "2025-01-31"
+          }
+        },
+        {
+          "no": "10",
+          "categoryCode": null,
+          "title": "전기료",
+          "amount": 68065805,
+          "sourcePage": 9,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "usage",
+              "title": "한전 고지",
+              "columns": [
+                "항목",
+                "사용량(kWh)",
+                "금액",
+                "비고"
+              ],
+              "rows": [
+                {
+                  "name": "주택용",
+                  "quantity": 406893,
+                  "amount": 66860710,
+                  "note": "세대, 공용분, TV수신료"
+                },
+                {
+                  "name": "산업용",
+                  "quantity": 7619,
+                  "amount": 1390480,
+                  "note": "급수용"
+                },
+                {
+                  "name": "가로등",
+                  "quantity": 3065,
+                  "amount": 560280,
+                  "note": "가로등"
+                }
+              ],
+              "total": {
+                "quantity": 417577,
+                "amount": 68811470
+              }
+            },
+            {
+              "kind": "usage",
+              "title": "가. 사용량분배 (통신업체 : 아름방송, SK, LG, KT인터넷 - 모자분리)",
+              "columns": [
+                "구분",
+                "사용량",
+                "발생금액",
+                "비고"
+              ],
+              "rows": [
+                {
+                  "group": "세대",
+                  "name": "세대전기료",
+                  "quantity": 291975,
+                  "amount": 44108120,
+                  "note": "세대사용량"
+                },
+                {
+                  "group": "세대",
+                  "name": "LH 사용량",
+                  "quantity": 181,
+                  "amount": 29280,
+                  "note": "공가세대"
+                },
+                {
+                  "group": "시설",
+                  "name": "산들 어린이집",
+                  "quantity": 1044,
+                  "amount": 147590,
+                  "note": "산들어린이집 전기료(101)"
+                },
+                {
+                  "group": "시설",
+                  "name": "다함께 돌봄센터",
+                  "quantity": 2786,
+                  "amount": 1494420,
+                  "note": "다함께 돌봄센터 전기료(104)"
+                },
+                {
+                  "group": "승강기",
+                  "name": "승강기전기료",
+                  "quantity": 13891,
+                  "amount": 2751070,
+                  "note": "198.05 원"
+                },
+                {
+                  "group": "공동전기요금",
+                  "name": "공동",
+                  "quantity": 97016,
+                  "amount": 18330320,
+                  "note": "지하주차장, 제습기, 난방펌프, 급수 및 소방 열선등"
+                },
+                {
+                  "group": "공동전기요금",
+                  "name": "산업용",
+                  "quantity": 7619,
+                  "amount": 1390480,
+                  "note": "급수펌프"
+                },
+                {
+                  "group": "공동전기요금",
+                  "name": "가로등",
+                  "quantity": 3065,
+                  "amount": 560280,
+                  "note": ""
+                },
+                {
+                  "group": "공동전기요금",
+                  "name": "카드할인",
+                  "quantity": null,
+                  "amount": -347665,
+                  "note": "국민체크카드 할인"
+                },
+                {
+                  "group": "공동전기요금",
+                  "name": "가로등보조금",
+                  "quantity": null,
+                  "amount": -398000,
+                  "note": "가로등 보조금(성남시청) 1/5회 차감"
+                }
+              ],
+              "subtotals": [
+                {
+                  "group": "세대",
+                  "quantity": 292156,
+                  "amount": 44137400
+                },
+                {
+                  "group": "시설",
+                  "quantity": 3830,
+                  "amount": 1642010
+                },
+                {
+                  "group": "공동전기요금",
+                  "quantity": 107700,
+                  "amount": 19535325
+                }
+              ],
+              "total": {
+                "quantity": 417577,
+                "amount": 68065805
+              }
+            },
+            {
+              "kind": "elevatorByBuilding",
+              "title": "나. 승강기 전기료",
+              "categoryCode": "elevator-electricity",
+              "baseAmount": 2751070,
+              "baseQuantity": 13891,
+              "unitRate": 198.05,
+              "unitRateBasis": "kWh단가",
+              "rows": [
+                {
+                  "building": "201",
+                  "line": "1호기",
+                  "kwh": 276,
+                  "units": 24,
+                  "perUnit": 2280,
+                  "total": 54720
+                },
+                {
+                  "building": "201",
+                  "line": "2호기",
+                  "kwh": 326,
+                  "units": 24,
+                  "perUnit": 2700,
+                  "total": 64800
+                },
+                {
+                  "building": "202",
+                  "line": "1호기",
+                  "kwh": 395,
+                  "units": 28,
+                  "perUnit": 2800,
+                  "total": 78400
+                },
+                {
+                  "building": "202",
+                  "line": "2호기",
+                  "kwh": 353,
+                  "units": 28,
+                  "perUnit": 2500,
+                  "total": 70000
+                },
+                {
+                  "building": "203",
+                  "line": "1호기",
+                  "kwh": 383,
+                  "units": 30,
+                  "perUnit": 2530,
+                  "total": 75900
+                },
+                {
+                  "building": "203",
+                  "line": "2호기",
+                  "kwh": 422,
+                  "units": 30,
+                  "perUnit": 2790,
+                  "total": 83700
+                },
+                {
+                  "building": "204",
+                  "line": "1호기",
+                  "kwh": 425,
+                  "units": 30,
+                  "perUnit": 2810,
+                  "total": 84300
+                },
+                {
+                  "building": "204",
+                  "line": "2호기",
+                  "kwh": 462,
+                  "units": 45,
+                  "perUnit": 2040,
+                  "total": 91800
+                },
+                {
+                  "building": "205",
+                  "line": "1호기",
+                  "kwh": 366,
+                  "units": 30,
+                  "perUnit": 2420,
+                  "total": 72600
+                },
+                {
+                  "building": "205",
+                  "line": "2호기",
+                  "kwh": 460,
+                  "units": 45,
+                  "perUnit": 2030,
+                  "total": 91350
+                },
+                {
+                  "building": "206",
+                  "line": "1호기",
+                  "kwh": 349,
+                  "units": 30,
+                  "perUnit": 2310,
+                  "total": 69300
+                },
+                {
+                  "building": "206",
+                  "line": "2호기",
+                  "kwh": 504,
+                  "units": 45,
+                  "perUnit": 2220,
+                  "total": 99900
+                },
+                {
+                  "building": "207",
+                  "line": "1호기",
+                  "kwh": 296,
+                  "units": 30,
+                  "perUnit": 1960,
+                  "total": 58800
+                },
+                {
+                  "building": "207",
+                  "line": "2호기",
+                  "kwh": 446,
+                  "units": 45,
+                  "perUnit": 1970,
+                  "total": 88650
+                },
+                {
+                  "building": "208",
+                  "line": "1호기",
+                  "kwh": 337,
+                  "units": 30,
+                  "perUnit": 2230,
+                  "total": 66900
+                },
+                {
+                  "building": "208",
+                  "line": "2호기",
+                  "kwh": 484,
+                  "units": 45,
+                  "perUnit": 2140,
+                  "total": 96300
+                },
+                {
+                  "building": "209",
+                  "line": "1호기",
+                  "kwh": 337,
+                  "units": 30,
+                  "perUnit": 2230,
+                  "total": 66900
+                },
+                {
+                  "building": "209",
+                  "line": "2호기",
+                  "kwh": 458,
+                  "units": 45,
+                  "perUnit": 2020,
+                  "total": 90900
+                },
+                {
+                  "building": "210",
+                  "line": "1호기",
+                  "kwh": 374,
+                  "units": 30,
+                  "perUnit": 2460,
+                  "total": 73800
+                },
+                {
+                  "building": "210",
+                  "line": "2호기",
+                  "kwh": 354,
+                  "units": 28,
+                  "perUnit": 2500,
+                  "total": 70000
+                },
+                {
+                  "building": "210",
+                  "line": "3호기",
+                  "kwh": 358,
+                  "units": 30,
+                  "perUnit": 2360,
+                  "total": 70800
+                },
+                {
+                  "building": "211",
+                  "line": "1호기",
+                  "kwh": 347,
+                  "units": 30,
+                  "perUnit": 2290,
+                  "total": 68700
+                },
+                {
+                  "building": "211",
+                  "line": "2호기",
+                  "kwh": 385,
+                  "units": 28,
+                  "perUnit": 2720,
+                  "total": 76160
+                },
+                {
+                  "building": "211",
+                  "line": "3호기",
+                  "kwh": 320,
+                  "units": 30,
+                  "perUnit": 2110,
+                  "total": 63300
+                },
+                {
+                  "building": "212",
+                  "line": "1호기",
+                  "kwh": 479,
+                  "units": 40,
+                  "perUnit": 2370,
+                  "total": 94800
+                },
+                {
+                  "building": "212",
+                  "line": "2호기",
+                  "kwh": 405,
+                  "units": 30,
+                  "perUnit": 2670,
+                  "total": 80100
+                },
+                {
+                  "building": "213",
+                  "line": "1호기",
+                  "kwh": 442,
+                  "units": 45,
+                  "perUnit": 1940,
+                  "total": 87300
+                },
+                {
+                  "building": "213",
+                  "line": "2호기",
+                  "kwh": 445,
+                  "units": 30,
+                  "perUnit": 2930,
+                  "total": 87900
+                },
+                {
+                  "building": "214",
+                  "line": "1호기",
+                  "kwh": 464,
+                  "units": 45,
+                  "perUnit": 2040,
+                  "total": 91800
+                },
+                {
+                  "building": "214",
+                  "line": "2호기",
+                  "kwh": 475,
+                  "units": 30,
+                  "perUnit": 3130,
+                  "total": 93900
+                },
+                {
+                  "building": "215",
+                  "line": "1호기",
+                  "kwh": 474,
+                  "units": 43,
+                  "perUnit": 2180,
+                  "total": 93740
+                },
+                {
+                  "building": "215",
+                  "line": "2호기",
+                  "kwh": 369,
+                  "units": 30,
+                  "perUnit": 2430,
+                  "total": 72900
+                },
+                {
+                  "building": "216",
+                  "line": "1호기",
+                  "kwh": 359,
+                  "units": 30,
+                  "perUnit": 2360,
+                  "total": 70800
+                },
+                {
+                  "building": "216",
+                  "line": "2호기",
+                  "kwh": 411,
+                  "units": 28,
+                  "perUnit": 2900,
+                  "total": 81200
+                },
+                {
+                  "building": "216",
+                  "line": "3호기",
+                  "kwh": 351,
+                  "units": 30,
+                  "perUnit": 2310,
+                  "total": 69300
+                }
+              ],
+              "totalKwh": 13891,
+              "totalUnits": 1171,
+              "totalAmount": 2751720,
+              "adjustment": 650
+            },
+            {
+              "kind": "allocation",
+              "title": "다. 공동 전기료",
+              "scope": "all",
+              "baseAmount": 19535325,
+              "unitRate": 153.41,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 729,
+                  "perUnit": 16360,
+                  "total": 11926440
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 16300,
+                  "total": 2200500
+                },
+                {
+                  "type": "51C",
+                  "units": 135,
+                  "perUnit": 16240,
+                  "total": 2192400
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 16360,
+                  "total": 229040
+                },
+                {
+                  "type": "59A",
+                  "units": 99,
+                  "perUnit": 18890,
+                  "total": 1870110
+                },
+                {
+                  "type": "59B",
+                  "units": 59,
+                  "perUnit": 18900,
+                  "total": 1115100
+                }
+              ],
+              "totalUnits": 1171,
+              "totalAmount": 19533590,
+              "adjustment": -1735,
+              "categoryCode": "common-electricity"
+            }
+          ],
+          "notes": [],
+          "relatedCategoryCodes": [
+            "household-electricity",
+            "elevator-electricity",
+            "common-electricity",
+            "daycare-electricity",
+            "carecenter-electricity"
+          ],
+          "sourcePages": [
+            9,
+            10
+          ],
+          "period": {
+            "from": "2024-12-01",
+            "to": "2024-12-31"
+          }
+        },
+        {
+          "no": "11",
+          "categoryCode": null,
+          "title": "수도료",
+          "amount": 15336570,
+          "sourcePage": 11,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "usage",
+              "title": "가. 사용기간 고지",
+              "columns": [
+                "구분",
+                "사용량(㎥)",
+                "고지금액",
+                "비고"
+              ],
+              "rows": [
+                {
+                  "name": "사용금액",
+                  "quantity": 16888,
+                  "amount": 15336570,
+                  "note": ""
+                }
+              ],
+              "total": null
+            },
+            {
+              "kind": "usage",
+              "title": "나. 수도요금 부과내역",
+              "columns": [
+                "구분",
+                "사용량(㎥)",
+                "사용금액",
+                "비고"
+              ],
+              "rows": [
+                {
+                  "name": "세대 수도",
+                  "quantity": 16188,
+                  "amount": 15094330,
+                  "note": ""
+                },
+                {
+                  "name": "어린이집",
+                  "quantity": 24,
+                  "amount": 23420,
+                  "note": ""
+                },
+                {
+                  "name": "다함께돌봄센터",
+                  "quantity": 21,
+                  "amount": 19940,
+                  "note": ""
+                },
+                {
+                  "name": "공동수도료",
+                  "quantity": 655,
+                  "amount": 198880,
+                  "note": ""
+                }
+              ],
+              "total": {
+                "quantity": 16888,
+                "amount": 15336570
+              }
+            },
+            {
+              "kind": "allocation",
+              "title": "다. 공동수도료",
+              "scope": "all",
+              "baseAmount": 198880,
+              "unitRate": 1.56,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 729,
+                  "perUnit": 170,
+                  "total": 123930
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 170,
+                  "total": 22950
+                },
+                {
+                  "type": "51C",
+                  "units": 135,
+                  "perUnit": 170,
+                  "total": 22950
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 170,
+                  "total": 2380
+                },
+                {
+                  "type": "59A",
+                  "units": 99,
+                  "perUnit": 190,
+                  "total": 18810
+                },
+                {
+                  "type": "59B",
+                  "units": 59,
+                  "perUnit": 190,
+                  "total": 11210
+                }
+              ],
+              "totalUnits": 1171,
+              "totalAmount": 202230,
+              "adjustment": 3350,
+              "categoryCode": "common-water"
+            }
+          ],
+          "notes": [],
+          "relatedCategoryCodes": [
+            "household-water",
+            "common-water"
+          ],
+          "period": {
+            "from": "2024-12-18",
+            "to": "2025-01-17"
+          }
+        },
+        {
+          "no": "12",
+          "categoryCode": "tv-license",
+          "title": "TV수신료(KBS 방송국)",
+          "amount": 2672500,
+          "sourcePage": 11,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "usage",
+              "title": "부과내역",
+              "columns": [
+                "구분",
+                "세대",
+                "세대당 부과액",
+                "연체세대",
+                "부과금액",
+                "비고"
+              ],
+              "rows": [
+                {
+                  "name": "TV 수신료",
+                  "quantity": 1069,
+                  "amount": 2672500,
+                  "note": "전기료에서 이관"
+                }
+              ],
+              "total": {
+                "quantity": 1069,
+                "amount": 2672500
+              }
+            }
+          ],
+          "notes": [],
+          "period": {
+            "from": "2024-12-01",
+            "to": "2024-12-31"
+          }
+        },
+        {
+          "no": "13",
+          "categoryCode": "food-waste",
+          "title": "음식물쓰레기처리비",
+          "amount": 1920000,
+          "sourcePage": 11,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "부과내역",
+              "scope": "foodWaste1152",
+              "baseAmount": 1920000,
+              "unitRate": 15.33,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 720,
+                  "perUnit": 1640,
+                  "total": 1180800
+                },
+                {
+                  "type": "51B",
+                  "units": 135,
+                  "perUnit": 1630,
+                  "total": 220050
+                },
+                {
+                  "type": "51C",
+                  "units": 130,
+                  "perUnit": 1620,
+                  "total": 210600
+                },
+                {
+                  "type": "51D",
+                  "units": 14,
+                  "perUnit": 1630,
+                  "total": 22820
+                },
+                {
+                  "type": "59A",
+                  "units": 96,
+                  "perUnit": 1890,
+                  "total": 181440
+                },
+                {
+                  "type": "59B",
+                  "units": 57,
+                  "perUnit": 1890,
+                  "total": 107730
+                }
+              ],
+              "totalUnits": 1152,
+              "totalAmount": 1923440,
+              "adjustment": 3440,
+              "note": "음식물 처리 면제세대 19세대"
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "14",
+          "categoryCode": "insurance",
+          "title": "화재보험료",
+          "amount": 2471030,
+          "sourcePage": 11,
+          "vendor": "메리츠보험 외",
+          "contractPeriod": {
+            "from": "2024-11-09",
+            "to": "2025-11-09"
+          },
+          "tables": [
+            {
+              "kind": "insurance",
+              "title": "보험 내역",
+              "rows": [
+                {
+                  "name": "주택화재보험",
+                  "amount": 1597960,
+                  "totalPremium": 19175500,
+                  "installment": "2/12회",
+                  "coverage": {
+                    "from": "2024-11-09",
+                    "to": "2025-11-09"
+                  }
+                },
+                {
+                  "name": "영업배상책임보험",
+                  "amount": 765830,
+                  "totalPremium": 9189990,
+                  "installment": "2/12회",
+                  "coverage": {
+                    "from": "2024-11-09",
+                    "to": "2025-11-09"
+                  }
+                },
+                {
+                  "name": "어린이놀이시설배상책임보험",
+                  "amount": 6330,
+                  "totalPremium": 75970,
+                  "installment": "2/12회",
+                  "coverage": {
+                    "from": "2024-11-09",
+                    "to": "2025-11-09"
+                  }
+                },
+                {
+                  "name": "승강기배상책임보험(메리츠보험)",
+                  "amount": 26960,
+                  "totalPremium": 323520,
+                  "installment": "2/12회",
+                  "coverage": {
+                    "from": "2024-09-27",
+                    "to": "2025-09-27"
+                  }
+                },
+                {
+                  "name": "재난배상책임보험(DB손해보험)",
+                  "amount": 73950,
+                  "totalPremium": 887440,
+                  "installment": "7/12회",
+                  "coverage": {
+                    "from": "2024-06-29",
+                    "to": "2025-06-29"
+                  }
+                }
+              ],
+              "total": 2471030
+            },
+            {
+              "kind": "allocation",
+              "title": "부과내역(분양 517 + 조기분양 423 = 940세대)",
+              "scope": "sale940",
+              "baseAmount": 2471030,
+              "unitRate": 24.19,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 575,
+                  "perUnit": 2580,
+                  "total": 1483500
+                },
+                {
+                  "type": "51B",
+                  "units": 119,
+                  "perUnit": 2570,
+                  "total": 305830
+                },
+                {
+                  "type": "51C",
+                  "units": 112,
+                  "perUnit": 2560,
+                  "total": 286720
+                },
+                {
+                  "type": "51D",
+                  "units": 11,
+                  "perUnit": 2580,
+                  "total": 28380
+                },
+                {
+                  "type": "59A",
+                  "units": 84,
+                  "perUnit": 2980,
+                  "total": 250320
+                },
+                {
+                  "type": "59B",
+                  "units": 39,
+                  "perUnit": 2980,
+                  "total": 116220
+                }
+              ],
+              "totalUnits": 940,
+              "totalAmount": 2470970,
+              "adjustment": -60
+            }
+          ],
+          "notes": [],
+          "sourcePages": [
+            11,
+            12
+          ]
+        },
+        {
+          "no": "15",
+          "categoryCode": "owner-council",
+          "title": "입주자대표회의운영비",
+          "amount": 1184300,
+          "sourcePage": 12,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "부과내역(분양세대 517 + 조기분양 423 = 940부과)",
+              "scope": "sale940",
+              "baseAmount": 1184300,
+              "unitRate": 11.59,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 575,
+                  "perUnit": 1240,
+                  "total": 713000
+                },
+                {
+                  "type": "51B",
+                  "units": 119,
+                  "perUnit": 1230,
+                  "total": 146370
+                },
+                {
+                  "type": "51C",
+                  "units": 112,
+                  "perUnit": 1230,
+                  "total": 137760
+                },
+                {
+                  "type": "51D",
+                  "units": 11,
+                  "perUnit": 1240,
+                  "total": 13640
+                },
+                {
+                  "type": "59A",
+                  "units": 84,
+                  "perUnit": 1430,
+                  "total": 120120
+                },
+                {
+                  "type": "59B",
+                  "units": 39,
+                  "perUnit": 1430,
+                  "total": 55770
+                }
+              ],
+              "totalUnits": 940,
+              "totalAmount": 1186660,
+              "adjustment": 2360
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "16",
+          "categoryCode": "election-committee",
+          "title": "선거관리위원회운영비",
+          "amount": 310000,
+          "sourcePage": 12,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "부과내역(분양세대 517 + 조기분양 423 = 940부과)",
+              "scope": "sale940",
+              "baseAmount": 310000,
+              "unitRate": 3.03,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 575,
+                  "perUnit": 320,
+                  "total": 184000
+                },
+                {
+                  "type": "51B",
+                  "units": 119,
+                  "perUnit": 320,
+                  "total": 38080
+                },
+                {
+                  "type": "51C",
+                  "units": 112,
+                  "perUnit": 320,
+                  "total": 35840
+                },
+                {
+                  "type": "51D",
+                  "units": 11,
+                  "perUnit": 320,
+                  "total": 3520
+                },
+                {
+                  "type": "59A",
+                  "units": 84,
+                  "perUnit": 370,
+                  "total": 31080
+                },
+                {
+                  "type": "59B",
+                  "units": 39,
+                  "perUnit": 370,
+                  "total": 14430
+                }
+              ],
+              "totalUnits": 940,
+              "totalAmount": 306950,
+              "adjustment": -3050
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "17",
+          "categoryCode": "longterm-repair",
+          "title": "장기수선충당금",
+          "amount": 4873260,
+          "sourcePage": 12,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "부과내역(분양세대 517 부과)",
+              "scope": "sale517",
+              "baseAmount": 4873260,
+              "unitRate": 86.25,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 279,
+                  "perUnit": 9200,
+                  "total": 2566800
+                },
+                {
+                  "type": "51B",
+                  "units": 75,
+                  "perUnit": 9160,
+                  "total": 687000
+                },
+                {
+                  "type": "51C",
+                  "units": 75,
+                  "perUnit": 9130,
+                  "total": 684750
+                },
+                {
+                  "type": "59A",
+                  "units": 73,
+                  "perUnit": 10620,
+                  "total": 775260
+                },
+                {
+                  "type": "59B",
+                  "units": 15,
+                  "perUnit": 10630,
+                  "total": 159450
+                }
+              ],
+              "totalUnits": 517,
+              "totalAmount": 4873260,
+              "adjustment": 0
+            }
+          ],
+          "notes": [
+            "기존 분양세대(517세대)의 장기수선충당금 월 부과금을 2023년 6월분 부과 시부터 조기분양전환세대와 타입별로 동일한 금액으로 조정하여 부과하기로 결의함(2023.06.16)"
+          ]
+        },
+        {
+          "no": "18",
+          "categoryCode": "longterm-repair-sale",
+          "title": "장기수선충당금(분전)",
+          "amount": 3937190,
+          "sourcePage": 13,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "allocation",
+              "title": "부과내역(조기분양 423세대)",
+              "scope": "early423",
+              "baseAmount": 3937190,
+              "unitRate": null,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 296,
+                  "perUnit": 9200,
+                  "total": 2723200,
+                  "lhRate": 9202.51
+                },
+                {
+                  "type": "51B",
+                  "units": 44,
+                  "perUnit": 9160,
+                  "total": 403040,
+                  "lhRate": 9163.53
+                },
+                {
+                  "type": "51C",
+                  "units": 37,
+                  "perUnit": 9130,
+                  "total": 337810,
+                  "lhRate": 9131.64
+                },
+                {
+                  "type": "51D",
+                  "units": 11,
+                  "perUnit": 9200,
+                  "total": 101200,
+                  "lhRate": 9198.96
+                },
+                {
+                  "type": "59A",
+                  "units": 11,
+                  "perUnit": 10620,
+                  "total": 116820,
+                  "lhRate": 10621.96
+                },
+                {
+                  "type": "59B",
+                  "units": 24,
+                  "perUnit": 10630,
+                  "total": 255120,
+                  "lhRate": 10629.06
+                }
+              ],
+              "totalUnits": 423,
+              "totalAmount": 3937190,
+              "adjustment": 0,
+              "unitRateBasis": "LH 특별수선충당금 요율(타입별 단가(LH) 열)"
+            }
+          ],
+          "notes": [
+            "공동주택법 시행령 제31조 제2항에 따르면 분양전환일 이후 사업주체인 LH에서 주택의 관리권을 입주자대표회의로 이관하는 시점까지 LH에서 적립하던 특별수선충당금 요율로 부과하고 있음."
+          ]
+        },
+        {
+          "no": "19",
+          "categoryCode": "parking-income",
+          "title": "주차수입",
+          "amount": 9629040,
+          "sourcePage": 13,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "parking",
+              "title": "부과 집계",
+              "basis": "주차관리규정 제16조 <별표4> (1세대 2차량 이상 보유) / 당월중 세대 7일 이상 방문한 차량 2배 부과",
+              "rows": [
+                {
+                  "name": "2차량 보유",
+                  "units": 289,
+                  "perUnit": 30000,
+                  "total": 8670000
+                },
+                {
+                  "name": "2차량 보유(일수부과)",
+                  "units": 15,
+                  "perUnit": null,
+                  "total": 419040
+                },
+                {
+                  "name": "3차량 보유",
+                  "units": 6,
+                  "perUnit": 90000,
+                  "total": 540000
+                },
+                {
+                  "name": "통로 주차위반 차량",
+                  "units": 0,
+                  "perUnit": null,
+                  "total": 0
+                },
+                {
+                  "name": "방문차량(7일이상 방문차량 2배부과)",
+                  "units": 0,
+                  "perUnit": null,
+                  "total": 0
+                }
+              ],
+              "subtotals": [
+                {
+                  "name": "2차량 보유 계",
+                  "total": 9089040
+                },
+                {
+                  "name": "3차량 보유 계",
+                  "total": 540000
+                }
+              ],
+              "total": 9629040
+            }
+          ],
+          "notes": []
+        },
+        {
+          "no": "20",
+          "categoryCode": null,
+          "title": "관리비차감",
+          "amount": 0,
+          "sourcePage": 13,
+          "vendor": null,
+          "contractPeriod": null,
+          "tables": [
+            {
+              "kind": "composition",
+              "title": "발생금액",
+              "rows": [
+                {
+                  "name": "관리비차감적립금(분양)",
+                  "amount": 0
+                },
+                {
+                  "name": "관리비차감적립금(임대)",
+                  "amount": 0
+                }
+              ],
+              "total": 0
+            },
+            {
+              "kind": "allocation",
+              "title": "부과내역(분양 517 + 조기분양 423 = 940부과)",
+              "scope": "sale940",
+              "baseAmount": 0,
+              "unitRate": 0,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 575,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "51B",
+                  "units": 119,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "51C",
+                  "units": 112,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "51D",
+                  "units": 11,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "59A",
+                  "units": 84,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "59B",
+                  "units": 39,
+                  "perUnit": 0,
+                  "total": 0
+                }
+              ],
+              "totalUnits": 940,
+              "totalAmount": 0,
+              "adjustment": 0
+            },
+            {
+              "kind": "allocation",
+              "title": "부과내역(임대 231세대)",
+              "scope": "rental231",
+              "baseAmount": 0,
+              "unitRate": 0,
+              "rows": [
+                {
+                  "type": "51A",
+                  "units": 154,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "51B",
+                  "units": 16,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "51C",
+                  "units": 23,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "51D",
+                  "units": 3,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "59A",
+                  "units": 15,
+                  "perUnit": 0,
+                  "total": 0
+                },
+                {
+                  "type": "59B",
+                  "units": 20,
+                  "perUnit": 0,
+                  "total": 0
+                }
+              ],
+              "totalUnits": 231,
+              "totalAmount": 0,
+              "adjustment": 0
+            }
+          ],
+          "notes": []
+        }
+      ]
+    }
+  ]
+}
