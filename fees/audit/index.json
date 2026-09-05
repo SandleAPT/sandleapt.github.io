@@ -1,0 +1,125 @@
+{
+   "dataset" : "gyeonggi-apartment-audit-cases",
+   "description" : "경기도가 매년 펴내는 공동주택관리 감사 사례집의 지적 사례를 연도별로 옮긴 자료. 원문 PDF는 저장소에 두지 않는다. 본문은 OCR 결과라 오타가 있으며, 정확한 문구는 원문 PDF 쪽 번호(pdfPage)로 확인한다.",
+   "groups" : [
+      "입주자대표회의",
+      "선거관리위원회",
+      "관리비·회계",
+      "사업자 선정·계약",
+      "장기수선",
+      "관리주체·관리사무소장",
+      "자료 보관·정보 공개",
+      "공동체 활성화·자생단체",
+      "하자·시설·안전·행위허가",
+      "기타"
+   ],
+   "tags" : [
+      "잡수입",
+      "관리비 부과·산정",
+      "장기수선충당금",
+      "수선유지·공사",
+      "입찰·사업자 선정",
+      "운영경비(입대의·선관위)",
+      "예산·결산·회계감사",
+      "정보 공개·자료 보관",
+      "공동체 활성화·경로당",
+      "보험·직인·보증",
+      "관리규약·선거"
+   ],
+   "title" : "경기도 공동주택관리 감사 사례집 (2018~2025)",
+   "totals" : {
+      "byGroup" : {
+         "공동체 활성화·자생단체" : 8,
+         "관리비·회계" : 90,
+         "관리주체·관리사무소장" : 25,
+         "기타" : 64,
+         "사업자 선정·계약" : 167,
+         "선거관리위원회" : 63,
+         "입주자대표회의" : 254,
+         "자료 보관·정보 공개" : 54,
+         "장기수선" : 36,
+         "하자·시설·안전·행위허가" : 4
+      },
+      "byTag" : {
+         "공동체 활성화·경로당" : 38,
+         "관리규약·선거" : 333,
+         "관리비 부과·산정" : 41,
+         "보험·직인·보증" : 97,
+         "수선유지·공사" : 270,
+         "예산·결산·회계감사" : 165,
+         "운영경비(입대의·선관위)" : 51,
+         "입찰·사업자 선정" : 271,
+         "잡수입" : 87,
+         "장기수선충당금" : 140,
+         "정보 공개·자료 보관" : 187
+      },
+      "cases" : 765
+   },
+   "updatedAt" : "2026-09-04",
+   "years" : [
+      {
+         "caseCount" : 92,
+         "file" : "audit/cases-2018.json",
+         "pdfPages" : 192,
+         "sourceFileName" : "2018 경기도 공동주택관리 감사 사례집1.pdf",
+         "tocMax" : 106,
+         "year" : 2018
+      },
+      {
+         "caseCount" : 105,
+         "file" : "audit/cases-2019.json",
+         "pdfPages" : 198,
+         "sourceFileName" : "2019 경기도 공동주택관리 감사 사례집.pdf",
+         "tocMax" : 105,
+         "year" : 2019
+      },
+      {
+         "caseCount" : 121,
+         "file" : "audit/cases-2020.json",
+         "pdfPages" : 233,
+         "sourceFileName" : "2020 경기도 공동주택관리 감사 사례집(최종).pdf",
+         "tocMax" : 125,
+         "year" : 2020
+      },
+      {
+         "caseCount" : 113,
+         "file" : "audit/cases-2021.json",
+         "pdfPages" : 202,
+         "sourceFileName" : "2021 경기도 공동주택관리 감사사례집.pdf",
+         "tocMax" : 115,
+         "year" : 2021
+      },
+      {
+         "caseCount" : 109,
+         "file" : "audit/cases-2022.json",
+         "pdfPages" : 184,
+         "sourceFileName" : "2022 경기도 공동주택관리 감사 사례집.pdf",
+         "tocMax" : 110,
+         "year" : 2022
+      },
+      {
+         "caseCount" : 83,
+         "file" : "audit/cases-2023.json",
+         "pdfPages" : 164,
+         "sourceFileName" : "2023 경기도 공동주택관리 감사 사례집(최종).pdf",
+         "tocMax" : 83,
+         "year" : 2023
+      },
+      {
+         "caseCount" : 75,
+         "file" : "audit/cases-2024.json",
+         "pdfPages" : 164,
+         "sourceFileName" : "2024 경기도 공동주택관리 감사 사례집.pdf",
+         "tocMax" : 75,
+         "year" : 2024
+      },
+      {
+         "caseCount" : 67,
+         "file" : "audit/cases-2025.json",
+         "pdfPages" : 158,
+         "sourceFileName" : "2025 경기도 공동주택관리 감사 사례집.pdf",
+         "tocMax" : 70,
+         "year" : 2025
+      }
+   ]
+}
