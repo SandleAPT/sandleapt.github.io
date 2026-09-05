@@ -120,7 +120,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v365</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v366</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.<br><br>이 포털의 자료는 산들마을 네이버 카페에 공개된 게시물(관리비부과명세서·회의 결과공고·계약서·선거 공고·관리규약)을 모아 정리한 것입니다. 원문은 카페에서 확인하세요.</div>
 </aside>
@@ -161,8 +161,8 @@ main{flex:1 1 auto;position:relative;min-height:0}
 // 같은 호스트 기준 주소(배포: https://sandleapt.github.io, 로컬 점검: http://localhost:…)
 var BASE = (location.protocol === "http:" || location.protocol === "https:") ? location.origin : "https://sandleapt.github.io";
 var MIN = BASE + "/minutes/";
-var MINQ = "?embed=1&v=365"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
-var FEES = BASE + "/fees/?v=54";
+var MINQ = "?embed=1&v=366"; // 회의록 iframe 캐시 키 — 포털 버전과 함께 갱신
+var FEES = BASE + "/fees/?v=55";
 // 2026-09-03 재편(v341): 기존 화면·해시는 그대로 두고 탐색 목적에 따라 왼쪽 메뉴만 다시 묶는다.
 var GROUPS = [
   { id: "minutes", title: "회의", cls: "", service: "minutes", items: [
@@ -177,7 +177,7 @@ var GROUPS = [
     // Archive 시험판(2026-09-02, 사용자 요청 "왔다갔다 하게"). 같은 호스트라 iframe으로 띄운다.
     // 회의록과는 **다른 앱**이므로 service를 따로 준다 — minutes로 두면 postMessage로 화면 전환을
     // 시도해 엉뚱한 곳을 건드린다. 아직 시험판이라 이름에 그대로 적는다.
-    { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=365" },
+    { id: "archiveV1", label: "Archive 시험판", service: "archive", url: BASE + "/archive-v1/?v=366" },
     { id: "topicView", label: "주제별 보기", service: "minutes", view: "topicView" },
     /* 「통합검색 (준비 중)」 자리표시 항목은 뺐다 (2026-09-04). 2026-09-03에 실제로 만들어져
        바로 위 Archive 안에서 돌고 있는데, 메뉴만 준비 중이라고 해서 없는 기능처럼 읽혔다.
@@ -268,7 +268,7 @@ var SERVICES = {
   proposal:  { url: BASE + "/agenda-proposal/?v=1" },
   // iframe src 는 **이곳**에서 읽는다(항목의 url 은 '새 창으로 열기' 단추용).
   // 여기 등록을 빠뜨리면 메뉴를 눌러도 아무 일이 일어나지 않는다 — 2026-09-02에 실제로 그랬다.
-  archive:   { url: BASE + "/archive-v1/?v=365" }
+  archive:   { url: BASE + "/archive-v1/?v=366" }
 };
 // 모바일 하단 바(v343): PC·상단과 같은 5개 대분류. 누르면 해당 분류의 첫 화면으로 바로 간다.
 var BOTTOM = [
