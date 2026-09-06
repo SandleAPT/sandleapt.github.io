@@ -115,6 +115,27 @@
       "amount": -3820,
       "explanation": "2025-01 수선유지비 분양 부과내역의 원문 ㎡단가는 128.29원(13,107,020÷102,151.7)으로 인쇄되어 있으나 실제 나눗셈 값은 128.31원이다. 타입별 세대당 금액과 부과 합계·부과차액은 원문 표기 그대로 옮겼다.",
       "checkedAt": "2026-09-06"
+    },
+    {
+      "id": "2025-02-repair-maintenance-unit-rate",
+      "period": "2025-02",
+      "field": "detail.repair-maintenance.allocation.unitRate",
+      "explanation": "2025-02 수선유지비 분양 부과내역의 원문 ㎡단가는 140.4원(14,337,853÷102,151.7)으로 인쇄되어 있으나 실제 나눗셈 값은 140.36원이다. 타입별 세대당 금액과 부과 합계·부과차액은 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-02-fee-reduction-unit-rate-sale",
+      "period": "2025-02",
+      "field": "detail.fee-reduction.allocation.unitRate",
+      "explanation": "2025-02 관리비차감 분양 부과내역의 원문 ㎡단가는 -100원으로 인쇄되어 있으나 실제 나눗셈 값은 -99.68원(-10,182,490÷102,152)이다. 원문이 이 절에서만 계약면적을 반올림(107/106/123)해 적은 것과 같은 표기 방식으로 보인다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-02-fee-reduction-unit-rate-rental",
+      "period": "2025-02",
+      "field": "detail.fee-reduction.allocation.unitRate",
+      "explanation": "2025-02 관리비차감 임대 부과내역의 원문 ㎡단가는 -86원으로 인쇄되어 있으나 실제 나눗셈 값은 -86.20원(-2,171,520÷25,192)이다.",
+      "checkedAt": "2026-09-07"
     }
   ],
   "analysisPolicy": {

@@ -15,8 +15,8 @@
       "from": "2025-01",
       "to": "2025-02",
       "monthCount": 2,
-      "status": "billing-summary-and-management-expense-complete; full-document-for-2025-01",
-      "fullDocumentPeriods": ["2025-01"]
+      "status": "billing-summary-and-management-expense-complete; full-document-for-2025-01-to-2025-02",
+      "fullDocumentPeriods": ["2025-01", "2025-02"]
     },
     {
       "year": 2026,

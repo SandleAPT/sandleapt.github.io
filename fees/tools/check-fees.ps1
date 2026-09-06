@@ -177,7 +177,13 @@ foreach ($sec in $doc.sections | Where-Object { $_.relatedCategoryCodes }) {
   $s = ($li | Where-Object { $sec.relatedCategoryCodes -contains $_.categoryCode } | Measure-Object -Property assessed -Sum).Sum
   if ($s -ne $sec.amount) { Bad "sec $($sec.no) $($sec.title): amount $($sec.amount) != related lineItems assessed $s" } else { Ok "sec $($sec.no) $($sec.title) = related lineItems ($s)" }
 }
-# section amounts sum vs monthly assessed (sections 1..18 cover every billing-summary row)
-if ($doc) { $secSum = ($doc.sections | Measure-Object -Property amount -Sum).Sum
-if ($secSum -eq $mt.assessed) { Ok "sum of section amounts = monthlyTotals.assessed ($secSum)" } else { Bad "sum of section amounts $secSum != monthlyTotals.assessed $($mt.assessed)" } }
+# section amounts sum vs monthly assessed
+# 절 합계에는 '관리비차감' 절(당월부과액 아래의 차감 행)도 들어가므로 monthlyTotals.feeReductionAssessed 를 더해 비교한다.
+if ($doc) {
+  $secSum = ($doc.sections | Measure-Object -Property amount -Sum).Sum
+  $fr = 0; if ($null -ne $mt.feeReductionAssessed) { $fr = [int64]$mt.feeReductionAssessed }
+  $want = [int64]$mt.assessed + $fr
+  $label = if ($fr -ne 0) { "monthlyTotals.assessed + feeReductionAssessed" } else { "monthlyTotals.assessed" }
+  if ($secSum -eq $want) { Ok "sum of section amounts = $label ($secSum)" } else { Bad "sum of section amounts $secSum != $label $want" }
+}
 Write-Output ("=== RESULT: " + $(if ($fail -eq 0) { "ALL CHECKS PASSED" } else { "$fail FAILURE(S)" }) + ", $warn warning(s)")

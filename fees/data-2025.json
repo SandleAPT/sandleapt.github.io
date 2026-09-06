@@ -72,9 +72,9 @@
     "managementExpense": "complete-for-2025-01-to-2025-02",
     "managementIncome": "complete-for-2025-01-to-2025-02",
     "depositBalance": "complete-for-2025-01-to-2025-02",
-    "sectionDetails": "complete-for-2025-01 (detail-2025.json)",
+    "sectionDetails": "complete-for-2025-01-to-2025-02 (detail-2025.json)",
     "sourceNotes": "management-expense-complete-for-2025-01-to-2025-02",
-    "note": "2025년 1월분은 원문 4~15쪽 전체, 2월분은 4·14·15쪽(부과총괄·관리외 수익·비용·예금 잔액)을 옮겼다. 2월 항목별 산출내역(5~13쪽)은 detail-2025.json에 이어서 넣는다. 2월 총괄표에는 1월에 없던 '관리비차감' 행이 있어 monthlyTotals에 feeReduction* 필드를 두었다(당월관리비 = 당월부과액 + 관리비차감 + 과오입금)."
+    "note": "2025년 1월분은 원문 4~15쪽 전체, 2월분도 원문 4~15쪽 전체를 옮겼다. 2월 총괄표에는 1월에 없던 '관리비차감' 행이 있어 monthlyTotals에 feeReduction* 필드를 두었다(당월관리비 = 당월부과액 + 관리비차감 + 과오입금)."
   },
   "sources": [
     {
