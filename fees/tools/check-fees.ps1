@@ -7,22 +7,36 @@ function Bad($m)  { Write-Output ("FAIL  " + $m); $script:fail++ }
 function Warn($m) { Write-Output ("WARN  " + $m); $script:warn++ }
 function Ok($m)   { Write-Output ("ok    " + $m) }
 
-# 1. parse all
-$files = @("data.json","categories.json","data-2026.json","detail-2026.json","reviews.json","decisions.json")
+# 1. parse all — 연도는 -Period 에서 가져온다(2025·2026 등 어느 해나 검산 가능)
+$year = $Period.Substring(0,4)
+$prevYear = if ($Prev) { $Prev.Substring(0,4) } else { $year }
+$files = @("data.json","categories.json","data-$year.json","detail-$year.json","reviews.json","decisions.json")
+if ($prevYear -ne $year) { $files += "data-$prevYear.json" }
 $J = @{}
 foreach ($f in $files) {
-  try { $J[$f] = Get-Content -Raw -Encoding UTF8 (Join-Path $root $f) | ConvertFrom-Json; Ok "parse $f" }
+  $path = Join-Path $root $f
+  if (-not (Test-Path $path)) {
+    if ($f -eq "data-$prevYear.json") { Warn "no $f — 전월 연결 검사는 건너뜀"; continue }
+    Bad "missing $f"; continue
+  }
+  try { $J[$f] = Get-Content -Raw -Encoding UTF8 $path | ConvertFrom-Json; Ok "parse $f" }
   catch { Bad "parse $f : $($_.Exception.Message)" }
 }
-$d = $J["data-2026.json"]; $det = $J["detail-2026.json"]; $cat = $J["categories.json"]
+$d = $J["data-$year.json"]; $det = $J["detail-$year.json"]; $cat = $J["categories.json"]
+$dPrev = if ($prevYear -eq $year) { $d } else { $J["data-$prevYear.json"] }
 $suppress = @($J["reviews.json"].reconciliations | Where-Object { $_.suppress } | ForEach-Object { $_.suppress })
 
 # 2. billing summary
 $li = @($d.lineItems | Where-Object { $_.period -eq $Period })
-$liPrev = @($d.lineItems | Where-Object { $_.period -eq $Prev })
+$liPrev = @($dPrev.lineItems | Where-Object { $_.period -eq $Prev })
 $mt = $d.monthlyTotals | Where-Object { $_.period -eq $Period }
 $gt = @($d.groupTotals | Where-Object { $_.period -eq $Period })
-Write-Output ("lineItems " + $Period + ": " + $li.Count + " rows; groupTotals: " + $gt.Count)
+Write-Output ("lineItems " + $Period + ": " + $li.Count + " rows; groupTotals: " + $gt.Count + "; prev(" + $Prev + "): " + $liPrev.Count + " rows")
+if ($li.Count -eq 0 -or -not $mt) {
+  Bad "$Period 자료가 data-$year.json 에 없다 — 기간·연도 파일을 확인할 것"
+  Write-Output ("=== RESULT: " + $fail + " FAILURE(S), " + $warn + " warning(s)")
+  exit 1
+}
 $dup = $li | Group-Object categoryCode | Where-Object { $_.Count -gt 1 }
 if ($dup) { Bad ("duplicate categoryCode: " + ($dup.Name -join ",")) } else { Ok "no duplicate categoryCode" }
 $codes = $cat.categories.code
@@ -65,7 +79,7 @@ if (($mt.managementFeeBilled - $mt.previousManagementFeeBilled) -ne $mt.manageme
 
 # 3. supplemental tables
 $supp = @($d.supplementalTables | Where-Object { $_.period -eq $Period })
-$suppPrev = @($d.supplementalTables | Where-Object { $_.period -eq $Prev })
+$suppPrev = @($dPrev.supplementalTables | Where-Object { $_.period -eq $Prev })
 Write-Output ("supplementalTables " + $Period + ": " + ($supp.sourceTable -join ", "))
 foreach ($t in $supp) {
   if ($t.sourceTable -in "management-expense","management-income") {
