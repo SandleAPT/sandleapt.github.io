@@ -89,11 +89,7 @@
           "rental": "관리비×연체일/365×6.5%(일할계산)"
         }
       },
-      "noticePages": [
-        1,
-        2,
-        3
-      ],
+      "noticePages": { "sourcePages": [1, 2, 3], "transcribed": false },
       "sections": [
         {
           "no": "1",
@@ -316,7 +312,7 @@
           "title": "청소비",
           "amount": 23442810,
           "sourcePage": 6,
-          "vendor": "㈜리포르",
+          "vendor": "㈜라포르",
           "contractPeriod": {
             "from": "2025-01-01",
             "to": "2025-12-31"
