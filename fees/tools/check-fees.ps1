@@ -152,7 +152,13 @@ foreach ($sec in $doc.sections) {
         if ($u -ne $t.totalUnits) { Bad "$tag elevator units $u != $($t.totalUnits)" }
         if ($a -ne $t.totalAmount) { Bad "$tag elevator amount $a != $($t.totalAmount)" }
         if (($t.totalAmount - $t.baseAmount) -ne $t.adjustment) { Bad "$tag elevator adjustment" }
-        foreach ($r in $t.rows) { if (($r.units * $r.perUnit) -ne $r.total) { Bad "$tag elevator $($r.building) $($r.line): units*perUnit != total" } }
+        foreach ($r in $t.rows) {
+          if (($r.units * $r.perUnit) -ne $r.total) {
+            $esup = $suppress | Where-Object { $_.check -eq "elevator-row" -and $_.period -eq $Period -and $_.section -eq $sec.no -and $_.building -eq $r.building -and $_.line -eq $r.line }
+            if ($esup) { Warn "$tag elevator $($r.building) $($r.line): units*perUnit != total — reviews.json reconciliations에 사유 있음" }
+            else { Bad "$tag elevator $($r.building) $($r.line): units*perUnit != total" }
+          }
+        }
         if ($t.categoryCode) { $allocByCode[$t.categoryCode] = [long]$allocByCode[$t.categoryCode] + [long]$t.totalAmount }
       }
       "usage" {

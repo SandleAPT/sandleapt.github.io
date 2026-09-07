@@ -481,6 +481,57 @@
       "field": "detail.household-hotwater.usage",
       "explanation": "2025-11 급탕비 표의 머리글 첫 칸이 「적요」가 아니라 「TN」으로 인쇄되어 있고 「공가세대 급탕」 행이 없다. 2025-08분부터 이어지는 서식이다.",
       "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-12-elevator-row-arithmetic",
+      "period": "2025-12",
+      "field": "detail.electricity.elevatorByBuilding.rows",
+      "explanation": "2025-12 승강기 전기료 표의 211동 1호기 행은 부과세대 30 × 세대부과액 2,100원인데 부과금액이 62,700원으로 인쇄되어 있어 곱셈이 300원 맞지 않는다(30×2,100=63,000). 합계 2,475,610원은 인쇄된 부과금액을 더한 값과 일치하고 총괄표 승강기전기료 당월부과금액과도 맞는다. 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08",
+      "suppress": [ { "check": "elevator-row", "period": "2025-12", "section": "10", "building": "211", "line": "1호기" } ]
+    },
+    {
+      "id": "2025-12-general-unit-rate",
+      "period": "2025-12",
+      "field": "detail.general.allocation.unitRate",
+      "explanation": "2025-12 일반관리비 부과내역의 원문 ㎡단가는 350.77원으로 인쇄되어 있으나 실제 나눗셈 값은 350.78원(44,669,070÷127,344.02)이다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-12-elevator-insurance-installment",
+      "period": "2025-12",
+      "field": "detail.insurance.rows.installment",
+      "explanation": "2025-12 승강기배상책임보험의 회차가 11월분 1/12회에서 12월분 7/12회로 여섯 칸 건너뛰었다. 월 납입액 23,760원과 총액 285,100원은 그대로다. 인쇄된 보험기간(2025.09.27~2026.11.09)이 1년 2개월인 점과 함께 보면 회차 기준이 계약 시작월(2025.09)에 맞춰진 것으로 보이나 11월분과는 이어지지 않는다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-12-repair-total-mismatch",
+      "period": "2025-12",
+      "field": "detail.repair-maintenance.split.rows",
+      "explanation": "2025-12 수선유지비에서 원문 총액 표기가 어긋나는 곳 둘: ① 207-404 세대 외벽방수의 총액이 10~11월분에는 1,180,000원, 12월분에는 1,188,000원으로 다르다(세 회차 합 396,000×3 = 1,188,000원이므로 12월 표기가 맞다). ② 206동 1402호 스프링클러 누수는 1/3회 300,600원인데 총액이 다른 스프링클러 건과 같은 770,000원으로 인쇄되어 3회분(901,800원)과 맞지 않는다. 둘 다 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-12-fee-reduction-final",
+      "period": "2025-12",
+      "field": "detail.fee-reduction",
+      "explanation": "2025-12는 2024년 이익잉여금 결산 관리비 차감의 마지막 회차(11/11회)로 월 금액이 다른 달과 조금 다르다(분양 -10,182,543원, 임대 -2,171,536원, 합계 -12,354,079원). 1~11월은 -12,354,010원이었다. 11회 합계는 분양 112,007,443원·임대 23,886,736원으로 원문 비고의 총액과 정확히 맞는다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-12-new-expense-row",
+      "period": "2025-12",
+      "field": "supplementalTables.management-expense.rows.name",
+      "explanation": "2025-12 관리외 비용에 「잡지출(수/광선 비상대책비용)」 행이 새로 생겼다(당월발생 1,880,100원, 비고 「수광선 관련 비용처리」). 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-12-management-income-prev-gap",
+      "period": "2025-12",
+      "field": "supplementalTables.management-income.rows.previousBalance",
+      "explanation": "2025-12 관리외 수익 기타수익의 전월잔액이 1,603,606원으로 인쇄되어 있으나 11월분 표의 당월잔액은 1,603,406원이다. 2025-09에 같은 행에서 200원이 이어지지 않았던 것(8월 당월잔액 396,606원 → 9월 전월잔액 396,406원)이 12월분에서 되돌아온 것으로 보인다. 그 사이 10~11월은 200원 적은 상태로 이어졌다. 각 달의 원문 표기를 그대로 옮겼다.",
+      "checkedAt": "2026-09-08",
+      "suppress": [ { "check": "supp-prev-link", "period": "2025-12", "sourceTable": "management-income", "row": "기타수익" } ]
     }
   ],
   "analysisPolicy": {
