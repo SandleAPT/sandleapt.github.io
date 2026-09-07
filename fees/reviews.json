@@ -157,6 +157,55 @@
       "field": "detail.repair-maintenance.allocation.unitRate",
       "explanation": "2025-03 수선유지비 임대 부과내역의 원문 ㎡단가는 88.30원으로 인쇄되어 있으나 실제 나눗셈 값은 88.28원(2,224,040÷25,192.32)이다.",
       "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-04-general-unit-rate",
+      "period": "2025-04",
+      "field": "detail.general.allocation.unitRate",
+      "explanation": "2025-04 일반관리비 부과내역의 원문 ㎡단가는 353.57원으로 인쇄되어 있으나 실제 나눗셈 값은 353.56원(45,023,270÷127,344.02)이다. 타입별 세대당 금액과 부과 합계·부과차액은 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-04-repair-maintenance-unit-rate-rental",
+      "period": "2025-04",
+      "field": "detail.repair-maintenance.allocation.unitRate",
+      "explanation": "2025-04 수선유지비 임대 부과내역의 원문 ㎡단가는 106.80원으로 인쇄되어 있으나 실제 나눗셈 값은 106.83원(2,691,400÷25,192.32)이다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-04-fee-reduction-unit-rate-sale",
+      "period": "2025-04",
+      "field": "detail.fee-reduction.allocation.unitRate",
+      "explanation": "2025-04 관리비차감 분양 부과내역의 원문 ㎡단가는 -100원으로 인쇄되어 있으나 실제 나눗셈 값은 -99.68원(-10,182,490÷102,151.7)이다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-04-fee-reduction-unit-rate-rental",
+      "period": "2025-04",
+      "field": "detail.fee-reduction.allocation.unitRate",
+      "explanation": "2025-04 관리비차감 임대 부과내역의 원문 ㎡단가는 -86원으로 인쇄되어 있으나 실제 나눗셈 값은 -86.20원(-2,171,520÷25,192.32)이다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-04-hotwater-period",
+      "period": "2025-04",
+      "field": "detail.household-hotwater.contractPeriod",
+      "explanation": "2025-04 급탕비 절의 기간이 원문에 2025.03.01~2025.03.31로 인쇄되어 있다. 같은 문서의 표지와 난방비 절은 2025.04.01~04.30이어서 원문 안에서 서로 어긋난다. 원문 표기 그대로 옮기고 해당 절에 안내문을 달았다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-04-daycare-heating-amount",
+      "period": "2025-04",
+      "field": "detail.heating.usage.rows",
+      "explanation": "2025-04 난방비 가. 발생내역의 어린이집 난방은 사용량 0.58MWh가 적혀 있으나 금액 칸이 「-」로 비어 있다. 난방 소계(89.61MWh / 7,139,970원)는 이 0.58MWh를 사용량에만 포함하고 금액은 0으로 계산되어 있어 원문 합계와는 맞는다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-04-food-waste-area",
+      "period": "2025-04",
+      "field": "detail.food-waste.allocation.scope",
+      "explanation": "2025-04 음식물쓰레기처리비의 부과세대는 1,150세대(면제 21세대)로 3월(1,149세대)보다 한 세대 늘었으나, 원문에 인쇄된 부과면적은 3월과 같은 124,918.94㎡이다. 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-07"
     }
   ],
   "analysisPolicy": {
