@@ -411,6 +411,41 @@
       "field": "detail.water.usage.rows",
       "explanation": "2025-09 수도료 나. 표의 공동수도료 사용량이 59㎥로 8월분 463㎥보다 크게 줄었는데 사용금액은 200,150원으로 8월분 199,240원과 비슷하다. 네 행의 합(17,211㎥ / 17,783,910원)은 가. 고지와 일치한다. 원문 표기 그대로 옮겼다.",
       "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-10-elevator-unit-rate-mismatch",
+      "period": "2025-10",
+      "field": "detail.electricity.usage.rows",
+      "explanation": "2025-10 승강기 전기료 kWh단가가 원문 9쪽 사용량분배 표에는 181.51원, 10쪽 승강기 전기료 표에는 181.52원으로 다르게 인쇄되어 있다. 실제 나눗셈 값은 181.52원(2,495,470÷13,748)이다. 2025-08에도 같은 성격의 차이가 있었다. 두 곳 모두 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-10-common-water-negative",
+      "period": "2025-10",
+      "field": "detail.water.usage.rows",
+      "explanation": "2025-10 수도료 나. 표의 공동수도료 사용량이 −45㎥로 인쇄되어 있다. 네 행의 합(16,219㎥ / 16,643,110원)은 가. 고지와 일치한다. 2025-03분에도 같은 성격의 음수(−43㎥)가 있었다. 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-10-elevator-insurance-expired",
+      "period": "2025-10",
+      "field": "detail.insurance.rows",
+      "explanation": "2025-10 승강기배상책임보험(MG손해보험)의 인쇄된 보험기간이 2024.09.27~2025.09.27로 이미 지난 상태인데 12/12회 마지막 회차 26,960원이 부과되었다. 총액 323,520원은 12회분과 맞는다. 갱신 계약 정보는 원문에 나오지 않는다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-10-hotwater-table-header",
+      "period": "2025-10",
+      "field": "detail.household-hotwater.usage",
+      "explanation": "2025-10 급탕비 표의 머리글 첫 칸이 「적요」가 아니라 「TN」으로 인쇄되어 있고 「공가세대 급탕」 행이 없다. 2025-08분부터 이어지는 서식이다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-10-new-row-fee",
+      "period": "2025-10",
+      "field": "detail.general.breakdown.rows",
+      "explanation": "2025-10 일반관리비 「그 밖의 부대비용」에 「지급수수료」 행이 새로 생겼다(공인인증서(전자세금계산서용, 은행/보험용) 갱신 발급수수료 8,400원).",
+      "checkedAt": "2026-09-08"
     }
   ],
   "analysisPolicy": {
