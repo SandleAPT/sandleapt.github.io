@@ -93,7 +93,11 @@ foreach ($t in $supp) {
     if ($pt) {
       for ($i = 0; $i -lt $t.rows.Count; $i++) {
         $r = $t.rows[$i]; $pr = $pt.rows[$i]
-        if ($pr -and $pr.name -eq $r.name -and $pr.currentBalance -ne $r.previousBalance) { Bad ("$($t.sourceTable) $($r.name): previousBalance $($r.previousBalance) != prev currentBalance $($pr.currentBalance)") }
+        if ($pr -and $pr.name -eq $r.name -and $pr.currentBalance -ne $r.previousBalance) {
+          $ssup = $suppress | Where-Object { $_.check -eq "supp-prev-link" -and $_.period -eq $Period -and $_.sourceTable -eq $t.sourceTable -and $_.row -eq $r.name }
+          if ($ssup) { Warn ("$($t.sourceTable) $($r.name): previousBalance $($r.previousBalance) != prev currentBalance $($pr.currentBalance) — reviews.json reconciliations에 사유 있음") }
+          else { Bad ("$($t.sourceTable) $($r.name): previousBalance $($r.previousBalance) != prev currentBalance $($pr.currentBalance)") }
+        }
       }
     }
     Ok ("$($t.sourceTable): row continuity + totals" + $(if ($pt) { " + prev-month link" } else { " (no prev table)" }))

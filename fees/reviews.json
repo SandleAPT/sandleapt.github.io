@@ -368,6 +368,49 @@
       "field": "detail.general.breakdown.rows",
       "explanation": "2025-08에 새로 나타난 행: ① 일반관리비 제세공과금 묶음의 「제세공과금 등」 62,500원(2025년도 산들마을아파트 주민세) ② 그 밖의 부대비용의 「회계감사비」 468,250원(2024년도 외부회계감사수수료 1,155,000원 1/3회 등) ③ 전기료 공동전기요금의 「경비실 보조금」 −80,000원(경비실 전기료 보조금(성남시청)). ③은 관리외 비용 공동주택지원금비용 당월발생 80,000원과 같은 금액이다.",
       "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-09-general-unit-rate",
+      "period": "2025-09",
+      "field": "detail.general.allocation.unitRate",
+      "explanation": "2025-09 일반관리비 부과내역의 원문 ㎡단가는 363.55원으로 인쇄되어 있으나 실제 나눗셈 값은 363.60원(46,302,180÷127,344.02)이다. 다른 달의 반올림 차이(0.01~0.02원)보다 크다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-09-fee-reduction-unit-rate",
+      "period": "2025-09",
+      "field": "detail.fee-reduction.allocation.unitRate",
+      "explanation": "2025-09 관리비차감 부과내역의 원문 ㎡단가는 분양 -100원·임대 -86원으로 반올림해 인쇄되어 있으나 실제 나눗셈 값은 -99.68원과 -86.20원이다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-09-management-income-prev-gap",
+      "period": "2025-09",
+      "field": "supplementalTables.management-income.rows.previousBalance",
+      "explanation": "2025-09 관리외 수익 기타수익의 전월잔액이 396,406원으로 인쇄되어 있으나 8월분 표의 당월잔액은 396,606원이다(8월 전월잔액 396,406원 + 당월발생 200원). 200원만큼 이어지지 않아 공동기여수익 소계(116,685,597원)와 합계(141,947,617원)도 8월분 당월잔액보다 각각 200원 적다. 양쪽 달 모두 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08",
+      "suppress": [ { "check": "supp-prev-link", "period": "2025-09", "sourceTable": "management-income", "row": "기타수익" } ]
+    },
+    {
+      "id": "2025-09-hotwater-table-header",
+      "period": "2025-09",
+      "field": "detail.household-hotwater.usage",
+      "explanation": "2025-09 급탕비 표의 머리글 첫 칸이 「적요」가 아니라 「TN」으로 인쇄되어 있다(8월분은 「수도료」). 8월분에 이어 「공가세대 급탕」 행도 없다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-09-food-waste-divisor",
+      "period": "2025-09",
+      "field": "detail.food-waste.allocation.scope",
+      "explanation": "2025-09 음식물쓰레기처리비의 나눗셈 분모가 소수 없이 「124,599.」로 인쇄되어 있다. 다른 달은 소수 둘째 자리까지 인쇄한다. 부과세대는 1,146세대(면제 11, 공가 14).",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-09-common-water-usage",
+      "period": "2025-09",
+      "field": "detail.water.usage.rows",
+      "explanation": "2025-09 수도료 나. 표의 공동수도료 사용량이 59㎥로 8월분 463㎥보다 크게 줄었는데 사용금액은 200,150원으로 8월분 199,240원과 비슷하다. 네 행의 합(17,211㎥ / 17,783,910원)은 가. 고지와 일치한다. 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08"
     }
   ],
   "analysisPolicy": {
