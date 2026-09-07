@@ -13,10 +13,10 @@
       "file": "data-2025.json",
       "detailFile": "detail-2025.json",
       "from": "2025-01",
-      "to": "2025-10",
-      "monthCount": 10,
-      "status": "billing-summary-and-management-expense-complete; full-document-for-2025-01-to-2025-10",
-      "fullDocumentPeriods": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10"]
+      "to": "2025-11",
+      "monthCount": 11,
+      "status": "billing-summary-and-management-expense-complete; full-document-for-2025-01-to-2025-11",
+      "fullDocumentPeriods": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11"]
     },
     {
       "year": 2026,
@@ -24,7 +24,7 @@
       "detailFile": "detail-2026.json",
       "from": "2026-01",
       "to": "2026-07",
-      "monthCount": 10,
+      "monthCount": 11,
       "status": "billing-summary-and-management-expense-complete; full-document-for-2026-01-to-07",
       "fullDocumentPeriods": ["2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07"]
     }
