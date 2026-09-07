@@ -13,10 +13,10 @@
       "file": "data-2025.json",
       "detailFile": "detail-2025.json",
       "from": "2025-01",
-      "to": "2025-04",
-      "monthCount": 4,
-      "status": "billing-summary-and-management-expense-complete; full-document-for-2025-01-to-2025-04",
-      "fullDocumentPeriods": ["2025-01", "2025-02", "2025-03", "2025-04"]
+      "to": "2025-05",
+      "monthCount": 5,
+      "status": "billing-summary-and-management-expense-complete; full-document-for-2025-01-to-2025-05",
+      "fullDocumentPeriods": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05"]
     },
     {
       "year": 2026,

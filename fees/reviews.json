@@ -206,6 +206,49 @@
       "field": "detail.food-waste.allocation.scope",
       "explanation": "2025-04 음식물쓰레기처리비의 부과세대는 1,150세대(면제 21세대)로 3월(1,149세대)보다 한 세대 늘었으나, 원문에 인쇄된 부과면적은 3월과 같은 124,918.94㎡이다. 원문 표기 그대로 옮겼다.",
       "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-05-general-unit-rate",
+      "period": "2025-05",
+      "field": "detail.general.allocation.unitRate",
+      "explanation": "2025-05 일반관리비 부과내역의 원문 ㎡단가는 346.25원으로 인쇄되어 있으나 실제 나눗셈 값은 346.27원(44,095,940÷127,344.02)이다. 타입별 세대당 금액과 부과 합계·부과차액은 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-05-fee-reduction-unit-rate-sale",
+      "period": "2025-05",
+      "field": "detail.fee-reduction.allocation.unitRate",
+      "explanation": "2025-05 관리비차감 분양 부과내역의 원문 ㎡단가는 -100원으로 인쇄되어 있으나 실제 나눗셈 값은 -99.68원(-10,182,490÷102,151.7)이다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-05-fee-reduction-unit-rate-rental",
+      "period": "2025-05",
+      "field": "detail.fee-reduction.allocation.unitRate",
+      "explanation": "2025-05 관리비차감 임대 부과내역의 원문 ㎡단가는 -86원으로 인쇄되어 있으나 실제 나눗셈 값은 -86.20원(-2,171,520÷25,192.32)이다. 원문의 나눗셈 분모도 이 절에서만 25,192.3으로 인쇄되어 있다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-05-insurance-installment-skip",
+      "period": "2025-05",
+      "field": "detail.insurance.rows.installment",
+      "explanation": "2025-05 화재보험료의 회차 표기가 4월 5/12회(재난배상책임보험 10/12회)에서 5월 7/12회(재난배상 12/12회)로 두 칸씩 건너뛰었다. 월 납입액은 4월과 같아(주택화재 1,597,960원 등) 이중 부과로는 보이지 않고 회차 표기만 어긋난 것으로 읽힌다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-05-food-waste-area",
+      "period": "2025-05",
+      "field": "detail.food-waste.allocation.scope",
+      "explanation": "2025-05 음식물쓰레기처리비의 부과세대는 4월과 같은 1,150세대인데 원문에 인쇄된 부과면적은 124,918.94㎡에서 125,024.78㎡로 달라졌다. 4월 면적이 3월(1,149세대) 값과 같았던 점을 함께 보면 4월 면적이 갱신되지 않았을 가능성이 있다. 각 달의 원문 표기를 그대로 옮겼다.",
+      "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-05-parking-subtotal-mismatch",
+      "period": "2025-05",
+      "field": "detail.parking-income.parking.subtotals",
+      "explanation": "2025-05 주차수입 표의 「계」 줄은 2차량 계 8,982,590원과 3차량 계 450,000원인데 합이 9,432,590원이어서 같은 줄의 총부과금액 9,423,270원과 9,320원 어긋난다. 총부과금액 열의 두 줄(9,210,000원 + 213,270원)은 9,423,270원으로 총괄표와 맞는다. 차이 9,320원은 일수부과 계 222,590원과 총부과 213,270원의 차이와 같다.",
+      "checkedAt": "2026-09-07",
+      "suppress": [ { "check": "parking-sum", "period": "2025-05", "section": "19" } ]
     }
   ],
   "analysisPolicy": {

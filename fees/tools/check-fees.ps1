@@ -161,7 +161,9 @@ foreach ($sec in $doc.sections) {
         }
       }
       "parking" {
-        $s = ($t.rows | Measure-Object -Property total -Sum).Sum; if ($s -ne $t.total) { Bad "$tag parking sum $s != $($t.total)" }
+        $psup = $suppress | Where-Object { $_.check -eq "parking-sum" -and $_.period -eq $Period -and $_.section -eq $sec.no }
+        $s = ($t.rows | Measure-Object -Property total -Sum).Sum
+        if ($s -ne $t.total) { if ($psup) { Warn "$tag parking sum $s != $($t.total) — reviews.json reconciliations에 사유 있음" } else { Bad "$tag parking sum $s != $($t.total)" } }
         foreach ($r in $t.rows) { if ($null -ne $r.perUnit -and ($r.units * $r.perUnit) -ne $r.total) { Bad "$tag parking $($r.name)" } }
         if ($t.total -ne $sec.amount) { Bad "$tag parking total != section amount" }
       }
