@@ -291,6 +291,41 @@
       "field": "detail.heating.usage.rows",
       "explanation": "2025-06 난방비 가. 발생내역의 세대·공가세대·어린이집·다함께돌봄센터 난방 사용량이 모두 0.00MWh이고 금액도 「-」다. 난방비 4,803,480원은 기본요금 4,162,010원과 공동난방비 641,470원만으로 이루어진다.",
       "checkedAt": "2026-09-07"
+    },
+    {
+      "id": "2025-07-general-unit-rate",
+      "period": "2025-07",
+      "field": "detail.general.allocation.unitRate",
+      "explanation": "2025-07 일반관리비 부과내역의 원문 ㎡단가는 359.57원으로 인쇄되어 있으나 실제 나눗셈 값은 359.55원(45,787,490÷127,344.02)이다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-07-general-breakdown-layout",
+      "period": "2025-07",
+      "field": "detail.general.breakdown.subtotals",
+      "explanation": "2025-07도 6월분과 같이 피복비(281,600원)와 교육훈련비(100,000원)가 「그 밖의 부대비용」 묶음 밖에 소계 없이 인쇄된다. 네 소계의 합(43,526,680 + 778,000 + 257,440 + 843,770 = 45,405,890)은 합계 45,787,490원보다 그 두 항목만큼 적다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-07-source-typos",
+      "period": "2025-07",
+      "field": "detail.general.breakdown.rows.detail",
+      "explanation": "2025-07 원문의 표기 오류로 보이는 곳: ① 일반관리비 잡비 내역의 「209동, 2016동 보도블럭 식대」는 216동의 오기로 보인다. ② 수선유지비 시설유지비의 「직우고시 정기점검(4차)」는 이전 달까지 「우정전 직무고시 정기점검(반기)」으로 인쇄되던 항목이다. 둘 다 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-07-management-commission-period",
+      "period": "2025-07",
+      "field": "detail.management-commission.contractPeriod",
+      "explanation": "2025-07 위탁관리수수료 절에 인쇄된 계약기간이 2024.07.01 ~ 2025.06.30으로, 7월분 부과 시점에는 이미 끝난 기간이다. 같은 달 일반관리비 우편료 비고에 「위.수탁 계약서 등기우편」이 있어 재계약이 진행 중이었던 것으로 보이나, 새 계약기간은 원문에 나오지 않는다. 원문 표기 그대로 옮겼다.",
+      "checkedAt": "2026-09-08"
+    },
+    {
+      "id": "2025-07-disaster-insurance-period",
+      "period": "2025-07",
+      "field": "detail.insurance.rows",
+      "explanation": "2025-07 재난배상책임보험(2/12회)의 보험기간이 6월분과 같은 2025.06.29 ~ 2026.11.09로 인쇄되어 있다. 12회 분납과 맞지 않는 점은 2025-06 기록과 같다.",
+      "checkedAt": "2026-09-08"
     }
   ],
   "analysisPolicy": {
