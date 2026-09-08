@@ -175,6 +175,14 @@
       "status": "active"
     },
     {
+      "code": "seniorcenter-electricity",
+      "displayName": "경로당",
+      "groupCode": "utility-electricity",
+      "aliases": ["경로당 전기료"],
+      "unit": "KRW",
+      "status": "active"
+    },
+    {
       "code": "carecenter-electricity",
       "displayName": "다함께돌봄센터",
       "groupCode": "utility-electricity",

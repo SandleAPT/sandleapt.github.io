@@ -196,6 +196,14 @@ if ($doc) {
   $fr = 0; if ($null -ne $mt.feeReductionAssessed) { $fr = [int64]$mt.feeReductionAssessed }
   $want = [int64]$mt.assessed + $fr
   $label = if ($fr -ne 0) { "monthlyTotals.assessed + feeReductionAssessed" } else { "monthlyTotals.assessed" }
-  if ($secSum -eq $want) { Ok "sum of section amounts = $label ($secSum)" } else { Bad "sum of section amounts $secSum != $label $want" }
+  if ($secSum -eq $want) { Ok "sum of section amounts = $label ($secSum)" }
+  else {
+    # 원문 쪽이 결락돼 일부 절을 못 옮긴 달은 reviews.json suppress(section-sum)로 낮춘다.
+    $gap = $want - $secSum
+    $gsup = $suppress | Where-Object { $_.check -eq "section-sum" -and $_.period -eq $Period }
+    if ($gsup -and $null -ne $gsup.gap -and [int64]$gsup.gap -eq $gap) {
+      Warn "sum of section amounts $secSum != $label $want (차이 $gap — 원문 결락, reviews.json reconciliations에 사유 있음)"
+    } else { Bad "sum of section amounts $secSum != $label $want" }
+  }
 }
 Write-Output ("=== RESULT: " + $(if ($fail -eq 0) { "ALL CHECKS PASSED" } else { "$fail FAILURE(S)" }) + ", $warn warning(s)")
