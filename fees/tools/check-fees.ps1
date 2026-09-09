@@ -134,9 +134,10 @@ foreach ($sec in $doc.sections) {
         if ($cc) { $allocByCode[$cc] = [long]$allocByCode[$cc] + [long]$t.totalAmount }
       }
       "breakdown" {
+        $bsup = $suppress | Where-Object { $_.check -eq "breakdown-sum" -and $_.period -eq $Period -and $_.section -eq $sec.no }
         $s = ($t.rows | Measure-Object -Property amount -Sum).Sum
-        if ($s -ne $t.total) { Bad "$tag breakdown sum $s != $($t.total)" }
-        foreach ($st in $t.subtotals) { $g = ($t.rows | Where-Object { $_.group -eq $st.group } | Measure-Object -Property amount -Sum).Sum; if ($g -ne $st.amount) { Bad "$tag breakdown subtotal $($st.group) $g != $($st.amount)" } }
+        if ($s -ne $t.total) { if ($bsup -and $null -ne $bsup.gap -and [int64]$bsup.gap -eq ($t.total - $s)) { Warn "$tag breakdown sum $s != $($t.total) (차이 $($t.total - $s) — 원문 내부 불일치, reviews.json reconciliations에 사유 있음)" } else { Bad "$tag breakdown sum $s != $($t.total)" } }
+        foreach ($st in $t.subtotals) { $g = ($t.rows | Where-Object { $_.group -eq $st.group } | Measure-Object -Property amount -Sum).Sum; if ($g -ne $st.amount) { if ($bsup -and $null -ne $bsup.gap -and [int64]$bsup.gap -eq ($st.amount - $g)) { Warn "$tag breakdown subtotal $($st.group) $g != $($st.amount) (차이 $($st.amount - $g) — 사유 있음)" } else { Bad "$tag breakdown subtotal $($st.group) $g != $($st.amount)" } } }
       }
       "composition" { $s = ($t.rows | Measure-Object -Property amount -Sum).Sum; if ($s -ne $t.total) { Bad "$tag composition sum $s != $($t.total)" } }
       "split" {
