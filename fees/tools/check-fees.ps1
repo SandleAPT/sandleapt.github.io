@@ -166,7 +166,7 @@ foreach ($sec in $doc.sections) {
           $usup = $suppress | Where-Object { $_.check -eq "usage-total" -and $_.period -eq $Period -and $_.section -eq $sec.no }
           $s = ($t.rows | Measure-Object -Property amount -Sum).Sum
           if ($s -ne $t.total.amount) { if ($usup) { Warn "$tag usage [$($t.title)] rows amount $s != total $($t.total.amount) — reviews.json reconciliations에 사유 있음" } else { Bad "$tag usage [$($t.title)] rows amount $s != total $($t.total.amount)" } }
-          if ($null -ne $t.total.quantity) { $q = ($t.rows | Where-Object { $null -ne $_.quantity } | Measure-Object -Property quantity -Sum).Sum; if ($q -ne $t.total.quantity) { Bad "$tag usage [$($t.title)] rows qty $q != total $($t.total.quantity)" } }
+          if ($null -ne $t.total.quantity) { $q = ($t.rows | Where-Object { $null -ne $_.quantity } | Measure-Object -Property quantity -Sum).Sum; if ($q -ne $t.total.quantity) { if ($usup) { Warn "$tag usage [$($t.title)] rows qty $q != total $($t.total.quantity) — reviews.json reconciliations에 사유 있음" } else { Bad "$tag usage [$($t.title)] rows qty $q != total $($t.total.quantity)" } } }
           if ($t.subtotals) { foreach ($st in $t.subtotals) { $g = ($t.rows | Where-Object { $_.group -eq $st.group } | Measure-Object -Property amount -Sum).Sum; if ($g -ne $st.amount) { if ($usup) { Warn "$tag usage [$($t.title)] subtotal $($st.group) $g != $($st.amount) — 사유 있음" } else { Bad "$tag usage [$($t.title)] subtotal $($st.group) $g != $($st.amount)" } } } }
         }
       }
