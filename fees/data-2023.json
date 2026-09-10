@@ -10,15 +10,16 @@
     "2023-03",
     "2023-04",
     "2023-05",
-    "2023-06"
+    "2023-06",
+    "2023-07"
   ],
   "detailExtraction": {
-    "billingSummary": "complete-for-2023-01-to-2023-06",
-    "managementExpense": "complete-for-2023-01-to-2023-06",
-    "managementIncome": "complete-for-2023-01-to-2023-06",
-    "depositBalance": "complete-for-2023-01-to-2023-06",
-    "sectionDetails": "complete-for-2023-01-to-2023-06 (detail-2023.json)",
-    "sourceNotes": "management-expense-complete-for-2023-01-to-2023-06",
+    "billingSummary": "complete-for-2023-01-to-2023-07",
+    "managementExpense": "complete-for-2023-01-to-2023-07",
+    "managementIncome": "complete-for-2023-01-to-2023-07",
+    "depositBalance": "complete-for-2023-01-to-2023-07",
+    "sectionDetails": "complete-for-2023-01-to-2023-07 (detail-2023.json)",
+    "sourceNotes": "management-expense-complete-for-2023-01-to-2023-07",
     "note": "2023년 서식: 부과총괄 28행(공용관리 8행 — 「수선유지비(계량기교체)」 행 포함, 전기료 묶음에 TV수신료·경로당 행). 산출내역은 19개 절(관리비차감 포함)이며 조기분양 전환(2023년 6월분) 전에는 분양 517세대·임대 654세대로 나눠 부과한다(승강기유지비·수선유지비·관리비차감). 장기수선충당금은 분양 517세대 70.02원/㎡(3,956,440원), 장기수선충당금(분전)은 조기분양 423세대를 동별 세대수로 표시한다. 관리외 표에는 연체료수입이 분양·임대로 나뉘고 「예치금이자전입액」·「관리비차감(연체료수입)」 행이 있다. 6월분(조기분양 전환 첫 달)부터 「수선유지비(계량기교체)」 행이 없어지고 「보험료(분양전환)」 행(insurance-sale)이 생기며, 승강기유지비는 1,171세대 한 표, 수선유지비·보험·입대의·선관위는 분양 940·임대 231세대로 나뉘고 장충금은 86.25원/㎡(4,873,260원), 산출내역은 20개 절(13-1 화재보험료[분전])."
   },
   "sources": [
@@ -135,6 +136,25 @@
       "detailFile": "detail-2023.json",
       "sourceFileStoredInRepository": 0,
       "note": "인쇄 3~17쪽이 원문 1~15쪽에 그대로 대응한다(인쇄 = 원문 + 2). 조기분양 전환(2023.6.16 의결) 첫 달: 부과총괄에서 「수선유지비(계량기교체)」 행이 없어지고 「보험료(분양전환)」 행이 생겨 28행 유지, 산출내역 20개 절(13-1 화재보험료[분전] 신설)."
+    },
+    {
+      "documentId": "fee-statement-2023-07",
+      "period": "2023-07",
+      "title": "2023년 7월 관리비 부과내역서",
+      "published": "2023-08-24",
+      "publishedAt": "2023-08-24 09:46",
+      "provider": "네이버카페 관리사무소 게시물",
+      "originalLocation": "네이버카페·관리사무소 확인 가능",
+      "sourceFileName": "2023년 7월 관리비 부과내역서 _ 네이버 카페.pdf",
+      "sourceFileSha256": "077201f8988b3b1b5b34ccfb14d6b46ec58f00e8d231574a1ecf65e0e231f3b3",
+      "originalPages": 15,
+      "capturedPages": 18,
+      "summarySourcePage": 4,
+      "captureSummaryPage": 6,
+      "extractionStatus": "full-document-verified",
+      "detailFile": "detail-2023.json",
+      "sourceFileStoredInRepository": 0,
+      "note": "인쇄 3~17쪽이 원문 1~15쪽에 그대로 대응한다(인쇄 = 원문 + 2). 6월분과 같은 서식(28행, 20개 절). 하계 휴가비 1/2회, 조경 24/24회 종료, 회계감사비 1/6회 시작."
     }
   ],
   "monthlyTotals": [
@@ -257,6 +277,26 @@
       "managementFeeBilled": 199530560,
       "previousManagementFeeBilled": 199503630,
       "managementFeeChange": 26930
+    },
+    {
+      "period": "2023-07",
+      "assessed": 219527500,
+      "residentShare": 218201950,
+      "lhShare": 1326720,
+      "billed": 219528670,
+      "adjustment": 1170,
+      "previousBilled": 211865680,
+      "change": 7662990,
+      "feeReductionAssessed": -11934200,
+      "feeReductionResidentShare": -11802330,
+      "feeReductionLhShare": -130390,
+      "feeReductionBilled": -11932720,
+      "overpayment": -237700,
+      "managementFeeAssessed": 207355600,
+      "managementFeeResidentShare": 206161920,
+      "managementFeeBilled": 207358250,
+      "previousManagementFeeBilled": 199530560,
+      "managementFeeChange": 7827690
     }
   ],
   "groupTotals": [
@@ -649,6 +689,71 @@
       "adjustment": 730,
       "previousBilled": 94458640,
       "change": -1957720
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "sourceName": "공용관리 합계",
+      "assessed": 100004560,
+      "residentShare": 98944280,
+      "lhShare": 1059900,
+      "billed": 100004180,
+      "adjustment": -380,
+      "previousBilled": 96004080,
+      "change": 4000100
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "sourceName": "난방 합계",
+      "assessed": 20630560,
+      "residentShare": 20579250,
+      "lhShare": 51210,
+      "billed": 20630460,
+      "adjustment": -100,
+      "previousBilled": 20917130,
+      "change": -286670
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "sourceName": "전기 합계",
+      "assessed": 62221690,
+      "residentShare": 62007640,
+      "lhShare": 213420,
+      "billed": 62221060,
+      "adjustment": -630,
+      "previousBilled": 57948260,
+      "change": 4272800
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "sourceName": "수도 합계",
+      "assessed": 13815270,
+      "residentShare": 13815290,
+      "lhShare": 2190,
+      "billed": 13817480,
+      "adjustment": 2210,
+      "previousBilled": 13635530,
+      "change": 181950
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "sourceName": "세대사용료 합계",
+      "assessed": 96667520,
+      "residentShare": 96402180,
+      "lhShare": 266820,
+      "billed": 96669000,
+      "adjustment": 1480,
+      "previousBilled": 92500920,
+      "change": 4168080
     }
   ],
   "lineItems": [
@@ -3081,6 +3186,411 @@
       "adjustment": 0,
       "previousBilled": 9121930,
       "change": -39930
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "general",
+      "sourceName": "일반관리비",
+      "groupCode": "common-management",
+      "assessed": 41859020,
+      "residentShare": 41395920,
+      "lhShare": 460400,
+      "billed": 41856320,
+      "adjustment": -2700,
+      "previousBilled": 40673100,
+      "change": 1183220
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "cleaning",
+      "sourceName": "청소비",
+      "groupCode": "common-management",
+      "assessed": 19746530,
+      "residentShare": 19527510,
+      "lhShare": 217180,
+      "billed": 19744690,
+      "adjustment": -1840,
+      "previousBilled": 19672850,
+      "change": 71840
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "security",
+      "sourceName": "경비비",
+      "groupCode": "common-management",
+      "assessed": 22368110,
+      "residentShare": 22124500,
+      "lhShare": 246060,
+      "billed": 22370560,
+      "adjustment": 2450,
+      "previousBilled": 21323730,
+      "change": 1046830
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "disinfection",
+      "sourceName": "소독비",
+      "groupCode": "common-management",
+      "assessed": 521000,
+      "residentShare": 516280,
+      "lhShare": 5740,
+      "billed": 522020,
+      "adjustment": 1020,
+      "previousBilled": 522020,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "elevator-maintenance",
+      "sourceName": "승강기유지비",
+      "groupCode": "common-management",
+      "assessed": 3784000,
+      "residentShare": 3742470,
+      "lhShare": 41620,
+      "billed": 3784090,
+      "adjustment": 90,
+      "previousBilled": 3164470,
+      "change": 619620
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "repair-maintenance",
+      "sourceName": "수선유지비",
+      "groupCode": "common-management",
+      "assessed": 11412240,
+      "residentShare": 11324650,
+      "lhShare": 88900,
+      "billed": 11413550,
+      "adjustment": 1310,
+      "previousBilled": 10334960,
+      "change": 1078590
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "management-commission",
+      "sourceName": "위탁관리수수료",
+      "groupCode": "common-management",
+      "assessed": 313660,
+      "residentShare": 312950,
+      "lhShare": 0,
+      "billed": 312950,
+      "adjustment": -710,
+      "previousBilled": 312950,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "household-heating",
+      "sourceName": "세대난방비",
+      "groupCode": "utility-heating",
+      "assessed": 0,
+      "residentShare": 0,
+      "lhShare": 0,
+      "billed": 0,
+      "adjustment": 0,
+      "previousBilled": 0,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "household-hotwater",
+      "sourceName": "세대급탕비",
+      "groupCode": "utility-heating",
+      "assessed": 15975060,
+      "residentShare": 15975060,
+      "lhShare": 0,
+      "billed": 15975060,
+      "adjustment": 0,
+      "previousBilled": 16226600,
+      "change": -251540
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "heating-basic",
+      "sourceName": "기본요금",
+      "groupCode": "utility-heating",
+      "assessed": 4162010,
+      "residentShare": 4118420,
+      "lhShare": 45810,
+      "billed": 4164230,
+      "adjustment": 2220,
+      "previousBilled": 4164230,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "common-heating",
+      "sourceName": "공동난방비",
+      "groupCode": "utility-heating",
+      "assessed": 493490,
+      "residentShare": 485770,
+      "lhShare": 5400,
+      "billed": 491170,
+      "adjustment": -2320,
+      "previousBilled": 526300,
+      "change": -35130
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "household-electricity",
+      "sourceName": "세대전기료",
+      "groupCode": "utility-electricity",
+      "assessed": 43414060,
+      "residentShare": 43373400,
+      "lhShare": 40660,
+      "billed": 43414060,
+      "adjustment": 0,
+      "previousBilled": 39140690,
+      "change": 4273370
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "tv-license",
+      "sourceName": "TV수신료",
+      "groupCode": "utility-electricity",
+      "assessed": 2732500,
+      "residentShare": 2732500,
+      "lhShare": 0,
+      "billed": 2732500,
+      "adjustment": 0,
+      "previousBilled": 2732500,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "common-electricity",
+      "sourceName": "공동전기료",
+      "groupCode": "utility-electricity",
+      "assessed": 12857590,
+      "residentShare": 12715570,
+      "lhShare": 141420,
+      "billed": 12856990,
+      "adjustment": -600,
+      "previousBilled": 13239610,
+      "change": -382620
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "elevator-electricity",
+      "sourceName": "승강기전기료",
+      "groupCode": "utility-electricity",
+      "assessed": 2787110,
+      "residentShare": 2755740,
+      "lhShare": 31340,
+      "billed": 2787080,
+      "adjustment": -30,
+      "previousBilled": 2613340,
+      "change": 173740
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "daycare-electricity",
+      "sourceName": "어린이집전기료",
+      "groupCode": "utility-electricity",
+      "assessed": 430430,
+      "residentShare": 430430,
+      "lhShare": 0,
+      "billed": 430430,
+      "adjustment": 0,
+      "previousBilled": 222120,
+      "change": 208310
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "seniorcenter-electricity",
+      "sourceName": "경로당",
+      "groupCode": "utility-electricity",
+      "assessed": 0,
+      "residentShare": 0,
+      "lhShare": 0,
+      "billed": 0,
+      "adjustment": 0,
+      "previousBilled": 0,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "household-water",
+      "sourceName": "세대수도료",
+      "groupCode": "utility-water",
+      "assessed": 13617950,
+      "residentShare": 13617950,
+      "lhShare": 0,
+      "billed": 13617950,
+      "adjustment": 0,
+      "previousBilled": 13431720,
+      "change": 186230
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "common-water",
+      "sourceName": "공동수도료",
+      "groupCode": "utility-water",
+      "assessed": 197320,
+      "residentShare": 197340,
+      "lhShare": 2190,
+      "billed": 199530,
+      "adjustment": 2210,
+      "previousBilled": 203810,
+      "change": -4280
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "food-waste",
+      "sourceName": "음식물처리비",
+      "groupCode": "other-charges",
+      "assessed": 1280000,
+      "residentShare": 1276520,
+      "lhShare": 0,
+      "billed": 1276520,
+      "adjustment": -3480,
+      "previousBilled": 960320,
+      "change": 316200
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "insurance",
+      "sourceName": "보험료",
+      "groupCode": "other-charges",
+      "assessed": 1861260,
+      "residentShare": 1860820,
+      "lhShare": 0,
+      "billed": 1860820,
+      "adjustment": -440,
+      "previousBilled": 1860820,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "insurance-sale",
+      "sourceName": "보험료(분양전환)",
+      "groupCode": "other-charges",
+      "assessed": 28590,
+      "residentShare": 29960,
+      "lhShare": 0,
+      "billed": 29960,
+      "adjustment": 1370,
+      "previousBilled": 29960,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "owner-council",
+      "sourceName": "입주자대표회의운영비",
+      "groupCode": "other-charges",
+      "assessed": 1368000,
+      "residentShare": 1368950,
+      "lhShare": 0,
+      "billed": 1368950,
+      "adjustment": 950,
+      "previousBilled": 1237590,
+      "change": 131360
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "election-committee",
+      "sourceName": "선거관리위원회운영비",
+      "groupCode": "other-charges",
+      "assessed": 370000,
+      "residentShare": 371670,
+      "lhShare": 0,
+      "billed": 371670,
+      "adjustment": 1670,
+      "previousBilled": 1379540,
+      "change": -1007870
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "longterm-repair",
+      "sourceName": "장기수선충당금",
+      "groupCode": "reserves-income",
+      "assessed": 4873260,
+      "residentShare": 4873260,
+      "lhShare": 0,
+      "billed": 4873260,
+      "adjustment": 0,
+      "previousBilled": 4873260,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "longterm-repair-sale",
+      "sourceName": "장기수선충당금(분양전환)",
+      "groupCode": "reserves-income",
+      "assessed": 3937190,
+      "residentShare": 3937190,
+      "lhShare": 0,
+      "billed": 3937190,
+      "adjustment": 0,
+      "previousBilled": 3937190,
+      "change": 0
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "billing-summary",
+      "categoryCode": "parking-income",
+      "sourceName": "주차수입",
+      "groupCode": "reserves-income",
+      "assessed": 9137120,
+      "residentShare": 9137120,
+      "lhShare": 0,
+      "billed": 9137120,
+      "adjustment": 0,
+      "previousBilled": 9082000,
+      "change": 55120
     }
   ],
   "supplementalTables": [
@@ -5087,6 +5597,340 @@
         "balance": 1996039381
       },
       "note": "계좌번호는 개인정보 보호를 위해 제외했습니다. 2023년 6월 말 예금 합계 1,996,039,381원. 하자보수충당예치금은 세후 이자 213,450원 증가, 장충 정기적금은 5월 부과액 3,956,440원이 들어가 31,651,520원(6월분 4,873,260원은 7월 잔액에 반영될 것)."
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "management-expense",
+      "sourcePage": 14,
+      "asOf": "2023-07-31",
+      "columns": ["구분", "전월잔액", "당월발생액", "당월잔액", "비고"],
+      "rows": [
+        {
+          "name": "예치금이자전입액",
+          "previousBalance": 1800134,
+          "currentActivity": 641105,
+          "currentBalance": 2441239,
+          "note": ""
+        },
+        {
+          "name": "하자보수충당부채이자전입액",
+          "previousBalance": 426857,
+          "currentActivity": 0,
+          "currentBalance": 426857,
+          "note": ""
+        },
+        {
+          "name": "재활용품비용",
+          "previousBalance": 2820000,
+          "currentActivity": 630000,
+          "currentBalance": 3450000,
+          "note": "미화원 재활용 분리수거비, 재활용 비닐"
+        },
+        {
+          "name": "전기검침수당",
+          "previousBalance": 1800000,
+          "currentActivity": 300000,
+          "currentBalance": 2100000,
+          "note": "한전업무지원금"
+        },
+        {
+          "name": "작은도서관운영비",
+          "previousBalance": 1205000,
+          "currentActivity": 200000,
+          "currentBalance": 1405000,
+          "note": "프린트임대료, 전화요금, 사무용품비"
+        },
+        {
+          "name": "법인세비용",
+          "previousBalance": 2450650,
+          "currentActivity": 0,
+          "currentBalance": 2450650,
+          "note": ""
+        },
+        {
+          "name": "경로당지원금",
+          "previousBalance": 800000,
+          "currentActivity": 0,
+          "currentBalance": 800000,
+          "note": ""
+        },
+        {
+          "name": "주차스티커비용",
+          "previousBalance": 198000,
+          "currentActivity": 374000,
+          "currentBalance": 572000,
+          "note": "주차위반 경고장 스티커 구입"
+        },
+        {
+          "name": "임차인대표회의운영비",
+          "previousBalance": 1125600,
+          "currentActivity": 245000,
+          "currentBalance": 1370600,
+          "note": "임차인대표회의운영비, 식대, 음료대"
+        },
+        {
+          "name": "임차인선거관리위원회운영비",
+          "previousBalance": 287820,
+          "currentActivity": 0,
+          "currentBalance": 287820,
+          "note": ""
+        },
+        {
+          "name": "관리비차감(연체료수입)",
+          "previousBalance": 433660,
+          "currentActivity": 0,
+          "currentBalance": 433660,
+          "note": "관리비 연체료 수입 차감(임대) (23년 1월 ~ 5월)"
+        },
+        {
+          "name": "공동주택지원금비용",
+          "previousBalance": 327450,
+          "currentActivity": 0,
+          "currentBalance": 327450,
+          "note": ""
+        },
+        {
+          "name": "잡지출",
+          "previousBalance": 189320,
+          "currentActivity": 0,
+          "currentBalance": 189320,
+          "note": "재난배상책임보험가입(23.06.30 ~ 24.06.30)"
+        }
+      ],
+      "totals":       {
+        "previousBalance": 13864491,
+        "currentActivity": 2390105,
+        "currentBalance": 16254596
+      },
+      "note": "원문 14쪽 관리외 비용 표를 옮긴 자료입니다. 예치금이자전입액 641,105원은 세전 757,795원의 원천징수(14% + 1.4%, 10원 절사) 후 금액. 주차스티커비용 374,000원(주차위반 경고장 스티커)."
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "management-income",
+      "sourcePage": 14,
+      "asOf": "2023-07-31",
+      "columns": ["구분", "전월잔액", "당월발생액", "당월잔액", "비고"],
+      "rows": [
+        {
+          "name": "장기수선충당금이자수입",
+          "previousBalance": 2127794,
+          "currentActivity": 757795,
+          "currentBalance": 2885589,
+          "note": ""
+        },
+        {
+          "name": "하자보수충당예치금이자수입",
+          "previousBalance": 504547,
+          "currentActivity": 0,
+          "currentBalance": 504547,
+          "note": ""
+        },
+        {
+          "name": "중계기수입",
+          "previousBalance": 19000000,
+          "currentActivity": 0,
+          "currentBalance": 19000000,
+          "note": ""
+        },
+        {
+          "name": "어린이집임대수입",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": "2021.11.10 ~ 23.11.30 (2년분) - 2021. 11.17 완납"
+        },
+        {
+          "name": "이자수입",
+          "previousBalance": 239056,
+          "currentActivity": 0,
+          "currentBalance": 239056,
+          "note": ""
+        },
+        {
+          "name": "주차수입",
+          "previousBalance": 54905660,
+          "currentActivity": 9137120,
+          "currentBalance": 64042780,
+          "note": "1세대 2차량 주차비 부과"
+        },
+        {
+          "name": "승강기수입",
+          "previousBalance": 2640000,
+          "currentActivity": 210000,
+          "currentBalance": 2850000,
+          "note": "승강기사용료"
+        },
+        {
+          "name": "광고수입",
+          "previousBalance": 1400000,
+          "currentActivity": 150000,
+          "currentBalance": 1550000,
+          "note": "게시판 광고수입"
+        },
+        {
+          "name": "재활용수입",
+          "previousBalance": 17846040,
+          "currentActivity": 0,
+          "currentBalance": 17846040,
+          "note": "1년 계약 (2023.01.11 ~ 2024.01.10)"
+        },
+        {
+          "name": "한전검침수입",
+          "previousBalance": 3021180,
+          "currentActivity": 503530,
+          "currentBalance": 3524710,
+          "note": "한전검침지원금"
+        },
+        {
+          "name": "연체료수입(분양)",
+          "previousBalance": 342630,
+          "currentActivity": 57700,
+          "currentBalance": 400330,
+          "note": "관리비 연체료 수입"
+        },
+        {
+          "name": "연체료수입(임대)",
+          "previousBalance": 433660,
+          "currentActivity": 0,
+          "currentBalance": 433660,
+          "note": "관리비 연체료 수입"
+        },
+        {
+          "name": "부과차익",
+          "previousBalance": 6322,
+          "currentActivity": 1916,
+          "currentBalance": 8238,
+          "note": "부과차익"
+        },
+        {
+          "name": "주차스티커수입",
+          "previousBalance": 72000,
+          "currentActivity": 4000,
+          "currentBalance": 76000,
+          "note": "차량 스티커 반환 미반납비 수입"
+        },
+        {
+          "name": "공동주택지원금수익",
+          "previousBalance": 340140,
+          "currentActivity": 168700,
+          "currentBalance": 508840,
+          "note": ""
+        },
+        {
+          "name": "기타수익",
+          "previousBalance": 131700,
+          "currentActivity": 30004,
+          "currentBalance": 161704,
+          "note": "재난배상책임보험 과다견적 차액 환입"
+        },
+        {
+          "name": "잡수입",
+          "previousBalance": 0,
+          "currentActivity": 0,
+          "currentBalance": 0,
+          "note": ""
+        }
+      ],
+      "totals":       {
+        "previousBalance": 103010729,
+        "currentActivity": 11020765,
+        "currentBalance": 114031494
+      },
+      "note": "원문 14쪽 관리외 수익 표를 옮긴 자료입니다. 장기수선충당금이자수입 757,795원(세전)은 7.29 만기 신한은행 정기예금 24,311,826원의 이자(세후 641,105원, 예금 설명행과 일치)로 K-apt 7월 입주자기여 758천원과 맞습니다. 공동주택지원금수익 168,700원(비고 없음), 기타수익 30,004원의 비고 「재난배상책임보험 과다견적 차액 환입」은 6월 비고가 그대로 남은 것으로 보입니다."
+    },
+    {
+      "period": "2023-07",
+      "sourceDocumentId": "fee-statement-2023-07",
+      "sourceTable": "deposit-balance",
+      "sourcePage": 15,
+      "asOf": "2023-07-31",
+      "columns": ["구분", "은행명", "통장잔액", "비고"],
+      "rows": [
+        {
+          "group": "관리비",
+          "bank": "국민은행",
+          "balance": 100455596,
+          "note": ""
+        },
+        {
+          "group": "관리비",
+          "bank": "신한은행",
+          "balance": 286958480,
+          "note": ""
+        },
+        {
+          "group": "관리비",
+          "bank": "우리은행",
+          "balance": 64781466,
+          "note": ""
+        },
+        {
+          "group": "관리비",
+          "bank": "하나은행",
+          "balance": 57606311,
+          "note": ""
+        },
+        {
+          "group": "잡수입",
+          "bank": "하나은행",
+          "balance": 56498688,
+          "note": ""
+        },
+        {
+          "group": "예치금",
+          "bank": "하나은행",
+          "balance": 7793720,
+          "note": ""
+        },
+        {
+          "group": "하자보수충당예치금",
+          "bank": "하나은행",
+          "balance": 1012187158,
+          "note": ""
+        },
+        {
+          "group": "장기수선충당예치금(분양)",
+          "bank": "국민은행",
+          "balance": 75069161,
+          "note": "정기예금(1년)-분양동 2024.04.03. 만기"
+        },
+        {
+          "group": "장기수선충당예치금(분양)",
+          "bank": "국민은행",
+          "balance": 24952931,
+          "note": "정기예금(1년)-분양동 2024.07.31. 만기 — 원문 설명행: 23.7/31 신한은행 정기예금 만기해지(24,311,826 + 이자 641,105 = 24,952,931), 23.7/31 국민은행 장기수선충당금으로 예치 24,952,931원"
+        },
+        {
+          "group": "장기수선충당예치금(분양)",
+          "bank": "국민은행",
+          "balance": 35607960,
+          "note": "정기적금(1년)-분양동 2023.11.26. 만기"
+        },
+        {
+          "group": "장기수선충당예치금(분양)",
+          "bank": "국민은행",
+          "balance": 215650858,
+          "note": "정기예금(1년)-분양동 2023.11.30. 만기"
+        },
+        {
+          "group": "장기수선충당예치금(분양)",
+          "bank": "신한은행",
+          "balance": 51049750,
+          "note": "정기예금(1년)-분양동 2024.01.27. 만기"
+        },
+        {
+          "group": "시재금",
+          "bank": "우리은행",
+          "balance": 2831517,
+          "note": ""
+        }
+      ],
+      "totals":       {
+        "balance": 1991443596
+      },
+      "note": "계좌번호는 개인정보 보호를 위해 제외했습니다. 2023년 7월 말 예금 합계 1,991,443,596원. 7.29 만기 신한은행 장충 정기예금 24,311,826원을 세후 이자 641,105원과 합쳐 국민은행 정기예금 24,952,931원(2024.07.31 만기)으로 옮겨 예치(2023.7.23 입대의 「가장 이율 높은 은행으로 재예치」 의결). 장충 정기적금은 아직 월 3,956,440원씩 증가(6월분부터의 4,873,260원 부과분은 다음 달 이후 반영 확인)."
     }
   ]
 }
