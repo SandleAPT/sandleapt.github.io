@@ -86,7 +86,9 @@ foreach ($t in $supp) {
     foreach ($r in $t.rows) { if (($r.previousBalance + $r.currentActivity) -ne $r.currentBalance) { Bad ("$($t.sourceTable) row $($r.name): prev+cur != balance") } }
     foreach ($fld in "previousBalance","currentActivity","currentBalance") {
       $s = ($t.rows | Measure-Object -Property $fld -Sum).Sum
-      if ($s -ne $t.totals.$fld) { Bad ("$($t.sourceTable).totals.$fld $($t.totals.$fld) != rows $s") }
+      if ($s -ne $t.totals.$fld) { $tsup = $suppress | Where-Object { $_.check -eq "supp-total" -and $_.period -eq $Period -and $_.sourceTable -eq $t.sourceTable -and $_.field -eq $fld }
+        if ($tsup -and $null -ne $tsup.gap -and [int64]$tsup.gap -eq ($t.totals.$fld - $s)) { Warn ("$($t.sourceTable).totals.$fld $($t.totals.$fld) != rows $s (차이 $($tsup.gap) — 원문 합계 오기, reviews.json reconciliations에 사유 있음)") }
+        else { Bad ("$($t.sourceTable).totals.$fld $($t.totals.$fld) != rows $s") } }
     }
     if ($t.subtotals) { foreach ($st in $t.subtotals) { foreach ($fld in "previousBalance","currentActivity","currentBalance") { $s = ($t.rows | Where-Object { $_.group -eq $st.group } | Measure-Object -Property $fld -Sum).Sum; if ($s -ne $st.$fld) { Bad ("$($t.sourceTable) subtotal $($st.group).$fld") } } } }
     $pt = $suppPrev | Where-Object { $_.sourceTable -eq $t.sourceTable }
