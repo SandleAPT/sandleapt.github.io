@@ -134,7 +134,7 @@ foreach ($sec in $doc.sections) {
         if ($su -ne $t.totalUnits) { Bad "$tag [$($t.title)] units $su != $($t.totalUnits)" }
         if ($sa -ne $t.totalAmount) { Bad "$tag [$($t.title)] rows total $sa != $($t.totalAmount)" }
         if (($t.totalAmount - $t.baseAmount) -ne $t.adjustment) { Bad "$tag [$($t.title)] totalAmount-baseAmount != adjustment" }
-        foreach ($r in $t.rows) { if ($null -ne $r.perUnit -and ($r.units * $r.perUnit) -ne $r.total) { Bad "$tag [$($t.title)] $($r.type): units*perUnit != total" } }
+        foreach ($r in $t.rows) { if ($null -ne $r.perUnit -and ($r.units * $r.perUnit) -ne $r.total) { $asup = $suppress | Where-Object { $_.check -eq "alloc-row" -and $_.period -eq $Period -and $_.section -eq $sec.no -and $_.type -eq $r.type }; if ($asup) { Warn "$tag [$($t.title)] $($r.type): units*perUnit != total (원문 인쇄 오류, reviews.json reconciliations에 사유 있음)" } else { Bad "$tag [$($t.title)] $($r.type): units*perUnit != total" } } }
         if ($t.scope -and $scopes.($t.scope).units -ne $t.totalUnits) { Bad "$tag [$($t.title)] scope units mismatch" }
         if ($t.scope -and $t.unitRate -and $scopes.($t.scope).area) { $calc = [math]::Round($t.baseAmount / $scopes.($t.scope).area, 2); if ([math]::Abs($calc - $t.unitRate) -gt 0.011) { Warn "$tag [$($t.title)] 원문 단가 $($t.unitRate) vs 발생금액÷면적 $calc (원문 내부 차이, reviews.json 확인)" } }
         $cc = if ($t.categoryCode) { $t.categoryCode } else { $sec.categoryCode }
