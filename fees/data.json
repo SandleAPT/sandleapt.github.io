@@ -2,12 +2,24 @@
   "schemaVersion": 5,
   "dataset": "sandle-fees",
   "title": "산들마을 관리비 월별 데이터",
-  "updatedAt": "2026-09-09",
+  "updatedAt": "2026-09-11",
   "currency": "KRW",
   "description": "10년 이상 누적을 전제로 원문, 항목 사전, 월별 관측값, 분석 결과를 분리한다.",
   "catalog": "categories.json",
   "reviews": "reviews.json",
   "years": [
+    {
+      "year": 2023,
+      "file": "data-2023.json",
+      "detailFile": "detail-2023.json",
+      "from": "2023-01",
+      "to": "2023-01",
+      "monthCount": 1,
+      "status": "billing-summary-and-management-expense-complete; section-details-complete-for-2023-01-to-2023-01",
+      "fullDocumentPeriods": [
+        "2023-01"
+      ]
+    },
     {
       "year": 2024,
       "file": "data-2024.json",

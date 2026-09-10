@@ -79,6 +79,15 @@
       "status": "active"
     },
     {
+      "code": "repair-meter-replacement",
+      "displayName": "수선유지비(계량기교체)",
+      "groupCode": "common-management",
+      "aliases": ["수선유지비(계량기교체)"],
+      "unit": "KRW",
+      "status": "active",
+      "note": "2023년 부과총괄에만 있는 행(세대 계량기 교체비 분납용). 2023년 1월분은 0원."
+    },
+    {
       "code": "management-commission",
       "displayName": "위탁관리수수료",
       "groupCode": "common-management",
