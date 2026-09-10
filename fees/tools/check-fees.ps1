@@ -90,7 +90,12 @@ foreach ($t in $supp) {
     }
     if ($t.subtotals) { foreach ($st in $t.subtotals) { foreach ($fld in "previousBalance","currentActivity","currentBalance") { $s = ($t.rows | Where-Object { $_.group -eq $st.group } | Measure-Object -Property $fld -Sum).Sum; if ($s -ne $st.$fld) { Bad ("$($t.sourceTable) subtotal $($st.group).$fld") } } } }
     $pt = $suppPrev | Where-Object { $_.sourceTable -eq $t.sourceTable }
-    if ($pt) {
+    $fyStart = $Period.EndsWith("-01")
+    if ($fyStart) {
+      # 회계연도 첫 달(1월분): 관리외 누계는 0에서 다시 시작하므로 전월 연결 대신 전월잔액 0을 확인
+      $nz = @($t.rows | Where-Object { $_.previousBalance -ne 0 })
+      if ($nz.Count -gt 0) { Bad ("$($t.sourceTable): 1월분인데 previousBalance != 0 (" + (($nz | ForEach-Object { $_.name }) -join ", ") + ")") }
+    } elseif ($pt) {
       for ($i = 0; $i -lt $t.rows.Count; $i++) {
         $r = $t.rows[$i]; $pr = $pt.rows[$i]
         if ($pr -and $pr.name -eq $r.name -and $pr.currentBalance -ne $r.previousBalance) {
@@ -100,7 +105,7 @@ foreach ($t in $supp) {
         }
       }
     }
-    Ok ("$($t.sourceTable): row continuity + totals" + $(if ($pt) { " + prev-month link" } else { " (no prev table)" }))
+    Ok ("$($t.sourceTable): row continuity + totals" + $(if ($fyStart) { " + 회계연도 첫 달(전월잔액 0 확인)" } elseif ($pt) { " + prev-month link" } else { " (no prev table)" }))
   } elseif ($t.sourceTable -eq "deposit-balance") {
     $s = ($t.rows | Measure-Object -Property balance -Sum).Sum
     if ($s -ne $t.totals.balance) { Bad ("deposit-balance total $($t.totals.balance) != rows $s") } else { Ok ("deposit-balance total $s") }

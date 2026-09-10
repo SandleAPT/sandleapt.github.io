@@ -13,9 +13,9 @@
       "file": "data-2024.json",
       "detailFile": "detail-2024.json",
       "from": "2024-01",
-      "to": "2024-11",
-      "monthCount": 11,
-      "status": "billing-summary-and-management-expense-complete; section-details-complete-for-2024-02-to-2024-11, partial-for-2024-01 (1월분 원문 12·13쪽 결락)",
+      "to": "2024-12",
+      "monthCount": 12,
+      "status": "billing-summary-and-management-expense-complete; section-details-complete-for-2024-02-to-2024-12, partial-for-2024-01 (1월분 원문 12·13쪽 결락)",
       "fullDocumentPeriods": [
         "2024-02",
         "2024-03",
@@ -26,7 +26,8 @@
         "2024-08",
         "2024-09",
         "2024-10",
-        "2024-11"
+        "2024-11",
+        "2024-12"
       ]
     },
     {
