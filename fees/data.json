@@ -13,9 +13,9 @@
       "file": "data-2023.json",
       "detailFile": "detail-2023.json",
       "from": "2023-01",
-      "to": "2023-07",
-      "monthCount": 7,
-      "status": "billing-summary-and-management-expense-complete; section-details-complete-for-2023-01-to-2023-07",
+      "to": "2023-08",
+      "monthCount": 8,
+      "status": "billing-summary-and-management-expense-complete; section-details-complete-for-2023-01-to-2023-08",
       "fullDocumentPeriods": [
         "2023-01",
         "2023-02",
@@ -23,7 +23,8 @@
         "2023-04",
         "2023-05",
         "2023-06",
-        "2023-07"
+        "2023-07",
+        "2023-08"
       ]
     },
     {
