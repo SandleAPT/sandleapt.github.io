@@ -122,7 +122,7 @@ PDF 원본은 저장소에 올리지 않는다. 출처 파일명과 SHA-256, 원
 - 산출내역: 섹션 금액 = 부과총괄 발생금액, 면적별 부과표의 `세대수×세대당=합계`·행 합계=합계·`합계−발생=부과차액`·세대수=범위 세대수, 분양·임대로 나뉜 부과표는 합쳐서 부과총괄 당월부과와 대조, 내역·구성·보험·주차·승강기 표의 행 합계, 섹션 금액 합 = 당월부과액
 - `sourceNotes`와 `reviews.json`의 분석 메모가 섞이지 않았는지 확인
 
-원문 자체가 안 맞아서 우리 쪽에서 고칠 수 없는 불일치는 `reviews.json`의 해당 조정 항목에 `suppress` 배열을 달아 FAIL 대신 WARN으로 낮춘다. 지금 쓰는 검사 이름은 `prev-link`(전월부과 연결, `categoryCode`로 지정), `usage-total`(사용량 표 합계, `section`으로 지정), `parking-sum`(주차수입 표 합계, `section`으로 지정), `supp-prev-link`(관리외 수익·비용 표의 전월잔액 연결, `sourceTable`·`row`로 지정), `elevator-row`(승강기 동별 표의 행 곱셈, `section`·`building`·`line`으로 지정), `section-sum`(원문 쪽 결락으로 절 합계가 모자랄 때, `gap` 금액이 정확히 맞을 때만), `breakdown-sum`(일반관리비 산출내역 소계·합계의 원문 오기, `section`·`gap`), `supp-total`(관리외 수익·비용 표 합계 행의 원문 오기, `sourceTable`·`field`(previousBalance 등)·`gap`), `alloc-row`(면적별 부과표 한 행의 세대수 × 단가 ≠ 합계 인쇄 오류, `section`·`type`) 아홉 가지다. `gap`은 「원문 합계 − 행 합」. 예:
+원문 자체가 안 맞아서 우리 쪽에서 고칠 수 없는 불일치는 `reviews.json`의 해당 조정 항목에 `suppress` 배열을 달아 FAIL 대신 WARN으로 낮춘다. 지금 쓰는 검사 이름은 `prev-link`(전월부과 연결, `categoryCode`로 지정), `usage-total`(사용량 표 합계, `section`으로 지정), `parking-sum`(주차수입 표 합계, `section`으로 지정), `supp-prev-link`(관리외 수익·비용 표의 전월잔액 연결, `sourceTable`·`row`로 지정), `elevator-row`(승강기 동별 표의 행 곱셈, `section`·`building`·`line`으로 지정), `section-sum`(원문 쪽 결락으로 절 합계가 모자랄 때, `gap` 금액이 정확히 맞을 때만), `breakdown-sum`(일반관리비 산출내역 소계·합계의 원문 오기, `section`·`gap`), `supp-total`(관리외 수익·비용 표 합계 행의 원문 오기, `sourceTable`·`field`(previousBalance 등)·`gap`), `alloc-row`(면적별 부과표 한 행의 세대수 × 단가 ≠ 합계 인쇄 오류, `section`·`type`), `monthly-total`(부과총괄 합계 행의 원문 오기, `field`(residentShare 등)·`gap`) 열 가지다. `gap`은 「원문 합계 − 행 합」. 예:
 
 ```json
 "suppress": [ { "check": "parking-sum", "period": "2025-05", "section": "19" } ]
@@ -136,11 +136,11 @@ suppress를 달기 전에 반드시 같은 항목의 `explanation`에 원문 어
 
 ## 현재 입력 범위
 
-- 2023년 1~5월: 원문 전체(부과총괄 28행, 항목별 산출내역 19개 절, 관리외 수익·비용, 예금 잔액) — 2023년 서식은 분양 517·임대 654세대 분리 부과(조기분양 전환 전)
+- 2023년 1~6월: 원문 전체(부과총괄 28행, 항목별 산출내역 19~20개 절, 관리외 수익·비용, 예금 잔액) — 1~5월은 분양 517·임대 654세대 분리 부과, 6월분(조기분양 전환)부터 940·231세대
 - 2024년 1월: 부과총괄·관리외 수익/비용·예금 잔액 전체 + 항목별 산출내역 13개 절(원문 12·13쪽 결락)
 - 2024년 2~12월: 원문 전체(부과총괄, 항목별 산출내역 각 19~21개 절, 관리외 수익·비용, 예금 잔액)
 - 2025년 1~12월(한 해 전체): 원문 전체(부과총괄, 항목별 산출내역 각 20~21개 섹션, 관리외 수익·비용, 예금 잔액)
 - 2026년 1~7월 부과총괄표
 - 2026년 1~7월 관리외 비용 및 원문 비고
 - 2026년 1~7월: 원문 전체(항목별 산출내역 각 20개 섹션, 관리외 수익, 예금 잔액)
-- 부과총괄 항목코드 30개(2023년 「수선유지비(계량기교체)」 repair-meter-replacement 추가)
+- 부과총괄 항목코드 31개(2023년 「수선유지비(계량기교체)」 repair-meter-replacement·「보험료(분양전환)」 insurance-sale 추가)

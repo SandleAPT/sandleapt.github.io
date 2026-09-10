@@ -232,6 +232,15 @@
       "status": "active"
     },
     {
+      "code": "insurance-sale",
+      "displayName": "보험료(분양전환)",
+      "groupCode": "other-charges",
+      "aliases": ["화재보험료[분전]", "보험료(분양전환)"],
+      "unit": "KRW",
+      "status": "active",
+      "note": "2023년 6월분부터 조기분양 423세대에 따로 부과하는 재난배상책임보험료(13-1절). 2024년에는 보험료 한 행으로 합쳐짐."
+    },
+    {
       "code": "owner-council",
       "displayName": "입주자대표회의운영비",
       "groupCode": "other-charges",

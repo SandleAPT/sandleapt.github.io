@@ -43,7 +43,7 @@ $codes = $cat.categories.code
 foreach ($x in $li) { if ($codes -notcontains $x.categoryCode) { Bad ("unknown categoryCode " + $x.categoryCode) } }
 foreach ($fld in "assessed","residentShare","lhShare","billed","adjustment","previousBilled","change") {
   $s = ($li | Measure-Object -Property $fld -Sum).Sum
-  if ($s -eq $mt.$fld) { Ok ("sum lineItems.$fld = monthlyTotals ($s)") } else { Bad ("sum lineItems.$fld $s != monthlyTotals $($mt.$fld)") }
+  if ($s -eq $mt.$fld) { Ok ("sum lineItems.$fld = monthlyTotals ($s)") } else { $msup = $suppress | Where-Object { $_.check -eq "monthly-total" -and $_.period -eq $Period -and $_.field -eq $fld }; if ($msup -and $null -ne $msup.gap -and [int64]$msup.gap -eq ($mt.$fld - $s)) { Warn ("sum lineItems.$fld $s != monthlyTotals $($mt.$fld) (차이 $($msup.gap) — 원문 총괄표 합계 오기, reviews.json reconciliations에 사유 있음)") } else { Bad ("sum lineItems.$fld $s != monthlyTotals $($mt.$fld)") } }
 }
 foreach ($x in $li) {
   if (($x.billed - $x.previousBilled) -ne $x.change) { Bad ("$($x.categoryCode): billed-previousBilled != change") }
