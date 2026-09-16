@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-16 19:50:00 KST
+마지막 갱신: 2026-09-16 20:03:13 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -42,6 +42,10 @@
   - 커밋: minutes `7479aee`
   - 검증: 7명 4-3 / 8명 4-4 35.1mm / 11명 4-4-3 45.4mm, 글자 넘침 없음, 375px 2칸·가로 스크롤 없음
   - 주의: 이름이 지금보다 길면(예: 4글자 이름·긴 직책) 서명칸이 줄어듦 — 최소 10mm
+- v423 안건 제목↔안건 요지 간격 `done` — 2026-09-16 20:03:13 KST (사용자 "안건요지부분이 제목이랑 너무 떨어져있는데 좀 붙여줘")
+  - 원인: 인쇄 `.paper` 세로 flex(v417)라 여백 안 겹침 → 7mm+6mm=13mm(화면 7mm)
+  - 고침(app.css): `.agenda-document-head` 아래 4mm, 바로 뒤 첫 칸 위 여백 0 → 인쇄·화면 4mm. 다른 칸 사이 6mm 유지
+  - 커밋: minutes `cb85bd5` · 검증: 인쇄 13→4, 화면 7→4, 안건 제출자·기타안건 첫 칸도 4mm
 - 재현: `cd ~/Project && python3 -m http.server 8765` → `localhost:8765/minutes/` 콘솔에서 `agendaPageHtml({agenda:state.agendas[i],draft:false},2,13,{})`를 `printableDocumentHtml`로 iframe(폭 210mm)에 그려 `.paper`·`.vote-summary-list` 높이 측정
 
 ### FEES-20260911-63 — 2023년 12월분 적재 (2023년 12개월 완료)
