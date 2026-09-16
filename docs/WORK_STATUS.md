@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-16 21:32:32 KST
+마지막 갱신: 2026-09-16 21:44:20 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -61,6 +61,13 @@
   - 추정 원인: 로컬 측정은 맥 글꼴 — 사용자 PC(맑은 고딕 등)는 더 넓어 이름+찬반이 칸을 넘어 옆 칸과 겹침. **로컬에서 사용자 글꼴로 재현은 못 함**
   - 커밋: minutes `7696bfe` · 검증: 넘침 없음, 7명 표결 28.2mm·11명 35.8mm, 억지로 넓힌 이름(letter-spacing 3·6px)도 칸 안 줄바꿈·겹침 0, DOCX sz 1 감소
   - 다음: 사용자 PC 인쇄본에서 겹침이 사라졌는지 확인 필요
+- v428 Safari 인쇄 본문 줄 겹침 `done` — 2026-09-16 21:44:20 KST (사용자 PDF 첨부 "파일이 겹치게 나오는건 문제가 크다고 봐")
+  - **v427의 원인 추정(표결 칸 글꼴 폭)은 틀렸음.** 겹친 곳은 본문(요지·주요 발언). 사용자 PDF는 맥 Safari(Quartz) 저장
+  - 원인: `.formatted-text{display:grid}` — WebKit 인쇄에서 grid 행 높이가 줄바꿈 전 기준. 크롬은 정상이라 그동안 로컬 확인(크롬 기반 브라우저)에 안 걸림
+  - 고침: `display:block` + 줄 사이 margin .12em
+  - 커밋: minutes `e637913` · 검증: WKWebView 인쇄로 사용자 PDF와 같은 겹침 재현 → 수정 후 제1·3·5안 정상, 크롬 쪽 높이 동일
+  - 재현 도구: minutes `scripts/print-check/` (README에 명령). **앞으로 인쇄 서식을 바꾸면 크롬만이 아니라 이 WebKit 인쇄로도 확인할 것**
+  - 남은 grid(표지 명단·안건 목록 `.row`·표결 4칸)는 이번 WebKit 출력에서 정상 확인. 이름이 칸보다 길어 줄바꿈되는 경우는 WebKit에서 미확인
 - 재현: `cd ~/Project && python3 -m http.server 8765` → `localhost:8765/minutes/` 콘솔에서 `agendaPageHtml({agenda:state.agendas[i],draft:false},2,13,{})`를 `printableDocumentHtml`로 iframe(폭 210mm)에 그려 `.paper`·`.vote-summary-list` 높이 측정
 
 ### FEES-20260911-63 — 2023년 12월분 적재 (2023년 12개월 완료)
