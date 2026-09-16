@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-16 21:21:27 KST
+마지막 갱신: 2026-09-16 21:24:20 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -53,6 +53,9 @@
 - v425 표결 서명 빈칸 없앰 `done` — 2026-09-16 21:21:27 KST (사용자 "서명 공란을 그냥 없애줘 그 위에 그냥 사인해달라고 하게")
   - 이름 칸 위에 직접 서명. `.vote-sign` 제거(JS·CSS), 4칸 격자·이름 10pt·찬반 8.5pt 배치는 `.vote-mixed-grid`/`.vote-person`에 바로 적용. DOCX 서명 열 제거(8160/2000)
   - 커밋: minutes `d0cb7f2` · 검증: 서명칸 0, 7명 4-3/8명 4-4/11명 4-4-3, 칸 44×9.6mm, 넘침 없음, DOCX 2열 표 6개
+- v426 찬반을 이름 옆 같은 줄로 `done` — 2026-09-16 21:24:20 KST (사용자 "빈칸만 없애는게 아니라 아예 찬성이라는 글씨까지 올려야 해")
+  - v425에서 빈칸만 빼고 찬반을 아래 줄에 남긴 것이 요청을 덜 읽은 것. `.vote-person` 가로 한 줄로, 한 줄 4명·10pt 유지
+  - 커밋: minutes `faf78de` · 검증: 이름·찬반 같은 줄, 넘침 없음, 칸 7.1mm, 표결 칸 8명 28.8·11명 36.6mm
 - 재현: `cd ~/Project && python3 -m http.server 8765` → `localhost:8765/minutes/` 콘솔에서 `agendaPageHtml({agenda:state.agendas[i],draft:false},2,13,{})`를 `printableDocumentHtml`로 iframe(폭 210mm)에 그려 `.paper`·`.vote-summary-list` 높이 측정
 
 ### FEES-20260911-63 — 2023년 12월분 적재 (2023년 12개월 완료)
