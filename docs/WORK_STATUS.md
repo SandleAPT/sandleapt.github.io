@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-16 21:44:20 KST
+마지막 갱신: 2026-09-18 15:39:29 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -68,6 +68,11 @@
   - 커밋: minutes `e637913` · 검증: WKWebView 인쇄로 사용자 PDF와 같은 겹침 재현 → 수정 후 제1·3·5안 정상, 크롬 쪽 높이 동일
   - 재현 도구: minutes `scripts/print-check/` (README에 명령). **앞으로 인쇄 서식을 바꾸면 크롬만이 아니라 이 WebKit 인쇄로도 확인할 것**
   - 남은 grid(표지 명단·안건 목록 `.row`·표결 4칸)는 이번 WebKit 출력에서 정상 확인. 이름이 칸보다 길어 줄바꿈되는 경우는 WebKit에서 미확인
+- v429 열람용 비밀번호 안내 `done` — 2026-09-18 15:39:29 KST (사용자 "열람비밀번호가 ~ 아니라고 뜨는데??")
+  - 원인: 작성·수정 화면 잠금(AdminGate)은 role:edit 만 통과 — 열람용(role:view)도 틀린 비밀번호와 같은 「올바르지 않습니다」로 표시. 저장된 열람 키를 작성 화면 진입 시 지우기까지 함
+  - 고침(core.js만, GAS 그대로): verify 가 edit/view/"" 반환, 열람용이면 「열람용 비밀번호입니다. 작성·수정 화면은 수정용 비밀번호가 필요합니다」, 저장 키가 열람용이면 유지
+  - 커밋: minutes `dafad20` · 검증: GasNet.json 을 가짜 응답으로 바꿔 5가지 경우 확인(실제 비밀번호 미사용)
+  - **확인 못 한 것:** 사용자가 어느 화면에서 넣었는지, 서버 VIEW_KEY 값이 실제로 그 비밀번호인지. 공고·점검 열람 잠금에서도 거절됐다면 서버 VIEW_KEY 가 바뀐 것 — 인증 기록 시트(logAuth_)의 verify fail 줄과 Script Properties 확인 필요
 - 재현: `cd ~/Project && python3 -m http.server 8765` → `localhost:8765/minutes/` 콘솔에서 `agendaPageHtml({agenda:state.agendas[i],draft:false},2,13,{})`를 `printableDocumentHtml`로 iframe(폭 210mm)에 그려 `.paper`·`.vote-summary-list` 높이 측정
 
 ### FEES-20260911-63 — 2023년 12월분 적재 (2023년 12개월 완료)
