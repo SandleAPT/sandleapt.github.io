@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 안건 제안서</title>
-<meta name="description" content="산들마을 입주자대표회의 안건 제안서를 A4 한 장으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=4">
+<meta name="description" content="산들마을 공동주택관리규약 별지 제7호 서식에 맞춰 의안을 A4 한 장으로 작성하는 도구">
+<link rel="stylesheet" href="./app.css?v=5">
 </head>
 <body>
 <header class="topbar">
@@ -25,7 +25,7 @@
   <section class="editor" aria-label="안건 제안서 작성">
     <div class="hint-card">
       <b>작성 기준</b>
-      <span>무슨 문제인지 → 무엇을 하자는지 → 비용은 어떻게 확인할지만 적으면 됩니다.</span>
+      <span>의결주문 → 제안이유 → 주요내용 → 비용추계 → 참고사항 순서로 작성합니다. 산들마을 관리규약 별지 제7호 서식 기준입니다.</span>
     </div>
 
     <section class="library" aria-label="저장된 안건 제안서">
@@ -36,60 +36,84 @@
       <div class="library-list" id="libraryList"><div class="library-empty">저장된 제안서가 없습니다.</div></div>
     </section>
 
+    <div class="field-grid three compact-row official-fields">
+      <label class="field">
+        <span>의안번호</span>
+        <small>회의 편성 시 입력해도 됩니다.</small>
+        <input id="agendaNo" type="text" placeholder="예: 제 3호">
+      </label>
+      <label class="field">
+        <span>의결년월일</span>
+        <small>아직 의결 전이면 비워두세요.</small>
+        <input id="decisionDate" type="date">
+      </label>
+      <label class="field">
+        <span>회의차수</span>
+        <small>별지의 ‘제 ○회’ 항목입니다.</small>
+        <input id="meetingNo" type="text" placeholder="예: 1">
+      </label>
+    </div>
+
     <label class="field">
-      <span>안건 제목</span>
+      <span>제목</span>
       <input id="title" type="text" placeholder="예: 커뮤니티센터 누수·곰팡이 보수의 건">
     </label>
 
     <div class="field-grid two compact-row">
       <label class="field">
-        <span>제안자</span>
+        <span>제출자</span>
         <input id="proposer" type="text" placeholder="예: 211동 동별대표자 유은혜">
       </label>
       <label class="field">
-        <span>제출일</span>
+        <span>제출년월일</span>
         <input id="date" type="date">
       </label>
     </div>
     <div class="page-state" id="pageState" aria-live="polite">A4 한 장 안에 들어갑니다.</div>
 
     <label class="field">
-      <span>1. 제안 배경</span>
-      <small>왜 이 안건을 올리는지 쉽게 적어주세요. 상황과 이유를 두세 문단으로 적어도 됩니다.</small>
+      <span>1. 의결주문</span>
+      <small>회의에서 찬성했을 때 정확히 무엇이 결정되는지 적어주세요.</small>
+      <textarea id="decision" rows="5" placeholder="예: 커뮤니티센터 누수·곰팡이 보수 범위와 예상비용을 관리주체가 확인하여 다음 회의에 보고하는 것으로 의결한다."></textarea>
+    </label>
+
+    <label class="field">
+      <span>2. 제안이유</span>
+      <small>왜 이 안건을 제안하는지 현재 상황과 필요성을 적어주세요.</small>
       <textarea id="background" rows="6" placeholder="예: 커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 문제가 생기고 있습니다."></textarea>
     </label>
 
     <label class="field">
-      <span>2. 주요 내용</span>
-      <small>해야 할 일을 한 줄씩 적어주세요. 줄 맨 앞에 - 를 쓰면 목록으로 보여요.</small>
-      <textarea id="details" rows="7" placeholder="- LH에서 바로 공사할 수 있으면 LH 공사로 진행\n- 계속 늦어지면 우리 단지에서 먼저 보수하는 방법 검토"></textarea>
+      <span>3. 주요내용</span>
+      <small>검토하거나 시행할 내용을 한 줄씩 적어주세요. 줄 맨 앞에 - 를 쓰면 목록으로 보여요.</small>
+      <textarea id="details" rows="7" placeholder="- LH 보수 가능 여부와 일정 확인\n- 단지 선보수 시 보수 범위·비용·재원 확인"></textarea>
     </label>
 
     <label class="field">
-      <span>3. 의결 내용</span>
-      <small>회의에서 무엇을 결정하면 되는지 적어주세요.</small>
-      <textarea id="decision" rows="5" placeholder="예: 누수와 곰팡이를 더 이상 오래 두지 않고 빠르게 보수한다."></textarea>
-    </label>
-
-    <label class="field">
-      <span>4. 비용</span>
-      <textarea id="cost" rows="4" placeholder="예: 관리사무소에서 보수 비용 확인 후 결정"></textarea>
+      <span>4. 비용추계서</span>
+      <small>예상금액과 재원을 적습니다. 아직 확인 전이면 확인이 필요한 내용을 적어도 됩니다.</small>
+      <textarea id="cost" rows="4" placeholder="예: 관리주체에서 보수 범위와 예상비용, 사용 가능한 재원을 확인 후 보고"></textarea>
     </label>
 
     <div class="field ref-field" id="refsField">
       <div class="field-title-row">
-        <span>5. 참고할 자료</span>
-        <label class="omit-check"><input id="noRefs" type="checkbox"> 참고자료 없음</label>
+        <span>5. 참고사항</span>
       </div>
-      <small>글로 적거나 PDF, JPG, PNG 파일을 추가할 수 있어요. 참고자료가 없으면 오른쪽 체크를 눌러주세요.</small>
-      <textarea id="refs" rows="4" placeholder="예: LH 관리이관 자료, 현장 사진, 견적서"></textarea>
+      <label class="sub-field">
+        <b>가. 근거규정</b>
+        <textarea id="basis" rows="3" placeholder="예: 산들마을 공동주택관리규약 제26조"></textarea>
+      </label>
+      <label class="sub-field">
+        <b>나. 기타</b>
+        <textarea id="refs" rows="3" placeholder="예: LH 관리이관 자료, 현장 사진, 견적서"></textarea>
+      </label>
       <div class="attach-row">
-        <label class="attach-button" for="attachments">파일 추가</label>
+        <label class="attach-button" for="attachments">별지첨부 파일 추가</label>
         <input id="attachments" class="file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" multiple>
         <span>PDF · JPG · PNG</span>
       </div>
       <div class="attachment-list" id="attachmentList" aria-live="polite"></div>
-      <small class="file-note">문서를 저장하면 첨부파일도 이 기기에 함께 보관됩니다. 실제 회의에 제출할 때는 원본 파일도 함께 전달해 주세요.</small>
+      <small class="file-note">입주자등이 연명하여 제안하는 경우 신청인 명단(명단·서명) 등 필요한 별지를 함께 첨부해 주세요.</small>
     </div>
 
     <p class="save-note" id="saveNote">작성 중인 내용은 이 기기에 임시 저장됩니다.</p>
@@ -100,38 +124,41 @@
       <article class="paper" id="paper">
         <div class="doc-head">
           <div class="apt">산들마을아파트 입주자대표회의</div>
-          <h2>안 건 제 안 서</h2>
+          <h2>의 안</h2>
         </div>
 
         <div class="meta-table">
-          <div class="meta-label title-label">안건 제목</div><div class="meta-value strong title-value" id="pTitle">안건 제목을 입력해 주세요.</div>
-          <div class="meta-label proposer-label">제안자</div><div class="meta-value proposer-value" id="pProposer">-</div>
-          <div class="meta-label date-label">제출일</div><div class="meta-value date-value" id="pDate">-</div>
+          <div class="meta-label agenda-label">의안번호</div><div class="meta-value agenda-value" id="pAgendaNo">제&nbsp;&nbsp;&nbsp;호</div>
+          <div class="meta-label decision-date-label">의결년월일</div><div class="meta-value decision-date-value" id="pDecisionMeta">20&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp; (제&nbsp;&nbsp;회)</div>
+          <div class="meta-label title-label">제목</div><div class="meta-value strong title-value" id="pTitle">제목을 입력해 주세요.</div>
+          <div class="meta-label proposer-label">제출자</div><div class="meta-value proposer-value" id="pProposer">-</div>
+          <div class="meta-label date-label">제출년월일</div><div class="meta-value date-value" id="pDate">-</div>
         </div>
 
         <section class="doc-section">
-          <h3>1. 제안 배경</h3>
+          <h3>1. 의결주문</h3>
+          <div class="doc-text empty" id="pDecision">내용을 입력해 주세요.</div>
+        </section>
+
+        <section class="doc-section">
+          <h3>2. 제안이유</h3>
           <div class="doc-text empty" id="pBackground">내용을 입력해 주세요.</div>
         </section>
 
         <section class="doc-section">
-          <h3>2. 주요 내용</h3>
+          <h3>3. 주요내용</h3>
           <div class="doc-text empty" id="pDetails">내용을 입력해 주세요.</div>
         </section>
 
-        <section class="doc-section">
-          <h3>3. 의결 내용</h3>
-          <div class="doc-text empty" id="pDecision">내용을 입력해 주세요.</div>
-        </section>
-
         <section class="doc-section compact-section">
-          <h3>4. 비용</h3>
+          <h3>4. 비용추계서</h3>
           <div class="doc-text empty" id="pCost">내용을 입력해 주세요.</div>
         </section>
 
         <section class="doc-section compact-section" id="refsSection">
-          <h3>5. 참고할 자료</h3>
-          <div class="doc-text empty" id="pRefs">내용을 입력해 주세요.</div>
+          <h3>5. 참고사항</h3>
+          <div class="sub-doc-row"><b>가. 근거규정</b><div class="doc-text empty" id="pBasis">-</div></div>
+          <div class="sub-doc-row"><b>나. 기타</b><div class="doc-text empty" id="pRefs">-</div></div>
           <div class="doc-attachments" id="pAttachments"></div>
         </section>
 
@@ -141,7 +168,7 @@
   </section>
 </main>
 
-<script src="./app.js?v=4"></script>
+<script src="./app.js?v=5"></script>
 <script src="./procedure-check.js?v=1"></script>
 </body>
 </html>
