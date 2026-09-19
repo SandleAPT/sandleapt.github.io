@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 안건 제안서</title>
-<meta name="description" content="산들마을 공동주택관리규약 별지 제7호 서식에 맞춰 의안을 A4 한 장으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=6">
+<meta name="description" content="산들마을 공동주택관리규약 별지 제7호 서식에 맞춰 의안을 표지와 본문 A4 2장으로 작성하는 도구">
+<link rel="stylesheet" href="./app.css?v=7">
 </head>
 <body class="access-pending">
 <div class="access-gate" id="accessGate" role="status" aria-live="polite">
@@ -18,7 +18,7 @@
 <header class="topbar">
   <div>
     <h1>안건 제안서</h1>
-    <p>짧고 쉽게 쓰면 A4 한 장으로 바로 정리돼요.</p>
+    <p>별지 제7호 구조를 표지와 본문 A4 2장으로 정리해요.</p>
   </div>
   <div class="top-actions">
     <button type="button" class="ghost" id="sampleBtn">누수 예시</button>
@@ -42,6 +42,12 @@
       </div>
       <div class="library-list" id="libraryList"><div class="library-empty">저장된 제안서가 없습니다.</div></div>
     </section>
+
+    <label class="field">
+      <span>회의 표기</span>
+      <small>표지와 본문 오른쪽 위에 작게 표시됩니다. 필요 없으면 비워두세요.</small>
+      <input id="meetingHeader" type="text" placeholder="예: 제6기 2026년09월 정기 입주자대표회의">
+    </label>
 
     <div class="field-grid three compact-row official-fields">
       <label class="field">
@@ -76,7 +82,7 @@
         <input id="date" type="date">
       </label>
     </div>
-    <div class="page-state" id="pageState" aria-live="polite">A4 한 장 안에 들어갑니다.</div>
+    <div class="page-state" id="pageState" aria-live="polite">표지 + 본문 A4 2장으로 정리됩니다.</div>
 
     <label class="field">
       <span>1. 의결주문</span>
@@ -127,49 +133,75 @@
   </section>
 
   <section class="preview-area" aria-label="A4 미리보기">
-    <div class="paper-wrap">
-      <article class="paper" id="paper">
-        <div class="doc-head">
-          <div class="apt">산들마을아파트 입주자대표회의</div>
-          <h2>의 안</h2>
+    <div class="paper-spread">
+      <article class="paper cover-paper" id="coverPaper">
+        <header class="paper-header">
+          <div class="meeting-caption empty" id="pMeetingHeaderCover"></div>
+          <div class="meeting-rule"></div>
+        </header>
+
+        <div class="cover-content">
+          <div class="cover-meta-table">
+            <div class="cover-meta-label">의안번호</div>
+            <div class="cover-meta-value strong" id="pAgendaNo">제&nbsp;&nbsp;&nbsp;호</div>
+            <div class="cover-meta-label decision-merged">의결사항</div>
+            <div class="cover-meta-label second-row">의결년월일</div>
+            <div class="cover-meta-value second-row" id="pDecisionMeta">20&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp; (제&nbsp;&nbsp;회)</div>
+          </div>
+
+          <section class="cover-title-block">
+            <div class="cover-title-label">제목</div>
+            <div class="cover-title-divider"></div>
+            <div class="cover-title-value empty" id="pTitle">제목을 입력해 주세요.</div>
+          </section>
+
+          <div class="submit-table">
+            <div class="submit-label">제 출 자</div><div class="submit-value" id="pProposer">-</div>
+            <div class="submit-label">제출년월일</div><div class="submit-value" id="pDate">-</div>
+          </div>
         </div>
 
-        <div class="meta-table">
-          <div class="meta-label agenda-label">의안번호</div><div class="meta-value agenda-value" id="pAgendaNo">제&nbsp;&nbsp;&nbsp;호</div>
-          <div class="meta-label decision-date-label">의결년월일</div><div class="meta-value decision-date-value" id="pDecisionMeta">20&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp; (제&nbsp;&nbsp;회)</div>
-          <div class="meta-label title-label">제목</div><div class="meta-value strong title-value" id="pTitle">제목을 입력해 주세요.</div>
-          <div class="meta-label proposer-label">제출자</div><div class="meta-value proposer-value" id="pProposer">-</div>
-          <div class="meta-label date-label">제출년월일</div><div class="meta-value date-value" id="pDate">-</div>
+        <div class="paper-bottom-rule"></div>
+      </article>
+
+      <article class="paper body-paper" id="bodyPaper">
+        <header class="paper-header">
+          <div class="meeting-caption empty" id="pMeetingHeaderBody"></div>
+          <div class="meeting-rule"></div>
+        </header>
+
+        <div class="body-content">
+          <section class="doc-section">
+            <h3>1. 의결주문</h3>
+            <div class="doc-section-box"><div class="doc-text empty" id="pDecision">내용을 입력해 주세요.</div></div>
+          </section>
+
+          <section class="doc-section">
+            <h3>2. 제안이유</h3>
+            <div class="doc-section-box"><div class="doc-text empty" id="pBackground">내용을 입력해 주세요.</div></div>
+          </section>
+
+          <section class="doc-section">
+            <h3>3. 주요내용</h3>
+            <div class="doc-section-box"><div class="doc-text empty" id="pDetails">내용을 입력해 주세요.</div></div>
+          </section>
+
+          <section class="doc-section">
+            <h3>4. 비용추계서</h3>
+            <div class="doc-section-box"><div class="doc-text empty" id="pCost">내용을 입력해 주세요.</div></div>
+          </section>
+
+          <section class="doc-section" id="refsSection">
+            <h3>5. 참고사항</h3>
+            <div class="doc-section-box refs-box">
+              <div class="sub-doc-row"><b>가. 근거규정</b><div class="doc-text empty" id="pBasis">-</div></div>
+              <div class="sub-doc-row"><b>나. 기타</b><div class="doc-text empty" id="pRefs">-</div></div>
+              <div class="doc-attachments" id="pAttachments"></div>
+            </div>
+          </section>
         </div>
 
-        <section class="doc-section">
-          <h3>1. 의결주문</h3>
-          <div class="doc-text empty" id="pDecision">내용을 입력해 주세요.</div>
-        </section>
-
-        <section class="doc-section">
-          <h3>2. 제안이유</h3>
-          <div class="doc-text empty" id="pBackground">내용을 입력해 주세요.</div>
-        </section>
-
-        <section class="doc-section">
-          <h3>3. 주요내용</h3>
-          <div class="doc-text empty" id="pDetails">내용을 입력해 주세요.</div>
-        </section>
-
-        <section class="doc-section compact-section">
-          <h3>4. 비용추계서</h3>
-          <div class="doc-text empty" id="pCost">내용을 입력해 주세요.</div>
-        </section>
-
-        <section class="doc-section compact-section" id="refsSection">
-          <h3>5. 참고사항</h3>
-          <div class="sub-doc-row"><b>가. 근거규정</b><div class="doc-text empty" id="pBasis">-</div></div>
-          <div class="sub-doc-row"><b>나. 기타</b><div class="doc-text empty" id="pRefs">-</div></div>
-          <div class="doc-attachments" id="pAttachments"></div>
-        </section>
-
-        <footer class="doc-foot">산들마을아파트</footer>
+        <div class="paper-bottom-rule"></div>
       </article>
     </div>
   </section>
@@ -234,7 +266,7 @@
   check();
 })();
 </script>
-<script src="./app.js?v=5"></script>
+<script src="./app.js?v=6"></script>
 <script src="./procedure-check.js?v=1"></script>
 </body>
 </html>
