@@ -6,6 +6,10 @@
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
 body{min-width:320px}
+.access-gate{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--bg)}
+.access-gate-card{width:min(520px,100%);background:#fffdf8;border:1px solid var(--line);border-radius:18px;padding:24px 26px;box-shadow:0 8px 28px rgba(0,0,0,.06);text-align:center}
+.access-gate-card b{display:block;font-size:17px;margin-bottom:7px}.access-gate-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.65}
+body.access-pending .topbar,body.access-pending .workspace{display:none!important}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 .topbar{min-height:72px;padding:13px 18px;background:#fffdf8;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:10}
