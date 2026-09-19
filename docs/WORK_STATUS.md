@@ -1,6 +1,6 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-20 03:29:00 KST
+마지막 갱신: 2026-09-20 03:34:07 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
@@ -9,10 +9,24 @@
 ### PROP-20260920-01 — 안건 제안서 2쪽 인쇄 서식 리디자인
 
 - 담당: GPT
-- 상태: `in_progress` — 2026-09-20 03:29:00 KST
+- 상태: `done` — 2026-09-20 03:34:07 KST
 - 사용자 지시: 확정한 시안대로 안건 제안서 실제 사이트 디자인 적용. 기존 회의록과 결이 이어지는 muted gray-green 톤, 표지+본문 2쪽, 제목·소제목 앞 세로 초록선 제거, 별지 제7호 구조 유지, 수정용 권한 메뉴만 노출 유지.
-- 수정 예정: `agenda-proposal/index.html`, `agenda-proposal/app.css`, `agenda-proposal/app.js`, 포털 `index.html`, `docs/AGENDA_PROPOSAL_TOOL.md`
-- 검증 예정: HTML/JS 참조 ID 일치, JS 문법, 2쪽 A4 fit/인쇄 CSS, 포털 캐시 키·버전 갱신, 기존 저장문서 호환.
+- 구현:
+  - `agenda-proposal/index.html`: 표지/본문 A4 2장 구조, 선택 입력 `회의 표기`, 표지 3열×2행 정보표(의결사항 2행 병합), 흰색 제목 영역, 제출자 표, 본문 5개 항목 구조
+  - `agenda-proposal/app.css`: 기존 회의록 수준의 낮은 채도 녹회색, 얇은 이중선, 흰 제목 배경, 제목·본문 소제목 앞 세로색 막대 없음, A4 2장 인쇄
+  - `agenda-proposal/app.js`: 2장 fit 검사, 회의 표기 동기화, 기존 저장문서와 호환되는 새 필드 추가
+  - 포털 `index.html`: v432, proposal cache `?v=4`
+  - `README.md`, `docs/AGENDA_PROPOSAL_TOOL.md`: 2장 출력·리디자인 설명 갱신
+- 검증:
+  - app.js V8 문법 파싱 성공
+  - 미리보기 필수 ID 누락/중복 0
+  - A4 paper 2개 확인, 과거 단일 `paper` 참조 0
+  - print CSS에서 2쪽 page-break 규칙 확인
+  - 포털 proposal cache 2곳 모두 v4, 포털 버전 v432 확인
+  - 실제 GitHub Pages 시각 렌더는 배포 캐시 반영 후 사용자 브라우저에서 최종 확인 필요
+- 커밋: `d60857f`, `917d967`, `97bf053`, `20004fa`, `0f1b2c4`, `476a11b`
+- 다음: 배포 반영 후 `https://sandleapt.github.io/#proposalView` 새로고침 → 표지/본문 2장 배치, 제목 줄바꿈, 긴 본문 fit, 인쇄 PDF 2쪽을 실제 브라우저에서 확인. 필요하면 여백·폰트 크기만 미세조정.
+
 
 ### MIN-20260916-418 — 만장일치 표결도 참석자 이름 표시 복원 + 서명 빈칸 시안
 
