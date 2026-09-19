@@ -120,7 +120,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v430</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v431</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.<br><br>이 포털의 자료는 산들마을 네이버 카페에 공개된 게시물(관리비부과명세서·회의 결과공고·계약서·선거 공고·관리규약)을 모아 정리한 것입니다. 원문은 카페에서 확인하세요.</div>
 </aside>
@@ -169,7 +169,7 @@ var GROUPS = [
     { id: "previewView", label: "회의록 미리보기", view: "previewView" },
     { id: "archiveView", label: "이전 회의록",     view: "archiveView" },
     { id: "agendaView", label: "안건 · 발언", view: "agendaView", adminOnly: true, subgroup: "회의 관리", child: true },
-    { id: "proposalView", label: "안건 제안서", service: "proposal", url: BASE + "/agenda-proposal/?v=2", adminOnly: true, child: true },
+    { id: "proposalView", label: "안건 제안서", service: "proposal", url: BASE + "/agenda-proposal/?v=3", adminOnly: true, child: true },
     { id: "setupView",  label: "회의 설정",   view: "setupView",  adminOnly: true, child: true },
     { id: "repsView",   label: "동대표 명단", view: "repsView",   adminOnly: true, child: true }
   ]},
@@ -249,15 +249,51 @@ var GROUPS = [
   }, 3000);   // 첫 화면이 뜨고 난 뒤에 확인한다
 })();
 
-function isAdminDevice() { // v61: 24시간 만료 규칙(회의록·관리비와 공통) — 만료된 키는 지우고 관리자 메뉴를 숨긴다
+function isAdminDevice() { // 회의록·관리비와 같은 24시간/30일 만료 규칙
   try {
     var k = localStorage.getItem("sandle_admin_key"); if (!k) return false;
     var at = +localStorage.getItem("sandle_admin_unlock_at") || 0;
-    // v107: 「이 기기 기억하기」를 켠 기기는 30일, 아니면 24시간 (회의록 core.js AdminGate와 같은 규칙).
     var ttl = (localStorage.getItem("sandle_admin_trust") === "1") ? 30*24*60*60*1000 : 24*60*60*1000;
-    if (!at || (Date.now() - at) > ttl) { localStorage.removeItem("sandle_admin_key"); localStorage.removeItem("sandle_admin_unlock_at"); return false; }
+    if (!at || (Date.now() - at) > ttl) {
+      localStorage.removeItem("sandle_admin_key");
+      localStorage.removeItem("sandle_admin_unlock_at");
+      return false;
+    }
     return true;
   } catch (e) { return false; }
+}
+// v431: 편집 메뉴는 평소 완전히 숨기고, 다른 잠금 화면에서 '수정용' 비밀번호를
+// 서버가 role:'edit'로 확인한 뒤에만 나타낸다. 열람용(role:'view')으로는 보이지 않는다.
+var PORTAL_GAS_URL="https://script.google.com/macros/s/AKfycbyhpE-DB5WAAEx7uqTCPwU-e0sPKuupkYN3YoQWALiFWe0IHFNh1y91e1VNtDmMxxoxLA/exec";
+var PORTAL_GAS_TOKEN="ITDXaUBDTmrz6DbQ3tv9R";
+var portalEditUnlocked=false, portalRoleChecking=false;
+function canSeeItem(it) { return !!it && (!it.adminOnly || portalEditUnlocked); }
+function setPortalEditAccess(on) {
+  on=!!on;
+  var changed=portalEditUnlocked!==on;
+  portalEditUnlocked=on;
+  if (changed && typeof renderMenu==="function") renderMenu();
+  if (current) {
+    if (current.adminOnly && !portalEditUnlocked) show("previewView", true);
+    else renderContext(current);
+  }
+}
+function verifyPortalEditAccess() {
+  if (portalRoleChecking) return;
+  var key="";
+  try { if (isAdminDevice()) key=localStorage.getItem("sandle_admin_key")||""; } catch (e) {}
+  if (!key) { setPortalEditAccess(false); return; }
+  portalRoleChecking=true;
+  fetch(PORTAL_GAS_URL,{
+    method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify({action:"verify",adminKey:key,token:PORTAL_GAS_TOKEN})
+  }).then(function(r){return r.json();}).then(function(x){
+    setPortalEditAccess(!!(x&&x.ok&&x.role==="edit"));
+  }).catch(function(){
+    // 서버 확인에 실패한 동안은 편집 메뉴를 열지 않는다.
+    setPortalEditAccess(false);
+  }).finally(function(){portalRoleChecking=false;});
 }
 function svcOf(it) { return it.service || it.group.service || it.id; }
 // 같은 호스트 서비스(iframe 한 벌씩). minutes 는 끼움 모드.
@@ -265,7 +301,7 @@ var SERVICES = {
   minutes:   { url: MIN + MINQ, embed: true },
   fees:      { url: FEES },
   community: { url: BASE + "/CommunityNotice/" },
-  proposal:  { url: BASE + "/agenda-proposal/?v=1" },
+  proposal:  { url: BASE + "/agenda-proposal/?v=3" },
   // iframe src 는 **이곳**에서 읽는다(항목의 url 은 '새 창으로 열기' 단추용).
   // 여기 등록을 빠뜨리면 메뉴를 눌러도 아무 일이 일어나지 않는다 — 2026-09-02에 실제로 그랬다.
   archive:   { url: BASE + "/archive-v1/?v=412" }
@@ -286,7 +322,7 @@ var contextGroups = document.getElementById("contextGroups"), contextMids = docu
 var contextSubRow = document.getElementById("contextSubRow"), contextSubs = document.getElementById("contextSubs");
 var current = null, frames = {}, ready = {};
 
-function firstItem(g) { return g.items.find(function (it) { return !it.placeholder; }); }
+function firstItem(g) { return g.items.find(function (it) { return !it.placeholder && canSeeItem(it); }); }
 function goItem(it) {
   if (!it || it.placeholder) return;
   show(it.id, true);
@@ -295,6 +331,7 @@ function goItem(it) {
 function midEntries(g) {
   var out = [], seenSubgroups = {};
   g.items.forEach(function (it) {
+    if (!canSeeItem(it)) return;
     if (it.child) {
       var subgroup = it.subgroup || "회의 관리";
       if (!seenSubgroups[subgroup]) {
@@ -327,41 +364,43 @@ function renderContext(it) {
   });
 
   contextSubs.innerHTML = "";
-  var subItems = activeSubgroup ? it.group.items.filter(function (candidate) { return candidate.child; }) : [];
+  var subItems = activeSubgroup ? it.group.items.filter(function (candidate) { return candidate.child && canSeeItem(candidate); }) : [];
   contextSubRow.hidden = !subItems.length;
   subItems.forEach(function (sub) {
     contextSubs.appendChild(buttonFor(sub.label, sub.id === it.id, "", function () { goItem(sub); }));
   });
 }
 
-// 메뉴 그리기
-GROUPS.forEach(function (g) {
-  var box = document.createElement("div"); box.className = "grp " + g.cls + (g.collapsible ? " collapsible" : ""); box.id = "grp-" + g.id;
-  if (g.collapsible) {
-    var tb = document.createElement("button"); tb.type = "button"; tb.className = "grp-title toggle";
-    tb.innerHTML = '<span class="dot"></span>' + g.title + '<span class="arrow">▸</span>';
-    tb.onclick = function () { box.classList.toggle("open"); try { localStorage.setItem("sandle_portal_admin_open", box.classList.contains("open") ? "1" : "0"); } catch (e) {} };
-    box.appendChild(tb);
-    // 회의록 앱과 같은 규칙: 관리자 키가 있는 기기나 한 번 펼친 기기는 펼친 채로
-    try { var v = localStorage.getItem("sandle_portal_admin_open"); if (v === "1" || (v === null && localStorage.getItem("sandle_admin_key"))) box.classList.add("open"); } catch (e) {}
-  } else {
-    var t = document.createElement("div"); t.className = "grp-title"; t.innerHTML = '<span class="dot"></span>' + g.title; box.appendChild(t);
-  }
-  var items = document.createElement("div"); items.className = "items";
-  var dividerAdded = false;
-  g.items.forEach(function (it) {
-    // v62: 관리자 메뉴도 항상 표시(🔒 포함) — 숨기면 키 만료 후 비밀번호를 넣을 입구가 없어짐(사용자 요청).
-    //      화면 자체는 회의록 앱이 서버 검증으로 잠근다(v69~), 열람/수정 2단계 키는 v92~.
-    if (it.adminOnly && !dividerAdded) { var d = document.createElement("div"); d.className = "items-divider"; items.appendChild(d); dividerAdded = true; }
-    if (it.subgroup) { var st = document.createElement("div"); st.className = "nav-subtitle"; st.textContent = it.subgroup; items.appendChild(st); }
-    var b = document.createElement("button"); b.type = "button"; b.className = "item" + (it.child ? " child" : "") + (it.adminOnly ? " locked" : "") + (it.placeholder ? " placeholder" : ""); b.dataset.id = it.id;
-    b.innerHTML = (it.adminOnly ? '<span class="num">🔒</span>' : "") + '<span>' + it.label + '</span>' + (it.external ? '<span class="ext">새 창 ↗</span>' : "");
-    if (it.placeholder) { b.disabled = true; b.setAttribute("aria-disabled", "true"); }
-    else b.onclick = function () { show(it.id, true); if (it.external) window.open(it.url, "_blank", "noopener"); closeDrawer(); };
-    items.appendChild(b);
+// 메뉴 그리기 — 수정용 권한 전에는 adminOnly 항목 자체를 만들지 않는다.
+function renderMenu() {
+  menu.innerHTML = "";
+  GROUPS.forEach(function (g) {
+    var box = document.createElement("div"); box.className = "grp " + g.cls + (g.collapsible ? " collapsible" : ""); box.id = "grp-" + g.id;
+    if (g.collapsible) {
+      var tb = document.createElement("button"); tb.type = "button"; tb.className = "grp-title toggle";
+      tb.innerHTML = '<span class="dot"></span>' + g.title + '<span class="arrow">▸</span>';
+      tb.onclick = function () { box.classList.toggle("open"); try { localStorage.setItem("sandle_portal_admin_open", box.classList.contains("open") ? "1" : "0"); } catch (e) {} };
+      box.appendChild(tb);
+      try { var v = localStorage.getItem("sandle_portal_admin_open"); if (v === "1") box.classList.add("open"); } catch (e) {}
+    } else {
+      var t = document.createElement("div"); t.className = "grp-title"; t.innerHTML = '<span class="dot"></span>' + g.title; box.appendChild(t);
+    }
+    var items = document.createElement("div"); items.className = "items";
+    var dividerAdded = false;
+    g.items.forEach(function (it) {
+      if (!canSeeItem(it)) return;
+      if (it.adminOnly && !dividerAdded) { var d = document.createElement("div"); d.className = "items-divider"; items.appendChild(d); dividerAdded = true; }
+      if (it.subgroup) { var st = document.createElement("div"); st.className = "nav-subtitle"; st.textContent = it.subgroup; items.appendChild(st); }
+      var b = document.createElement("button"); b.type = "button"; b.className = "item" + (it.child ? " child" : "") + (it.placeholder ? " placeholder" : ""); b.dataset.id = it.id;
+      b.innerHTML = '<span>' + it.label + '</span>' + (it.external ? '<span class="ext">새 창 ↗</span>' : "");
+      if (it.placeholder) { b.disabled = true; b.setAttribute("aria-disabled", "true"); }
+      else b.onclick = function () { show(it.id, true); if (it.external) window.open(it.url, "_blank", "noopener"); closeDrawer(); };
+      items.appendChild(b);
+    });
+    box.appendChild(items); menu.appendChild(box);
   });
-  box.appendChild(items); menu.appendChild(box);
-});
+}
+renderMenu();
 BOTTOM.forEach(function (bt) {
   var b = document.createElement("button"); b.className = bt.cls; b.dataset.group = bt.group; b.innerHTML = '<span class="ic">' + bt.ic + '</span>' + bt.label;
   b.onclick = function () {
@@ -452,6 +491,10 @@ function directUrl(it) {
 }
 function show(id, push, fromApp) {
   var it = ITEMS[id] || ITEMS.previewView;
+  if (it.adminOnly && !portalEditUnlocked) {
+    it = ITEMS.previewView;
+    try { history.replaceState(null, "", "#previewView"); } catch (e) {}
+  }
   current = it;
   document.querySelectorAll(".item").forEach(function (b) { b.classList.toggle("active", b.dataset.id === it.id); });
   // 모바일 하단은 현재 화면이 속한 대분류를 표시한다(PC 왼쪽 메뉴와 같은 정보구조).
@@ -485,12 +528,21 @@ document.getElementById("scrim").onclick = closeDrawer;
 window.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
 
 window.addEventListener("hashchange", function () { show((location.hash || "").replace(/^#/, ""), false); });
+// 같은 도메인의 자물쇠 화면(관리비·회의록 등)에서 비밀번호를 입력하면 localStorage 변경이
+// 부모 포털에도 전달된다. 수정용 역할이면 그 즉시 숨겨 둔 편집 메뉴를 다시 그린다.
+window.addEventListener("storage", function (e) {
+  if (e.key === "sandle_admin_key" || e.key === "sandle_admin_unlock_at" || e.key === "sandle_admin_trust") verifyPortalEditAccess();
+});
+window.addEventListener("focus", verifyPortalEditAccess);
 (function () {
   var first = (location.hash || "").replace(/^#/, "") || "previewView";
   var it = ITEMS[first] || ITEMS.previewView;
+  // 권한 확인 전에는 편집 전용 해시도 일반 첫 화면으로 돌린다.
+  if (it.adminOnly && !portalEditUnlocked) it = ITEMS.previewView;
   // 첫 화면이 회의록 앱 안의 탭이면 iframe 주소에 &tab= 을 붙여 처음부터 그 화면으로(메시지 왕복 없이)
   if (!it.external && (svcOf(it) === "minutes") && it.view && it.view !== "previewView") SERVICES.minutes.url = MIN + MINQ + "&tab=" + it.view;
   show(it.id, false);
+  verifyPortalEditAccess();
 })();
 </script>
 </body>
