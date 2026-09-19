@@ -12,7 +12,7 @@
 - 저장소 이름이 `sandleapt.github.io`라서 루트 주소 **https://sandleapt.github.io/** 로 열립니다(2026-08-23 이름 변경 완료).
 - Settings → Pages → Build and deployment: `Deploy from a branch`, Branch `main` / `(root)`.
 - 특정 화면으로 바로 가기: `https://sandleapt.github.io/#hajaView`처럼 `#항목id`를 사용합니다. 기존 항목 ID는 유지하며, 문서 하위 탭은 `noticeView`(관리규약) · `noticeContracts` · `noticeElections` · `noticeAnnouncements` · `noticeChecks`로 바로 엽니다.
-- 안건 제안서 작성 도구: `https://sandleapt.github.io/#proposalView` 또는 `https://sandleapt.github.io/agenda-proposal/`. 입력 내용은 브라우저에만 자동 저장되고, A4 1장 미리보기와 인쇄·PDF 저장을 지원합니다.
+- 안건 제안서 작성 도구: `https://sandleapt.github.io/#proposalView` 또는 `https://sandleapt.github.io/agenda-proposal/`. 입력 내용은 브라우저에만 자동 저장되고, 표지+본문 A4 2장 미리보기와 인쇄·PDF 저장을 지원합니다.
 
 ## 구조 (2026-08-23, 사이드바형)
 - 한 파일 `index.html`. 데스크탑은 5개 대분류의 왼쪽 사이드바, 모바일(860px 이하)은 같은 5개 대분류의 하단 바와 ☰ 서랍을 사용합니다. 하단 대분류를 누르면 해당 분류의 첫 화면으로 바로 이동합니다.
