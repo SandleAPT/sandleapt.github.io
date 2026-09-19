@@ -3,9 +3,8 @@
   var DRAFT_KEY="sandle_agenda_proposal_v1";
   var DB_NAME="sandle_agenda_proposals_v1";
   var STORE="documents";
-  var ids=["title","proposer","date","background","details","decision","cost","refs"];
+  var ids=["agendaNo","decisionDate","meetingNo","title","proposer","date","decision","background","details","cost","basis","refs"];
   var el={}; ids.forEach(function(id){el[id]=document.getElementById(id);});
-  var noRefs=document.getElementById("noRefs");
   var attachmentsInput=document.getElementById("attachments");
   var attachmentList=document.getElementById("attachmentList");
   var refsField=document.getElementById("refsField");
@@ -23,8 +22,10 @@
   var currentDocId=null;
   var dbPromise=null;
   var preview={
+    agendaNo:document.getElementById("pAgendaNo"),decisionMeta:document.getElementById("pDecisionMeta"),
     title:document.getElementById("pTitle"),proposer:document.getElementById("pProposer"),date:document.getElementById("pDate"),
-    background:document.getElementById("pBackground"),details:document.getElementById("pDetails"),decision:document.getElementById("pDecision"),cost:document.getElementById("pCost"),refs:document.getElementById("pRefs")
+    decision:document.getElementById("pDecision"),background:document.getElementById("pBackground"),details:document.getElementById("pDetails"),
+    cost:document.getElementById("pCost"),basis:document.getElementById("pBasis"),refs:document.getElementById("pRefs")
   };
 
   function today(){
@@ -56,13 +57,11 @@
   }
   function formData(){
     var data={}; ids.forEach(function(id){data[id]=el[id].value;});
-    data.noRefs=!!noRefs.checked;
     return data;
   }
   function applyData(data){
     data=data||{};
     ids.forEach(function(id){el[id].value=typeof data[id]==="string"?data[id]:"";});
-    noRefs.checked=!!data.noRefs;
     if(!el.date.value)el.date.value=today();
   }
   function saveDraft(){
@@ -100,25 +99,23 @@
     attachmentFiles.forEach(function(file){var li=document.createElement("li");li.textContent="첨부: "+(file.name||"첨부파일");ul.appendChild(li);});
     pAttachments.appendChild(ul);
   }
-  function updateRefControls(){
-    var off=!!noRefs.checked;
-    refsField.classList.toggle("omitted",off);
-    el.refs.disabled=off;
-    attachmentsInput.disabled=off;
-    refsSection.hidden=off;
+  function decisionMeta(){
+    var date=el.decisionDate.value?fmtDate(el.decisionDate.value):"20  .  .  .";
+    var meeting=el.meetingNo.value.trim();
+    return date+"  (제 "+(meeting||"  ")+"회)";
   }
   function update(){
-    preview.title.textContent=el.title.value.trim()||"안건 제목을 입력해 주세요.";
+    preview.agendaNo.textContent=el.agendaNo.value.trim()||"제   호";
+    preview.decisionMeta.textContent=decisionMeta();
+    preview.title.textContent=el.title.value.trim()||"제목을 입력해 주세요.";
     preview.proposer.textContent=el.proposer.value.trim()||"-";
     preview.date.textContent=fmtDate(el.date.value);
+    renderText(preview.decision,el.decision.value);
     renderText(preview.background,el.background.value);
     renderText(preview.details,el.details.value);
-    renderText(preview.decision,el.decision.value);
     renderText(preview.cost,el.cost.value);
-    updateRefControls();
-    var hasAttachments=attachmentFiles.length>0;
-    renderText(preview.refs,el.refs.value,hasAttachments?"":"내용을 입력해 주세요.");
-    preview.refs.classList.toggle("empty",!el.refs.value.trim()&&!hasAttachments);
+    renderText(preview.basis,el.basis.value,"-");
+    renderText(preview.refs,el.refs.value,"-");
     renderAttachmentPreview();
     saveDraft();
     requestAnimationFrame(fit);
@@ -254,7 +251,7 @@
   }
   function clearForm(){
     ids.forEach(function(id){el[id].value="";});
-    el.date.value=today(); noRefs.checked=false; attachmentFiles=[]; currentDocId=null; attachmentsInput.value="";
+    el.date.value=today(); attachmentFiles=[]; currentDocId=null; attachmentsInput.value="";
     renderAttachmentList(); clearDraft(); update();
     saveNote.textContent="새 제안서를 작성하고 있습니다.";
     renderLibrary();
@@ -267,19 +264,20 @@
   function sample(){
     currentDocId=null; attachmentFiles=[]; renderAttachmentList();
     applyData({
+      agendaNo:"", decisionDate:"", meetingNo:"",
       title:"커뮤니티센터 누수·곰팡이 보수의 건",
       proposer:"", date:today(),
-      background:"커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 영향을 주고 있습니다. 현재 누수 보수는 LH 관리이관 내용에 포함되어 있으나, 관리이관 시기가 정해지지 않아 실제 공사가 언제 시작될지는 알기 어려운 상태입니다.\n\n누수와 곰팡이는 오래 둘수록 마감재 손상이나 냄새, 습기 문제가 더 커질 수 있습니다. LH 보수를 기다리되 일정이 계속 늦어질 경우에는 단지에서 먼저 필요한 보수를 할 수 있도록 기준을 정하고자 합니다.",
-      details:"- LH 관리이관을 통해 빠르게 보수할 수 있으면 LH 공사로 진행\n- 관리이관이 계속 늦어지면 우리 단지에서 먼저 보수하는 방법과 비용 확인\n- 누수 원인을 잡고 젖은 곳을 충분히 말린 뒤 곰팡이를 없애고 필요한 부분만 고침\n- 공사 전 현재 누수와 곰팡이 상태를 사진으로 남김\n- 벽 설치나 공간 변경은 이번 보수와 나누어 보고, 누수 공사 후 상태를 확인해 다시 판단",
-      decision:"커뮤니티센터 누수와 곰팡이를 더 이상 오래 두지 않고 빠르게 보수한다.\n\nLH를 통한 빠른 보수가 어렵다고 판단되면 관리사무소에서 우리 단지가 먼저 보수할 때 필요한 범위, 비용과 일정을 확인해 회의에 보고한다.",
-      cost:"관리사무소에서 보수 범위와 예상 비용을 확인한 뒤 결정",
-      refs:"LH 관리이관 자료, 현재 상태 사진, 보수 견적", noRefs:false
+      decision:"커뮤니티센터 누수·곰팡이 보수 범위와 예상비용, 비용부담 주체 및 가능한 일정을 관리주체가 확인하여 다음 회의에 보고하는 것으로 의결한다.",
+      background:"커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 영향을 주고 있습니다. 현재 누수 보수는 LH 관리이관 내용에 포함되어 있으나, 관리이관 시기가 정해지지 않아 실제 공사가 언제 시작될지는 알기 어려운 상태입니다.\n\n누수와 곰팡이는 오래 둘수록 마감재 손상이나 냄새, 습기 문제가 더 커질 수 있어 보수 방법과 일정을 확인할 필요가 있습니다.",
+      details:"- LH 관리이관을 통한 보수 가능 여부와 예상 일정 확인\n- LH 보수가 늦어질 경우 단지 선보수 가능 여부 검토\n- 선보수 시 누수 원인, 보수 범위, 예상비용과 재원 확인\n- 공사 전 현재 누수와 곰팡이 상태를 사진으로 기록\n- 벽 설치나 공간 변경은 이번 보수와 분리하여 추후 판단",
+      cost:"관리주체에서 보수 범위와 예상비용, 사용 가능한 재원을 확인하여 보고",
+      basis:"산들마을 공동주택관리규약 제26조(안건의 제안)",
+      refs:"LH 관리이관 자료, 현재 상태 사진, 보수 견적"
     });
     update(); saveNote.textContent="예시를 불러왔습니다. 필요한 부분을 고친 뒤 ‘문서 저장’을 눌러주세요."; renderLibrary();
   }
 
   ids.forEach(function(id){el[id].addEventListener("input",update);el[id].addEventListener("change",update);});
-  noRefs.addEventListener("change",update);
   attachmentsInput.addEventListener("change",function(){
     var files=Array.prototype.slice.call(attachmentsInput.files||[]);
     var rejected=files.filter(function(file){return !fileAllowed(file);});
