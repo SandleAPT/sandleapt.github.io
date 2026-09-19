@@ -3,14 +3,15 @@
   var DRAFT_KEY="sandle_agenda_proposal_v1";
   var DB_NAME="sandle_agenda_proposals_v1";
   var STORE="documents";
-  var ids=["agendaNo","decisionDate","meetingNo","title","proposer","date","decision","background","details","cost","basis","refs"];
+  var ids=["meetingHeader","agendaNo","decisionDate","meetingNo","title","proposer","date","decision","background","details","cost","basis","refs"];
   var el={}; ids.forEach(function(id){el[id]=document.getElementById(id);});
   var attachmentsInput=document.getElementById("attachments");
   var attachmentList=document.getElementById("attachmentList");
   var refsField=document.getElementById("refsField");
   var refsSection=document.getElementById("refsSection");
   var pAttachments=document.getElementById("pAttachments");
-  var paper=document.getElementById("paper");
+  var coverPaper=document.getElementById("coverPaper");
+  var bodyPaper=document.getElementById("bodyPaper");
   var pageState=document.getElementById("pageState");
   var printBtn=document.getElementById("printBtn");
   var saveBtn=document.getElementById("saveBtn");
@@ -22,6 +23,7 @@
   var currentDocId=null;
   var dbPromise=null;
   var preview={
+    meetingHeaderCover:document.getElementById("pMeetingHeaderCover"),meetingHeaderBody:document.getElementById("pMeetingHeaderBody"),
     agendaNo:document.getElementById("pAgendaNo"),decisionMeta:document.getElementById("pDecisionMeta"),
     title:document.getElementById("pTitle"),proposer:document.getElementById("pProposer"),date:document.getElementById("pDate"),
     decision:document.getElementById("pDecision"),background:document.getElementById("pBackground"),details:document.getElementById("pDetails"),
@@ -105,9 +107,15 @@
     return date+"  (제 "+(meeting||"  ")+"회)";
   }
   function update(){
+    var meetingHeader=el.meetingHeader.value.trim();
+    [preview.meetingHeaderCover,preview.meetingHeaderBody].forEach(function(node){
+      node.textContent=meetingHeader;
+      node.classList.toggle("empty",!meetingHeader);
+    });
     preview.agendaNo.textContent=el.agendaNo.value.trim()||"제   호";
     preview.decisionMeta.textContent=decisionMeta();
     preview.title.textContent=el.title.value.trim()||"제목을 입력해 주세요.";
+    preview.title.classList.toggle("empty",!el.title.value.trim());
     preview.proposer.textContent=el.proposer.value.trim()||"-";
     preview.date.textContent=fmtDate(el.date.value);
     renderText(preview.decision,el.decision.value);
@@ -121,17 +129,20 @@
     requestAnimationFrame(fit);
   }
   function fit(){
-    var sizes=[11.5,11.25,11], lines=[1.55,1.50,1.45], gaps=[14,12,10];
+    var pages=[coverPaper,bodyPaper];
+    var sizes=[10.5,10.25,10], lines=[1.62,1.58,1.54], gaps=[12,10,8];
     var fits=false, used=sizes[sizes.length-1];
     for(var i=0;i<sizes.length;i++){
-      paper.style.setProperty("--doc-size",sizes[i]+"pt");
-      paper.style.setProperty("--doc-line",lines[i]);
-      paper.style.setProperty("--section-gap",gaps[i]+"px");
+      pages.forEach(function(page){
+        page.style.setProperty("--doc-size",sizes[i]+"pt");
+        page.style.setProperty("--doc-line",lines[i]);
+        page.style.setProperty("--section-gap",gaps[i]+"px");
+      });
       used=sizes[i];
-      if(paper.scrollHeight<=paper.clientHeight+1){fits=true;break;}
+      if(pages.every(function(page){return page.scrollHeight<=page.clientHeight+1;})){fits=true;break;}
     }
     pageState.classList.toggle("over",!fits);
-    pageState.textContent=fits ? "A4 한 장 · 본문 "+used+"pt" : "11pt로도 A4 한 장을 넘습니다. 내용을 조금 줄여 주세요.";
+    pageState.textContent=fits ? "A4 2장 · 표지 + 본문 · 본문 "+used+"pt" : "10pt로도 본문 A4 한 장을 넘습니다. 내용을 조금 줄여 주세요.";
     printBtn.disabled=!fits;
     return fits;
   }
@@ -264,7 +275,7 @@
   function sample(){
     currentDocId=null; attachmentFiles=[]; renderAttachmentList();
     applyData({
-      agendaNo:"", decisionDate:"", meetingNo:"",
+      meetingHeader:"", agendaNo:"", decisionDate:"", meetingNo:"",
       title:"커뮤니티센터 누수·곰팡이 보수의 건",
       proposer:"", date:today(),
       decision:"커뮤니티센터 누수·곰팡이 보수 범위와 예상비용, 비용부담 주체 및 가능한 일정을 관리주체가 확인하여 다음 회의에 보고하는 것으로 의결한다.",
