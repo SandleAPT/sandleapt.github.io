@@ -280,9 +280,10 @@
       });
   }
   function configureCloud(){
-    var current=getCloudUrl(false);
-    var next=(prompt(current?"클라우드 저장소 주소를 변경할까요?\n현재 주소를 그대로 쓰려면 취소하세요.":"클라우드 저장소 주소(Apps Script 웹앱 URL)를 입력하세요.\n비공개 자료 저장소와 같은 주소를 사용합니다.",current||"")||"").trim();
-    if(!next)return;try{localStorage.setItem(CLOUD_URL_KEY,next);}catch(e){}libraryLoaded=false;libraryPromise=null;refreshLibrary();
+    window.ProposalCloudSettings.open(getCloudUrl(false),function(url){
+      localStorage.setItem(CLOUD_URL_KEY,url);
+      libraryLoaded=false;libraryPromise=null;refreshLibrary();
+    });
   }
   function readFileDataUrl(file){
     return new Promise(function(resolve,reject){

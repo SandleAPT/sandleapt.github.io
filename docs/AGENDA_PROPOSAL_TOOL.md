@@ -111,3 +111,9 @@
 - 초안에 저장 문서 ID·생성시각·저장소 주소를 함께 보관하여 새로고침 후에도 같은 문서를 수정한다. 구형 초안은 ID가 없으므로 목록에서 한 번 불러와야 한다. 제목으로 임의 매칭하지 않는다.
 - 새로고침 후 수정 저장은 기존 첨부를 먼저 읽어 보존한다. 첨부를 삭제하려면 목록에서 다시 불러온 후 제거한다. 읽기 실패 시 덮어쓰지 않는다.
 - 검증: `node agenda-proposal/tests/save-document.test.js` (신규 ID, 수정 ID 유지, 새로고침 연결, 기존 HWP 보존).
+
+## v445 연결 설정과 권한
+
+- 클라우드 설정에서 주소 복사 또는 연결 설정 JSON 내려받기/가져오기를 지원한다. 다른 기기에서 가져온 뒤 연결 적용한다. 비밀번호·회의자료는 파일에 포함하지 않는다.
+- 포털 내 작성 화면은 부모의 검증된 권한을 재사용하며, 직접 접속은 공통 PortalAccess로 검증한다.
+- 검증: `node agenda-proposal/tests/access.test.js`, `node agenda-proposal/tests/cloud-settings.test.js`.

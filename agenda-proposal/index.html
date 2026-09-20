@@ -230,68 +230,12 @@
   </section>
 </main>
 
-<script>
-(function(){
-  "use strict";
-  var GAS_URL="https://script.google.com/macros/s/AKfycbyhpE-DB5WAAEx7uqTCPwU-e0sPKuupkYN3YoQWALiFWe0IHFNh1y91e1VNtDmMxxoxLA/exec";
-  var GAS_TOKEN="ITDXaUBDTmrz6DbQ3tv9R";
-  var checking=false;
-  var gate=document.getElementById("accessGate");
-  var title=document.getElementById("accessGateTitle");
-  var text=document.getElementById("accessGateText");
-
-  function validStoredKey(){
-    try{
-      var key=localStorage.getItem("sandle_admin_key")||"";
-      if(!key)return "";
-      var at=+localStorage.getItem("sandle_admin_unlock_at")||0;
-      var ttl=(localStorage.getItem("sandle_admin_trust")==="1")?30*24*60*60*1000:24*60*60*1000;
-      if(!at||(Date.now()-at)>ttl){
-        localStorage.removeItem("sandle_admin_key");
-        localStorage.removeItem("sandle_admin_unlock_at");
-        return "";
-      }
-      return key;
-    }catch(e){return "";}
-  }
-  function locked(message){
-    document.body.classList.add("access-pending");
-    if(gate)gate.style.display="";
-    if(title)title.textContent="회의자료 작성은 수정용 권한에서만 보여요.";
-    if(text)text.textContent=message||"포털의 🔒 메뉴에서 수정용 비밀번호를 입력하면 이 메뉴와 작성 화면이 나타납니다.";
-  }
-  function unlocked(){
-    document.body.classList.remove("access-pending");
-    if(gate)gate.style.display="none";
-  }
-  function check(){
-    if(checking)return;
-    var key=validStoredKey();
-    if(!key){locked();return;}
-    checking=true;
-    if(title)title.textContent="수정 권한을 확인하고 있어요.";
-    if(text)text.textContent="잠시만 기다려 주세요.";
-    fetch(GAS_URL,{
-      method:"POST",
-      headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({action:"verify",adminKey:key,token:GAS_TOKEN})
-    }).then(function(r){return r.json();}).then(function(x){
-      if(x&&x.ok&&x.role==="edit")unlocked();
-      else locked("열람용 비밀번호로는 표시되지 않습니다. 포털의 🔒 메뉴에서 수정용 비밀번호를 입력해 주세요.");
-    }).catch(function(){
-      locked("권한을 확인하지 못했습니다. 네트워크를 확인한 뒤 다시 열어 주세요.");
-    }).finally(function(){checking=false;});
-  }
-  window.addEventListener("storage",function(e){
-    if(e.key==="sandle_admin_key"||e.key==="sandle_admin_unlock_at"||e.key==="sandle_admin_trust")check();
-  });
-  window.addEventListener("focus",check);
-  check();
-})();
-</script>
+<script src="../portal/access.js?v=1"></script>
+<script src="./access.js?v=1"></script>
 <script src="./meeting-order.js?v=1"></script>
 <script src="./cloud-request.js?v=2"></script>
-<script src="./app.js?v=16"></script>
+<script src="./cloud-settings.js?v=1"></script>
+<script src="./app.js?v=17"></script>
 <script src="./procedure-check.js?v=2"></script>
 </body>
 </html>
