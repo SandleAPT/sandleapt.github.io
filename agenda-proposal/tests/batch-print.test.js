@@ -33,9 +33,12 @@ const app=window.ProposalPrint.create({config:context.typeConfig,term:6,fit:()=>
  assert.equal(document.querySelectorAll('#printBatch [id]').length,0);
  assert.equal(document.getElementById('title').value,'저장 전 초안');
  await app.open();
+ assert.equal(document.querySelectorAll('.print-include').length,4,'attachment option visible before any document fetch');
+ const before=loaded.length;
  const chosen=document.querySelectorAll('.print-choice input')[0];chosen.setAttribute('checked','');
- await document.querySelector('.print-list').onchange({target:chosen});
- const attachment=document.querySelector('.print-file');assert(attachment);assert.equal(document.querySelectorAll('.print-file').length,1,'HWP has no print checkbox');attachment.setAttribute('checked','');
+ document.querySelector('.print-list').onchange();
+ assert.equal(loaded.length,before,'selection must not fetch payloads');assert(!document.querySelector('[data-close]').disabled);
+ document.querySelector('.print-include').checked=true;
  await submit.onclick();assert.equal(prints,2);assert.deepEqual(attached,['첨부.pdf']);assert.equal(document.querySelectorAll('#printBatch .paper').length,3);
  await app.open();fail=true;const input=document.querySelector('.print-choice input');input.setAttribute('checked','');
  await submit.onclick();assert.equal(prints,2);assert.equal(document.querySelectorAll('#printBatch .paper').length,0);assert(document.querySelector('[role=status]').textContent!==undefined);

@@ -505,7 +505,7 @@
   newBtn.addEventListener("click",newDocument);saveBtn.addEventListener("click",saveDocument);var printer=window.ProposalPrint.create({
     fit:fit,currentPages:function(){return [coverPaper,bodyPaper];},config:typeConfig,term:CURRENT_TERM,date:fmtDate,renderText:renderText,
     sort:order.sortedForLibrary,number:function(doc){return order.displayNumber(doc,libraryDocs);},
-    list:function(){return loadLibraryData(false,true);},
+    list:function(){return ensureLibraryReady();},
     load:function(doc){return cloudApi({action:"get",id:doc.id},false).then(function(res){if(!res.item)throw new Error("저장된 자료를 찾지 못했습니다.");return parsePayload(res.item);});}
   });
   printBtn.addEventListener("click",function(){if(!documentLoading&&!documentSaving)printer.open();});
