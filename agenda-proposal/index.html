@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 안건 제안서</title>
 <meta name="description" content="산들마을 공동주택관리규약 별지 제7호 서식에 맞춰 의안을 표지와 본문 A4 2장으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=8">
+<link rel="stylesheet" href="./app.css?v=10">
 </head>
 <body class="access-pending">
 <div class="access-gate" id="accessGate" role="status" aria-live="polite">
@@ -35,12 +35,15 @@
       <span>의결주문 → 제안이유 → 주요내용 → 비용추계 → 참고사항 순서로 작성합니다. 산들마을 관리규약 별지 제7호 서식 기준입니다.</span>
     </div>
 
-    <section class="library" aria-label="저장된 안건 제안서">
+    <section class="library" aria-label="클라우드 안건 제안서">
       <div class="library-head">
-        <div><b>저장된 제안서</b><span id="libraryCount">0건</span></div>
-        <small>저장한 제안서는 이 기기에서 다시 불러오거나 삭제할 수 있어요.</small>
+        <div><b>클라우드 제안서</b><span id="libraryCount">-</span></div>
+        <div class="library-cloud">
+          <button type="button" id="cloudConnectBtn">클라우드 연결</button>
+          <small id="cloudStatus">연결 상태를 확인하고 있어요.</small>
+        </div>
       </div>
-      <div class="library-list" id="libraryList"><div class="library-empty">저장된 제안서가 없습니다.</div></div>
+      <div class="library-list" id="libraryList"><div class="library-empty">클라우드 목록을 불러오는 중입니다.</div></div>
     </section>
 
     <div class="field-grid three compact-row official-fields">
@@ -129,7 +132,7 @@
       <small class="file-note">입주자등이 연명하여 제안하는 경우 신청인 명단(명단·서명) 등 필요한 별지를 함께 첨부해 주세요.</small>
     </div>
 
-    <p class="save-note" id="saveNote">작성 중인 내용은 이 기기에 임시 저장됩니다.</p>
+    <p class="save-note" id="saveNote">작성 중 내용은 이 기기에 임시 저장되고, ‘문서 저장’을 누르면 클라우드에 저장됩니다.</p>
   </section>
 
   <section class="preview-area" aria-label="A4 미리보기">
@@ -266,7 +269,7 @@
   check();
 })();
 </script>
-<script src="./app.js?v=8"></script>
+<script src="./app.js?v=10"></script>
 <script src="./procedure-check.js?v=1"></script>
 </body>
 </html>
