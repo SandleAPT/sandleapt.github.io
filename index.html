@@ -113,6 +113,7 @@ main{flex:1 1 auto;position:relative;min-height:0}
 }
 @media (prefers-reduced-motion:reduce){aside.rail,.grp-title .arrow{transition:none}.loading{animation:none}}
 </style>
+<link rel="stylesheet" href="./portal/access.css?v=1">
 </head>
 <body>
 <aside class="rail" id="rail">
@@ -120,9 +121,10 @@ main{flex:1 1 auto;position:relative;min-height:0}
        내가 시각을 지어내 적는 바람에 15:40인데 16:44로 미래 시각이 적혀 있었다.
        이제 이 페이지가 배포된 파일의 Last-Modified 를 읽어 채운다 — 지어낼 수가 없다.
        v 번호만 손으로 올린다(커밋 순번이라 시각과 무관). -->
-  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v440</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
+  <div class="brand"><div class="logo">산</div><div><b>산들마을 입주민 포털</b><small><span id="verNo">v441</span> · <span id="verTime">갱신 시각 확인 중…</span></small></div></div>
   <nav class="menu" id="menu"></nav>
   <div class="rail-foot">왼쪽 메뉴로 모든 화면을 오갑니다.<br>↗ 표시는 새 창으로 열립니다.<br><br>이 포털의 자료는 산들마을 네이버 카페에 공개된 게시물(관리비부과명세서·회의 결과공고·계약서·선거 공고·관리규약)을 모아 정리한 것입니다. 원문은 카페에서 확인하세요.</div>
+  <button type="button" class="admin-entry" id="adminModeBtn">관리자모드<small id="accessRole">일반 열람 중</small></button>
 </aside>
 <div class="scrim" id="scrim"></div>
 <div class="stage">
@@ -144,6 +146,17 @@ main{flex:1 1 auto;position:relative;min-height:0}
   </main>
   <div class="bottom" id="bottom"></div>
 </div>
+<dialog class="access-dialog" id="accessDialog" aria-labelledby="accessTitle">
+  <form id="accessForm">
+    <h2 id="accessTitle">관리자모드</h2>
+    <p>비밀번호에 따라 열람 또는 수정 권한이 적용됩니다. 권한을 바꾸면 열려 있던 화면이 다시 열리므로 작성 중인 내용은 먼저 저장해 주세요.</p>
+    <label>비밀번호<input id="accessPassword" type="password" autocomplete="current-password" required></label>
+    <label><input id="accessTrust" type="checkbox"> 이 기기에서 30일간 기억하기</label>
+    <p id="accessMessage" role="status" aria-live="polite"></p>
+    <div class="access-actions"><button type="button" id="accessLogout" hidden>권한 종료</button><button type="button" id="accessCancel">닫기</button><button type="submit" id="accessSubmit">확인</button></div>
+  </form>
+</dialog>
+<script src="./portal/access.js?v=1"></script>
 <script>
 // ── 버전 표기 규칙 (사용자 지시) ──────────────────────────────────────
 // 고칠 때마다 **v를 1 올리고, 옆의 시각을 `YYYY.MM.DD HH:MM:SS`로 함께 갱신한다.**
@@ -194,7 +207,7 @@ var GROUPS = [
   ]},
   { id: "management", title: "점검 · 관리", cls: "", items: [
     { id: "noticeChecks", label: "절차 점검", view: "noticeView", noticeSub: "checks", service: "minutes" },
-    { id: "fees",     label: "관리비 추적 🔒", service: "fees", url: FEES },
+    { id: "fees",     label: "관리비 추적", memberOnly: true, service: "fees", url: FEES },
     { id: "hajaView", label: "하자판결금",  service: "minutes", view: "hajaView" }
   ]},
   { id: "info", title: "소식 · 정보", cls: "", items: [
@@ -249,52 +262,23 @@ var GROUPS = [
   }, 3000);   // 첫 화면이 뜨고 난 뒤에 확인한다
 })();
 
-function isAdminDevice() { // 회의록·관리비와 같은 24시간/30일 만료 규칙
-  try {
-    var k = localStorage.getItem("sandle_admin_key"); if (!k) return false;
-    var at = +localStorage.getItem("sandle_admin_unlock_at") || 0;
-    var ttl = (localStorage.getItem("sandle_admin_trust") === "1") ? 30*24*60*60*1000 : 24*60*60*1000;
-    if (!at || (Date.now() - at) > ttl) {
-      localStorage.removeItem("sandle_admin_key");
-      localStorage.removeItem("sandle_admin_unlock_at");
-      return false;
-    }
-    return true;
-  } catch (e) { return false; }
+var portalRole="";
+function canSeeItem(it) { return PortalAccess.allowed(it,portalRole); }
+function setPortalRole(role) {
+  portalRole=role;
+  document.getElementById("accessRole").textContent=role==="edit"?"수정 권한 사용 중":role==="view"?"열람 권한 사용 중":"일반 열람 중";
+  document.getElementById("accessLogout").hidden=!role;
+  // 권한이 바뀌면 이전 권한으로 열린 iframe도 폐기한다.
+  Object.keys(frames).forEach(function(key){var pane=document.getElementById("pane-svc-"+key);if(pane)pane.remove();});
+  frames={};ready={};pendingView=null;
+  renderMenu();
+  if(current)show(canSeeItem(current)?current.id:"previewView",true);
 }
-// v431: 편집 메뉴는 평소 완전히 숨기고, 다른 잠금 화면에서 '수정용' 비밀번호를
-// 서버가 role:'edit'로 확인한 뒤에만 나타낸다. 열람용(role:'view')으로는 보이지 않는다.
-var PORTAL_GAS_URL="https://script.google.com/macros/s/AKfycbyhpE-DB5WAAEx7uqTCPwU-e0sPKuupkYN3YoQWALiFWe0IHFNh1y91e1VNtDmMxxoxLA/exec";
-var PORTAL_GAS_TOKEN="ITDXaUBDTmrz6DbQ3tv9R";
-var portalEditUnlocked=false, portalRoleChecking=false;
-function canSeeItem(it) { return !!it && (!it.adminOnly || portalEditUnlocked); }
-function setPortalEditAccess(on) {
-  on=!!on;
-  var changed=portalEditUnlocked!==on;
-  portalEditUnlocked=on;
-  if (changed && typeof renderMenu==="function") renderMenu();
-  if (current) {
-    if (current.adminOnly && !portalEditUnlocked) show("previewView", true);
-    else renderContext(current);
-  }
-}
-function verifyPortalEditAccess() {
-  if (portalRoleChecking) return;
-  var key="";
-  try { if (isAdminDevice()) key=localStorage.getItem("sandle_admin_key")||""; } catch (e) {}
-  if (!key) { setPortalEditAccess(false); return; }
-  portalRoleChecking=true;
-  fetch(PORTAL_GAS_URL,{
-    method:"POST",
-    headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify({action:"verify",adminKey:key,token:PORTAL_GAS_TOKEN})
-  }).then(function(r){return r.json();}).then(function(x){
-    setPortalEditAccess(!!(x&&x.ok&&x.role==="edit"));
-  }).catch(function(){
-    // 서버 확인에 실패한 동안은 편집 메뉴를 열지 않는다.
-    setPortalEditAccess(false);
-  }).finally(function(){portalRoleChecking=false;});
-}
+var portalAccess=PortalAccess.create({storage:localStorage,fetch:window.fetch.bind(window),
+  url:"https://script.google.com/macros/s/AKfycbyhpE-DB5WAAEx7uqTCPwU-e0sPKuupkYN3YoQWALiFWe0IHFNh1y91e1VNtDmMxxoxLA/exec",
+  token:"ITDXaUBDTmrz6DbQ3tv9R",change:setPortalRole});
+var accessBusy=false;
+function verifyPortalEditAccess(){if(!accessBusy)return portalAccess.restore(false);}
 function svcOf(it) { return it.service || it.group.service || it.id; }
 // 같은 호스트 서비스(iframe 한 벌씩). minutes 는 끼움 모드.
 var SERVICES = {
@@ -353,6 +337,7 @@ function buttonFor(label, active, cls, onclick, disabled) {
 function renderContext(it) {
   contextGroups.innerHTML = "";
   GROUPS.forEach(function (g) {
+    if(!firstItem(g))return;
     contextGroups.appendChild(buttonFor(g.title, g.id === it.group.id, "", function () { goItem(firstItem(g)); }));
   });
 
@@ -375,6 +360,7 @@ function renderContext(it) {
 function renderMenu() {
   menu.innerHTML = "";
   GROUPS.forEach(function (g) {
+    if(!firstItem(g))return;
     var box = document.createElement("div"); box.className = "grp " + g.cls + (g.collapsible ? " collapsible" : ""); box.id = "grp-" + g.id;
     if (g.collapsible) {
       var tb = document.createElement("button"); tb.type = "button"; tb.className = "grp-title toggle";
@@ -491,7 +477,7 @@ function directUrl(it) {
 }
 function show(id, push, fromApp) {
   var it = ITEMS[id] || ITEMS.previewView;
-  if (it.adminOnly && !portalEditUnlocked) {
+  if (!canSeeItem(it)) {
     it = ITEMS.previewView;
     try { history.replaceState(null, "", "#previewView"); } catch (e) {}
   }
@@ -531,18 +517,34 @@ window.addEventListener("hashchange", function () { show((location.hash || "").r
 // 같은 도메인의 자물쇠 화면(관리비·회의록 등)에서 비밀번호를 입력하면 localStorage 변경이
 // 부모 포털에도 전달된다. 수정용 역할이면 그 즉시 숨겨 둔 편집 메뉴를 다시 그린다.
 window.addEventListener("storage", function (e) {
-  if (e.key === "sandle_admin_key" || e.key === "sandle_admin_unlock_at" || e.key === "sandle_admin_trust") verifyPortalEditAccess();
+  if (e.key === null || e.key === "sandle_admin_key" || e.key === "sandle_admin_unlock_at" || e.key === "sandle_admin_trust") verifyPortalEditAccess();
 });
+var accessDialog=document.getElementById("accessDialog"),accessInput=document.getElementById("accessPassword"),accessMessage=document.getElementById("accessMessage");
+document.getElementById("adminModeBtn").onclick=function(){closeDrawer();accessInput.value="";accessMessage.textContent="";accessDialog.showModal();accessInput.focus();};
+document.getElementById("accessCancel").onclick=function(){accessDialog.close();};
+accessDialog.addEventListener("close",function(){accessInput.value="";if(accessBusy)portalAccess.logout();});
+document.getElementById("accessLogout").onclick=function(){portalAccess.logout();accessDialog.close();};
+document.getElementById("accessForm").onsubmit=async function(event){
+  event.preventDefault();if(accessBusy)return;
+  var key=accessInput.value.trim();if(!key)return;
+  accessBusy=true;document.getElementById("accessSubmit").disabled=true;accessMessage.textContent="권한을 확인하고 있습니다…";
+  try{if(await portalAccess.login(key,document.getElementById("accessTrust").checked)){accessBusy=false;accessDialog.close();}}
+  catch(error){accessMessage.textContent=error.message||"권한 확인에 실패했습니다. 다시 시도해 주세요.";}
+  finally{accessBusy=false;accessInput.value="";document.getElementById("accessSubmit").disabled=false;}
+};
+setInterval(function(){if(!accessBusy)portalAccess.expire();},1000);
+setInterval(verifyPortalEditAccess,300000);
+document.addEventListener("visibilitychange",function(){if(!document.hidden)verifyPortalEditAccess();});
 window.addEventListener("focus", verifyPortalEditAccess);
 (function () {
   var first = (location.hash || "").replace(/^#/, "") || "previewView";
   var it = ITEMS[first] || ITEMS.previewView;
   // 권한 확인 전에는 편집 전용 해시도 일반 첫 화면으로 돌린다.
-  if (it.adminOnly && !portalEditUnlocked) it = ITEMS.previewView;
+  if (!canSeeItem(it)) it = ITEMS.previewView;
   // 첫 화면이 회의록 앱 안의 탭이면 iframe 주소에 &tab= 을 붙여 처음부터 그 화면으로(메시지 왕복 없이)
   if (!it.external && (svcOf(it) === "minutes") && it.view && it.view !== "previewView") SERVICES.minutes.url = MIN + MINQ + "&tab=" + it.view;
   show(it.id, false);
-  verifyPortalEditAccess();
+  Promise.resolve(verifyPortalEditAccess()).then(function(){if(canSeeItem(ITEMS[first]))show(first,true);});
 })();
 </script>
 </body>

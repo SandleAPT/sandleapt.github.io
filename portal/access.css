@@ -1,0 +1,8 @@
+.admin-entry{margin:0 12px 14px;padding:12px;border:1px solid var(--gold-line);border-radius:10px;background:var(--gold-soft);color:var(--gold-ink);font:inherit;font-size:13px;font-weight:800;cursor:pointer;flex-shrink:0}
+.admin-entry small{display:block;margin-top:3px;font-size:11px;font-weight:500}
+.access-dialog{width:min(380px,calc(100% - 32px));border:1px solid var(--line);border-radius:16px;padding:24px;color:var(--ink);background:var(--paper)}
+.access-dialog::backdrop{background:rgba(0,0,0,.35)}
+.access-dialog h2{font-size:18px;margin:0 0 10px}.access-dialog p{font-size:13px;line-height:1.6;color:var(--muted)}
+.access-dialog label{display:block;font-size:13px;margin:12px 0}.access-dialog input[type=password]{display:block;width:100%;padding:10px;margin-top:7px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.access-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.access-actions button{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font:inherit;font-size:13px}.access-actions button[type=submit]{background:var(--gold-soft);font-weight:800}
+#accessMessage{min-height:20px;color:#9b3b26}
