@@ -56,7 +56,8 @@
 - 포털: 기존 `회의 관리` 첫 화면은 `안건 · 발언`로 유지하고 `회의자료 작성`을 그 다음 소분류로 둔다.
 - 순번 검증: `node agenda-proposal/tests/meeting-order.test.js`
 - 화면 계약 검증: `node agenda-proposal/tests/form-contract.test.js`
-- 포털 버전: v437
+- 포털 버전: v438
+- 첨부 복원은 dataURL 직접 디코딩으로 처리하며 인터넷 요청을 하지 않는다. `node agenda-proposal/tests/attachment-restore.test.js`로 바이트·파일명·복원 오류를 검증한다.
 - 불러오기 검증: `node agenda-proposal/tests/cloud-request.test.js` 및 `node agenda-proposal/tests/load-document.test.js`
 
 완료 시각: 2026-09-03 14:56:53 KST

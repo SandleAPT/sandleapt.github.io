@@ -1,8 +1,9 @@
 (function(root){
   "use strict";
-  function json(url,options){
+  function json(url,options,onProgress){
     var body=JSON.parse(options.body||"{}");
     var tries=body.action==="get"||body.action==="list"?3:1;
+    var total=tries;
     function attempt(){
       var controller=new AbortController(),timer;
       return new Promise(function(resolve,reject){
@@ -15,6 +16,7 @@
       }).finally(function(){clearTimeout(timer);});
     }
     function run(){
+      if(onProgress)onProgress(total-tries+1,total);
       return attempt().catch(function(err){
         if(--tries<=0)throw err;
         return new Promise(function(resolve){setTimeout(resolve,700);}).then(run);

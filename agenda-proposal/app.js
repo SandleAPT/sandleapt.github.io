@@ -257,10 +257,10 @@
     return url;
   }
   function getCloudKey(){try{return localStorage.getItem(ADMIN_KEY)||"";}catch(e){return "";}}
-  function cloudApi(body,askUrl){
+  function cloudApi(body,askUrl,onProgress){
     var url=getCloudUrl(askUrl!==false); if(!url)return Promise.reject(new Error("클라우드 저장소 연결이 필요합니다."));
     var key=getCloudKey(); if(!key)return Promise.reject(new Error("수정용 비밀번호가 필요합니다.")); body.adminKey=key;
-    return window.ProposalCloud.json(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)})
+    return window.ProposalCloud.json(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)},onProgress)
       .then(function(res){
         if(res&&res.ok)return res;
         if(res&&res.error==="edit_required")throw new Error("수정용 비밀번호가 필요합니다.");
@@ -282,8 +282,19 @@
   }
   function storedAttachmentToFile(item){
     if(!item||!item.dataUrl)return Promise.resolve(null);
-    return fetch(item.dataUrl).then(function(r){return r.blob();}).then(function(blob){
-      try{return new File([blob],item.name||"첨부파일",{type:item.type||blob.type||"application/octet-stream",lastModified:item.lastModified||Date.now()});}
+    return Promise.resolve().then(function(){
+      var match=String(item.dataUrl).match(/^data:([^,]*),([\s\S]*)$/);
+      if(!match)throw new Error((item.name||"첨부파일")+": 저장된 첨부 형식이 올바르지 않습니다.");
+      var bytes;
+      if(/;base64(?:;|$)/i.test(match[1])){
+        var binary=atob(match[2]);bytes=new Uint8Array(binary.length);
+        for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+      }else{
+        bytes=new TextEncoder().encode(decodeURIComponent(match[2]));
+      }
+      var type=item.type||match[1].split(";")[0]||"application/octet-stream";
+      var blob=new Blob([bytes],{type:type});
+      try{return new File([blob],item.name||"첨부파일",{type:type,lastModified:item.lastModified||Date.now()});}
       catch(e){blob.name=item.name||"첨부파일";blob.lastModified=item.lastModified||Date.now();return blob;}
     });
   }
@@ -397,12 +408,14 @@
     if(documentLoading)return;
     documentLoading=true;button.disabled=true;button.textContent="불러오는 중…";
     saveBtn.disabled=true;newBtn.disabled=true;libraryList.classList.add("busy");
-    cloudStatus.textContent=saveNote.textContent="클라우드에서 회의자료와 첨부파일을 불러오는 중…";
-    return cloudApi({action:"get",id:id},true).then(function(res){
+    return cloudApi({action:"get",id:id},true,function(attempt,total){
+      cloudStatus.textContent=saveNote.textContent="저장소 응답을 기다리는 중… ("+attempt+"/"+total+"회 · 회당 최대 15초)";
+    }).then(function(res){
       if(!res.item)throw new Error("저장된 회의자료를 찾지 못했습니다.");
       var obj=parsePayload(res.item),doc=libraryDocs.find(function(row){return row.id===id;});
       if(!doc){doc=order.parseRecord(res.item);order.hydrateRecord(doc,obj);upsertLocalDoc(doc);}
       var data=Object.assign({},obj.data||obj);data.docType=doc.docType;data.meetingType=data.meetingType||doc.meetingType;data.agendaNo=String(order.displayNumber(doc,libraryDocs)||normalizeAgendaNo(data.agendaNo)||1);
+      cloudStatus.textContent=saveNote.textContent="본문 수신 완료 · 첨부파일 "+(obj.attachments||[]).length+"개를 복원하는 중…";
       return Promise.all((obj.attachments||[]).map(storedAttachmentToFile)).then(function(files){
         applyData(data);
         attachmentFiles=files.filter(Boolean);currentDocId=id;currentCreatedAt=obj.createdAt||doc.createdAt||"";
