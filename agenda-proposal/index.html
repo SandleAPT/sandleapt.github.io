@@ -43,13 +43,7 @@
       <div class="library-list" id="libraryList"><div class="library-empty">저장된 제안서가 없습니다.</div></div>
     </section>
 
-    <label class="field">
-      <span>회의 표기</span>
-      <small>표지와 본문 오른쪽 위에 작게 표시됩니다. 필요 없으면 비워두세요.</small>
-      <input id="meetingHeader" type="text" placeholder="예: 제6기 2026년09월 정기 입주자대표회의">
-    </label>
-
-    <div class="field-grid two compact-row official-fields">
+    <div class="field-grid three compact-row official-fields">
       <label class="field">
         <span>의안번호</span>
         <small>안건 순서에 맞는 숫자만 선택하면 됩니다.</small>
@@ -59,8 +53,17 @@
       </label>
       <label class="field">
         <span>의결년월일</span>
-        <small>아직 의결 전이면 비워두세요.</small>
+        <small>연도와 월은 회의 표기에 자동 반영됩니다.</small>
         <input id="decisionDate" type="date">
+      </label>
+      <label class="field">
+        <span>회의 구분</span>
+        <small>정기인지 임시인지만 선택하면 됩니다.</small>
+        <select id="meetingType" aria-label="회의 구분">
+          <option value="">구분 선택</option>
+          <option value="정기">정기</option>
+          <option value="임시">임시</option>
+        </select>
       </label>
     </div>
 
@@ -263,7 +266,7 @@
   check();
 })();
 </script>
-<script src="./app.js?v=7"></script>
+<script src="./app.js?v=8"></script>
 <script src="./procedure-check.js?v=1"></script>
 </body>
 </html>
