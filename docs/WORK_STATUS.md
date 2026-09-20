@@ -6,6 +6,15 @@
 
 ## 활성 작업
 
+### PORTAL-20260921-21 — 참고사항 제목과 내용 표시 분리
+
+- GPT, done(구현·자동검증), 2026-09-21 03:28:19 KST. v452/proposal iframe21/app22/CSS16/reference2.
+- 제목 표시와 내용 숨기기를 독립 체크로 분리. 제목을 끄면 본문이 빈 제목 열 없이 표시됨. 내용 숨기기는 해당 행 전체를 숨기되 입력 보존. 공유 모듈로 미리보기·일괄 인쇄 동일 적용. 중첩 label을 제거해 체크와 입력 분리.
+- 기존 showBasis/showRefs 의미 유지. 신규 showBasisTitle/showRefsTitle 기본 true; 초안/저장/불러오기/새 문서 지원. README에 호환성 기록.
+- 변경: 두 index, app.js/CSS, reference-display.js와 테스트, README/작업현황. 검증: reference-display 모든 제목·내용 조합, 저장 왕복/구버전, batch-print 회귀, 문법 및 diff 검사 통과. 실제 프린터는 미검증.
+- 다음: main 배포 및 공개 v452 확인. 기존 저장 자료는 옵션 변경 후 수정으로 저장.
+
+
 ### PORTAL-20260921-20 — 참고사항 출력 옵션·긴 본문 연속 출력
 
 - GPT, done(구현/자동검증), 2026-09-21 03:18:39 KST. 포털 v451/proposal iframe20/app21/CSS15/batch4/reference1.

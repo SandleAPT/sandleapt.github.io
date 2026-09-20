@@ -212,3 +212,7 @@ body.access-pending .print-picker{visibility:hidden}
   .body-paper .sub-doc-row > b{display:block;margin-bottom:2mm;break-after:avoid}
   .body-paper .doc-text{orphans:3;widows:3}
 }
+
+.output-options{display:flex;flex-wrap:wrap;gap:6px 18px}
+.sub-field>label{font-size:12px;font-weight:bold;color:#514d45}
+.sub-doc-row.without-title{grid-template-columns:1fr}

@@ -30,7 +30,8 @@
   var saveNote=document.getElementById("saveNote");
   var typeWarning=document.getElementById("typeWarning");
   var agendaNoDisplay=document.getElementById("agendaNoDisplay");
-  var showBasis=document.getElementById("showBasis"),showRefs=document.getElementById("showRefs");
+  var hideBasis=document.getElementById("hideBasis"),hideRefs=document.getElementById("hideRefs");
+  var showBasisTitle=document.getElementById("showBasisTitle"),showRefsTitle=document.getElementById("showRefsTitle");
   var attachmentFiles=[];
   var currentDocId=null;
   var attachmentsNeedRestore=false;
@@ -134,7 +135,7 @@
     typeInputs.forEach(function(input){input.checked=input.value===value;});
   }
   function formData(){
-    var data={docType:getDocType(),showBasis:showBasis.checked,showRefs:showRefs.checked}; ids.forEach(function(id){data[id]=el[id].value;}); return data;
+    var data={docType:getDocType(),showBasis:!hideBasis.checked,showRefs:!hideRefs.checked,showBasisTitle:showBasisTitle.checked,showRefsTitle:showRefsTitle.checked}; ids.forEach(function(id){data[id]=el[id].value;}); return data;
   }
   function normalizeMeetingType(value,legacyHeader){
     if(value==="정기"||value==="임시")return value;
@@ -144,7 +145,7 @@
     return "";
   }
   function applyData(data){
-    data=data||{};showBasis.checked=data.showBasis!==false;showRefs.checked=data.showRefs!==false; setDocType(data.docType||"decision");
+    data=data||{};hideBasis.checked=data.showBasis===false;hideRefs.checked=data.showRefs===false;showBasisTitle.checked=data.showBasisTitle!==false;showRefsTitle.checked=data.showRefsTitle!==false; setDocType(data.docType||"decision");
     ids.forEach(function(id){
       if(id==="agendaNo")el[id].value=normalizeAgendaNo(data[id]);
       else if(id==="meetingType")el[id].value=normalizeMeetingType(data[id],data.meetingHeader);
@@ -468,7 +469,7 @@
       .finally(function(){libraryList.classList.remove("busy");});
   }
   function clearForm(){
-    showBasis.checked=showRefs.checked=true;
+    hideBasis.checked=hideRefs.checked=false;showBasisTitle.checked=showRefsTitle.checked=true;
     ids.forEach(function(id){el[id].value="";});setDocType("decision");applyTypeUi();el.date.value=today();attachmentFiles=[];currentDocId=null;currentCreatedAt="";attachmentsNeedRestore=false;attachmentsInput.value="";
     renderAttachmentList();clearDraft();update();saveNote.textContent="새 회의자료를 작성하고 있습니다.";renderLibraryRows();
   }
@@ -488,7 +489,7 @@
     update();saveNote.textContent="의결안건 예시를 불러왔습니다. 필요한 부분을 고친 뒤 ‘새로 등록’을 눌러주세요.";renderLibraryRows();
   }
 
-  [showBasis,showRefs].forEach(function(input){input.addEventListener("change",update);});
+  [hideBasis,hideRefs,showBasisTitle,showRefsTitle].forEach(function(input){input.addEventListener("change",update);});
   editableIds.forEach(function(id){el[id].addEventListener("input",update);el[id].addEventListener("change",update);});
   typeInputs.forEach(function(input){input.addEventListener("change",function(){applyTypeUi();update();});});
   attachmentsInput.addEventListener("change",function(){

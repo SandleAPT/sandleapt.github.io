@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 회의자료 작성</title>
 <meta name="description" content="산들마을 입주자대표회의 의결안건과 보고사항을 A4 표지와 분량에 맞춘 본문으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=15">
+<link rel="stylesheet" href="./app.css?v=16">
 </head>
 <body class="access-pending">
 <div class="access-gate" id="accessGate" role="status" aria-live="polite">
@@ -134,16 +134,16 @@
       <div class="field-title-row">
         <span id="refsHeading">5. 참고사항</span>
       </div>
-      <label class="sub-field">
-        <span class="output-option"><input type="checkbox" id="showBasis" checked> 출력에 표시</span>
-        <b id="basisLabel">가. 근거규정</b>
+      <div class="sub-field">
+        <div class="output-options"><label class="output-option"><input type="checkbox" id="showBasisTitle" checked> 제목 표시</label><label class="output-option"><input type="checkbox" id="hideBasis"> 내용 숨기기</label></div>
+        <label for="basis" id="basisLabel">가. 근거규정</label>
         <textarea id="basis" rows="3" placeholder="예: 산들마을 공동주택관리규약 제26조"></textarea>
-      </label>
-      <label class="sub-field">
-        <span class="output-option"><input type="checkbox" id="showRefs" checked> 출력에 표시</span>
-        <b id="refsLabel">나. 기타</b>
+      </div>
+      <div class="sub-field">
+        <div class="output-options"><label class="output-option"><input type="checkbox" id="showRefsTitle" checked> 제목 표시</label><label class="output-option"><input type="checkbox" id="hideRefs"> 내용 숨기기</label></div>
+        <label for="refs" id="refsLabel">나. 기타</label>
         <textarea id="refs" rows="3" placeholder="예: LH 관리이관 자료, 현장 사진, 견적서"></textarea>
-      </label>
+      </div>
       <div class="attach-row">
         <label class="attach-button" for="attachments">별지첨부 파일 추가</label>
         <input id="attachments" class="file-input" type="file" accept=".pdf,.png,.jpg,.jpeg,.hwp,application/pdf,image/png,image/jpeg" multiple>
@@ -237,9 +237,9 @@
 <script src="./meeting-order.js?v=1"></script>
 <script src="./cloud-request.js?v=2"></script>
 <script src="./attachment-print.js?v=1"></script>
-<script src="./reference-display.js?v=1"></script>
+<script src="./reference-display.js?v=2"></script>
 <script src="./batch-print.js?v=4"></script>
-<script src="./app.js?v=21"></script>
+<script src="./app.js?v=22"></script>
 <script src="./procedure-check.js?v=2"></script>
 </body>
 </html>
