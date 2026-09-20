@@ -18,7 +18,7 @@
           (async function(){var response=await options.fetch(options.url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'verify',adminKey:key,token:options.token,privateStoreUrl:read('sandle_private_url')}),signal:controller.signal});
             if(!response.ok)throw new Error('권한 확인에 실패했습니다.');
             var result=await response.json();return result&&result.ok&&(result.role==='view'||result.role==='edit')?result:{role:''};})(),
-          new Promise(function(_,reject){timer=setTimeout(function(){controller.abort();reject(new Error('응답이 늦어지고 있습니다. 다시 시도해 주세요.'));},15000);})
+          new Promise(function(_,reject){timer=setTimeout(function(){controller.abort();reject(new Error('응답이 늦어지고 있습니다. 다시 시도해 주세요.'));},45000);})
         ]);
       }finally{clearTimeout(timer);}
     }
