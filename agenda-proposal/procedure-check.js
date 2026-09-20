@@ -127,5 +127,8 @@
   document.getElementById('sampleBtn').addEventListener('click',function(){setTimeout(function(){work.value='repair';fund.value='auto';plan.value='auto';budget.value='auto';render();},0);});
   document.getElementById('newBtn').addEventListener('click',function(){setTimeout(function(){if(!document.getElementById('title').value.trim()){work.value='auto';fund.value='auto';plan.value='auto';budget.value='auto';render();}},0);});
   document.getElementById('libraryList').addEventListener('click',function(e){if(e.target&&e.target.tagName==='BUTTON'&&e.target.textContent==='불러오기'){setTimeout(function(){work.value='auto';fund.value='auto';plan.value='auto';budget.value='auto';render();},50);}});
+  function syncDocumentType(type){card.hidden=(type||document.body.getAttribute('data-doc-type'))==='report';}
+  document.addEventListener('proposal-type-change',function(e){syncDocumentType(e.detail&&e.detail.docType);});
+  syncDocumentType();
   render();
 })();

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>산들마을 안건 제안서</title>
-<meta name="description" content="산들마을 공동주택관리규약 별지 제7호 서식에 맞춰 의안을 표지와 본문 A4 2장으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=10">
+<title>산들마을 회의자료 작성</title>
+<meta name="description" content="산들마을 입주자대표회의 의결안건과 보고사항을 표지와 본문 A4 2장으로 작성하는 도구">
+<link rel="stylesheet" href="./app.css?v=11">
 </head>
 <body class="access-pending">
 <div class="access-gate" id="accessGate" role="status" aria-live="polite">
@@ -17,11 +17,11 @@
 
 <header class="topbar">
   <div>
-    <h1>안건 제안서</h1>
-    <p>별지 제7호 구조를 표지와 본문 A4 2장으로 정리해요.</p>
+    <h1>회의자료 작성</h1>
+    <p>의결할 자료와 보고할 자료를 구분해 표지와 본문 A4 2장으로 정리해요.</p>
   </div>
   <div class="top-actions">
-    <button type="button" class="ghost" id="sampleBtn">누수 예시</button>
+    <button type="button" class="ghost" id="sampleBtn">의결 예시</button>
     <button type="button" class="ghost" id="newBtn">새 문서</button>
     <button type="button" class="save" id="saveBtn">문서 저장</button>
     <button type="button" class="primary" id="printBtn">인쇄 · PDF</button>
@@ -29,33 +29,49 @@
 </header>
 
 <main class="workspace">
-  <section class="editor" aria-label="안건 제안서 작성">
+  <section class="editor" aria-label="회의자료 작성">
     <div class="hint-card">
-      <b>작성 기준</b>
-      <span>의결주문 → 제안이유 → 주요내용 → 비용추계 → 참고사항 순서로 작성합니다. 산들마을 관리규약 별지 제7호 서식 기준입니다.</span>
+      <b id="typeIntroTitle">의결안건 작성 기준</b>
+      <span id="typeIntroText">의결주문 → 제안이유 → 주요내용 → 비용추계 → 참고사항 순서로 작성합니다. 산들마을 관리규약 별지 제7호 서식 기준입니다.</span>
     </div>
 
-    <section class="library" aria-label="클라우드 안건 제안서">
+    <fieldset class="type-picker">
+      <legend>자료 구분</legend>
+      <div class="type-options">
+        <label class="type-option">
+          <input type="radio" name="docType" value="decision" checked>
+          <span><b>의결안건</b><small>회의에서 찬반을 표결해 결정할 자료</small></span>
+        </label>
+        <label class="type-option">
+          <input type="radio" name="docType" value="report">
+          <span><b>보고사항</b><small>현황·의무·진행상황을 공유할 자료</small></span>
+        </label>
+      </div>
+      <p class="type-notice" id="typeNotice">의결주문에는 찬성했을 때 무엇이 결정되는지 한 문장으로 적어주세요.</p>
+      <p class="type-warning" id="typeWarning" hidden></p>
+    </fieldset>
+
+    <section class="library" aria-label="클라우드 회의자료">
       <div class="library-head">
-        <div><b>클라우드 제안서</b><span id="libraryCount">-</span></div>
+        <div><b>클라우드 회의자료</b><span id="libraryCount">-</span></div>
         <div class="library-cloud">
           <button type="button" id="cloudConnectBtn">클라우드 연결</button>
           <small id="cloudStatus">연결 상태를 확인하고 있어요.</small>
         </div>
       </div>
+      <p class="library-help">같은 회의일·같은 구분 안에서 ↑↓로 순서를 바꾸면 번호도 자동으로 다시 매겨집니다.</p>
       <div class="library-list" id="libraryList"><div class="library-empty">클라우드 목록을 불러오는 중입니다.</div></div>
     </section>
 
     <div class="field-grid three compact-row official-fields">
       <label class="field">
-        <span>의안번호</span>
-        <small>안건 순서에 맞는 숫자만 선택하면 됩니다.</small>
-        <select id="agendaNo" aria-label="의안번호">
-          <option value="">번호 선택</option>
-        </select>
+        <span id="numberLabel">의안번호</span>
+        <small id="numberHelp">같은 회의일의 의결안건끼리 저장 순서대로 자동 배정됩니다.</small>
+        <span class="auto-number" id="agendaNoDisplay">회의일을 선택하면 자동 배정</span>
+        <input id="agendaNo" type="hidden">
       </label>
       <label class="field">
-        <span>의결년월일</span>
+        <span id="meetingDateLabel">의결년월일</span>
         <small>연도와 월은 회의 표기에 자동 반영됩니다.</small>
         <input id="decisionDate" type="date">
       </label>
@@ -77,25 +93,25 @@
 
     <div class="field-grid two compact-row">
       <label class="field">
-        <span>제출자</span>
+        <span id="proposerLabel">제출자</span>
         <input id="proposer" type="text" placeholder="예: 211동 동별대표자 유은혜">
       </label>
       <label class="field">
-        <span>제출년월일</span>
+        <span id="submissionDateLabel">제출년월일</span>
         <input id="date" type="date">
       </label>
     </div>
     <div class="page-state" id="pageState" aria-live="polite">표지 + 본문 A4 2장으로 정리됩니다.</div>
 
-    <label class="field">
-      <span>1. 의결주문</span>
-      <small>회의에서 찬성했을 때 정확히 무엇이 결정되는지 적어주세요.</small>
+    <label class="field" id="decisionField">
+      <span id="decisionHeading">1. 의결주문</span>
+      <small id="decisionHelp">회의에서 찬성했을 때 정확히 무엇이 결정되는지 적어주세요.</small>
       <textarea id="decision" rows="5" placeholder="예: 커뮤니티센터 누수·곰팡이 보수 범위와 예상비용을 관리주체가 확인하여 다음 회의에 보고하는 것으로 의결한다."></textarea>
     </label>
 
     <label class="field">
-      <span>2. 제안이유</span>
-      <small>왜 이 안건을 제안하는지 현재 상황과 필요성을 적어주세요.</small>
+      <span id="backgroundHeading">2. 제안이유</span>
+      <small id="backgroundHelp">왜 이 안건을 제안하는지 현재 상황과 필요성을 적어주세요.</small>
       <textarea id="background" rows="6" placeholder="예: 커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 문제가 생기고 있습니다."></textarea>
     </label>
 
@@ -106,21 +122,27 @@
     </label>
 
     <label class="field">
-      <span>4. 비용추계서</span>
-      <small>예상금액과 재원을 적습니다. 아직 확인 전이면 확인이 필요한 내용을 적어도 됩니다.</small>
+      <span id="costHeading">4. 비용추계서</span>
+      <small id="costHelp">예상금액과 재원을 적습니다. 아직 확인 전이면 확인이 필요한 내용을 적어도 됩니다.</small>
       <textarea id="cost" rows="4" placeholder="예: 관리주체에서 보수 범위와 예상비용, 사용 가능한 재원을 확인 후 보고"></textarea>
+    </label>
+
+    <label class="field" id="followupField" hidden>
+      <span>5. 향후 일정·후속사항</span>
+      <small>보고 뒤 예정된 일정이나 다음에 확인할 내용을 적어주세요.</small>
+      <textarea id="followup" rows="4" placeholder="예: 확정되는 항목부터 관리비 부과 전에 주민에게 안내"></textarea>
     </label>
 
     <div class="field ref-field" id="refsField">
       <div class="field-title-row">
-        <span>5. 참고사항</span>
+        <span id="refsHeading">5. 참고사항</span>
       </div>
       <label class="sub-field">
-        <b>가. 근거규정</b>
+        <b id="basisLabel">가. 근거규정</b>
         <textarea id="basis" rows="3" placeholder="예: 산들마을 공동주택관리규약 제26조"></textarea>
       </label>
       <label class="sub-field">
-        <b>나. 기타</b>
+        <b id="refsLabel">나. 기타</b>
         <textarea id="refs" rows="3" placeholder="예: LH 관리이관 자료, 현장 사진, 견적서"></textarea>
       </label>
       <div class="attach-row">
@@ -145,10 +167,10 @@
 
         <div class="cover-content">
           <div class="cover-meta-table">
-            <div class="cover-meta-label">의안번호</div>
+            <div class="cover-meta-label" id="pNumberLabel">의안번호</div>
             <div class="cover-meta-value strong" id="pAgendaNo">제&nbsp;&nbsp;&nbsp;호</div>
-            <div class="cover-meta-label decision-merged">의결사항</div>
-            <div class="cover-meta-label second-row">의결년월일</div>
+            <div class="cover-meta-label decision-merged" id="pTypeLabel">의결사항</div>
+            <div class="cover-meta-label second-row" id="pMeetingDateLabel">의결년월일</div>
             <div class="cover-meta-value second-row" id="pDecisionMeta">20&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;.</div>
           </div>
 
@@ -159,8 +181,8 @@
           </section>
 
           <div class="submit-table">
-            <div class="submit-label">제 출 자</div><div class="submit-value" id="pProposer">-</div>
-            <div class="submit-label">제출년월일</div><div class="submit-value" id="pDate">-</div>
+            <div class="submit-label" id="pProposerLabel">제 출 자</div><div class="submit-value" id="pProposer">-</div>
+            <div class="submit-label" id="pSubmissionDateLabel">제출년월일</div><div class="submit-value" id="pDate">-</div>
           </div>
         </div>
 
@@ -175,12 +197,12 @@
 
         <div class="body-content">
           <section class="doc-section">
-            <h3>1. 의결주문</h3>
+            <h3 id="pDecisionHeading">1. 의결주문</h3>
             <div class="doc-section-box"><div class="doc-text empty" id="pDecision">내용을 입력해 주세요.</div></div>
           </section>
 
           <section class="doc-section">
-            <h3>2. 제안이유</h3>
+            <h3 id="pBackgroundHeading">2. 제안이유</h3>
             <div class="doc-section-box"><div class="doc-text empty" id="pBackground">내용을 입력해 주세요.</div></div>
           </section>
 
@@ -190,15 +212,20 @@
           </section>
 
           <section class="doc-section">
-            <h3>4. 비용추계서</h3>
+            <h3 id="pCostHeading">4. 비용추계서</h3>
             <div class="doc-section-box"><div class="doc-text empty" id="pCost">내용을 입력해 주세요.</div></div>
           </section>
 
+          <section class="doc-section" id="followupSection" hidden>
+            <h3>5. 향후 일정·후속사항</h3>
+            <div class="doc-section-box"><div class="doc-text empty" id="pFollowup">내용을 입력해 주세요.</div></div>
+          </section>
+
           <section class="doc-section" id="refsSection">
-            <h3>5. 참고사항</h3>
+            <h3 id="pRefsHeading">5. 참고사항</h3>
             <div class="doc-section-box refs-box">
-              <div class="sub-doc-row"><b>가. 근거규정</b><div class="doc-text empty" id="pBasis">-</div></div>
-              <div class="sub-doc-row"><b>나. 기타</b><div class="doc-text empty" id="pRefs">-</div></div>
+              <div class="sub-doc-row"><b id="pBasisLabel">가. 근거규정</b><div class="doc-text empty" id="pBasis">-</div></div>
+              <div class="sub-doc-row"><b id="pRefsLabel">나. 기타</b><div class="doc-text empty" id="pRefs">-</div></div>
               <div class="doc-attachments" id="pAttachments"></div>
             </div>
           </section>
@@ -237,7 +264,7 @@
   function locked(message){
     document.body.classList.add("access-pending");
     if(gate)gate.style.display="";
-    if(title)title.textContent="안건 제안서는 수정용 권한에서만 보여요.";
+    if(title)title.textContent="회의자료 작성은 수정용 권한에서만 보여요.";
     if(text)text.textContent=message||"포털의 🔒 메뉴에서 수정용 비밀번호를 입력하면 이 메뉴와 작성 화면이 나타납니다.";
   }
   function unlocked(){
@@ -269,7 +296,8 @@
   check();
 })();
 </script>
-<script src="./app.js?v=10"></script>
-<script src="./procedure-check.js?v=1"></script>
+<script src="./meeting-order.js?v=1"></script>
+<script src="./app.js?v=11"></script>
+<script src="./procedure-check.js?v=2"></script>
 </body>
 </html>
