@@ -21,6 +21,7 @@
   var pageState=document.getElementById("pageState");
   var printBtn=document.getElementById("printBtn");
   var saveBtn=document.getElementById("saveBtn");
+  var deleteBtn=document.getElementById("deleteBtn");
   var newBtn=document.getElementById("newBtn");
   var libraryList=document.getElementById("libraryList");
   var libraryCount=document.getElementById("libraryCount");
@@ -31,12 +32,14 @@
   var agendaNoDisplay=document.getElementById("agendaNoDisplay");
   var attachmentFiles=[];
   var currentDocId=null;
+  var attachmentsNeedRestore=false;
   var currentCreatedAt="";
   var libraryDocs=[];
   var libraryLoaded=false;
   var libraryPromise=null;
   var libraryLoadToken=0;
   var documentLoading=false;
+  var documentSaving=false;
 
   var preview={
     meetingHeaderCover:document.getElementById("pMeetingHeaderCover"),meetingHeaderBody:document.getElementById("pMeetingHeaderBody"),
@@ -148,10 +151,17 @@
     });
     if(!el.date.value)el.date.value=today(); applyTypeUi();
   }
-  function saveDraft(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify(formData()));}catch(e){}}
+  function saveDraft(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify(Object.assign({},formData(),{savedDocument:{id:currentDocId,createdAt:currentCreatedAt,url:getCloudUrl(false)}})));}catch(e){}}
   function loadDraft(){
     var data=null; try{data=JSON.parse(localStorage.getItem(DRAFT_KEY)||"null");}catch(e){}
-    if(data)applyData(data); else{setDocType("decision");if(!el.date.value)el.date.value=today();applyTypeUi();}
+    if(data){
+      applyData(data);
+      var saved=data.savedDocument;
+      if(saved&&typeof saved.id==="string"&&saved.id.indexOf("proposal_")===0&&saved.url===getCloudUrl(false)){
+        currentDocId=saved.id;currentCreatedAt=saved.createdAt||"";attachmentsNeedRestore=true;
+        saveNote.textContent="저장된 문서를 이어서 수정합니다. ‘수정’은 기존 자료를 갱신하며, 기존 첨부도 유지합니다. 첨부를 삭제하려면 목록에서 다시 불러와 주세요.";
+      }
+    } else{setDocType("decision");if(!el.date.value)el.date.value=today();applyTypeUi();}
   }
   function clearDraft(){try{localStorage.removeItem(DRAFT_KEY);}catch(e){}}
 
@@ -230,6 +240,7 @@
     return number;
   }
   function update(){
+    saveBtn.textContent=currentDocId?"수정":"새로 등록";deleteBtn.hidden=!currentDocId;
     var meetingHeader=meetingHeaderText(),number=updateAutoNumber();
     [preview.meetingHeaderCover,preview.meetingHeaderBody].forEach(function(node){node.textContent=meetingHeader;node.classList.toggle("empty",!meetingHeader);});
     preview.agendaNo.textContent=number?"제 "+number+" 호":"제   호"; preview.decisionMeta.textContent=decisionMeta();
@@ -383,10 +394,23 @@
     if(!el.decision.value.trim()){alert((getDocType()==="report"?"보고요지":"의결주문")+"를 먼저 적어주세요.");el.decision.focus();return false;}return true;
   }
   function saveDocument(){
+    if(documentSaving||documentLoading)return;
     if(!validateBeforeSave())return;
+    documentSaving=true;newBtn.disabled=true;deleteBtn.disabled=true;
     saveBtn.disabled=true;saveNote.textContent="회의자료와 첨부파일을 클라우드에 저장하고 있습니다…";
     var now=new Date().toISOString(),id=currentDocId||newId(),type=getDocType(),date=el.decisionDate.value;
-    ensureLibraryReady().then(function(){
+    return ensureLibraryReady().then(function(){
+      if(!attachmentsNeedRestore||!currentDocId)return;
+      return cloudApi({action:"get",id:id},true).then(function(res){
+        if(!res.item)throw new Error("기존 문서를 찾지 못했습니다. 목록을 확인해 주세요.");
+        return Promise.all((parsePayload(res.item).attachments||[]).map(storedAttachmentToFile));
+      }).then(function(files){
+        files.filter(Boolean).forEach(function(file){
+          if(!attachmentFiles.some(function(other){return other.name===file.name&&other.size===file.size&&other.lastModified===file.lastModified;}))attachmentFiles.push(file);
+        });
+        attachmentsNeedRestore=false;renderAttachmentList();
+      });
+    }).then(function(){
       var existing=libraryDocs.find(function(doc){return doc.id===id;});
       var sameGroup=existing&&existing.date===date&&existing.docType===type;
       var orderKey=sameGroup?existing.orderKey:order.nextOrderKey(libraryDocs,date,type,id);
@@ -399,13 +423,13 @@
         return cloudApi({action:"save",record:record},true).then(function(){return {doc:draftDoc,payload:payload};});
       });
     }).then(function(saved){
-      currentDocId=saved.doc.id;currentCreatedAt=saved.payload.createdAt;upsertLocalDoc(saved.doc);libraryLoaded=true;
-      saveNote.textContent="클라우드에 저장했습니다. 같은 회의일 안에서 번호가 자동 정리됩니다.";renderLibraryRows();refreshLibrary();
+      currentDocId=saved.doc.id;currentCreatedAt=saved.payload.createdAt;upsertLocalDoc(saved.doc);libraryLoaded=true;saveDraft();
+      saveNote.textContent="저장했습니다. ‘수정’은 이 자료에 반영됩니다. 별도 자료는 ‘새 문서’로 작성해 주세요.";update();renderLibraryRows();refreshLibrary();
     }).catch(function(err){console.error(err);alert("클라우드 저장 실패: "+err.message);saveNote.textContent="클라우드에 저장하지 못했습니다. 작성 중 내용은 이 기기의 임시초안에 남아 있습니다.";})
-      .finally(function(){saveBtn.disabled=false;});
+      .finally(function(){documentSaving=false;saveBtn.disabled=false;newBtn.disabled=false;deleteBtn.disabled=false;});
   }
   function loadDocument(id,button){
-    if(documentLoading)return;
+    if(documentLoading||documentSaving)return;
     documentLoading=true;button.disabled=true;button.textContent="불러오는 중…";
     saveBtn.disabled=true;newBtn.disabled=true;libraryList.classList.add("busy");
     return cloudApi({action:"get",id:id},true,function(attempt,total){
@@ -418,7 +442,7 @@
       cloudStatus.textContent=saveNote.textContent="본문 수신 완료 · 첨부파일 "+(obj.attachments||[]).length+"개를 복원하는 중…";
       return Promise.all((obj.attachments||[]).map(storedAttachmentToFile)).then(function(files){
         applyData(data);
-        attachmentFiles=files.filter(Boolean);currentDocId=id;currentCreatedAt=obj.createdAt||doc.createdAt||"";
+        attachmentFiles=files.filter(Boolean);attachmentsNeedRestore=false;currentDocId=id;currentCreatedAt=obj.createdAt||doc.createdAt||"";
         renderAttachmentList();update();cloudStatus.textContent=saveNote.textContent="‘"+doc.title+"’ 자료를 불러왔습니다.";renderLibraryRows();
         el.title.scrollIntoView({behavior:"smooth",block:"center"});el.title.focus({preventScroll:true});
       });
@@ -426,11 +450,12 @@
       .finally(function(){documentLoading=false;button.disabled=false;button.textContent="불러오기";saveBtn.disabled=false;newBtn.disabled=false;libraryList.classList.remove("busy");});
   }
   function deleteDocument(id,title){
+    if(documentLoading||documentSaving)return;
     if(!confirm("‘"+(title||"이 회의자료")+"’를 클라우드에서 삭제할까요?\n뒤 자료의 번호는 자동으로 한 칸씩 당겨집니다."))return;
     cloudApi({action:"delete",id:id},true).then(function(){
       libraryDocs=libraryDocs.filter(function(doc){return doc.id!==id;});libraryLoaded=true;
-      if(currentDocId===id){currentDocId=null;currentCreatedAt="";saveNote.textContent="클라우드 문서는 삭제했습니다. 화면의 작성 내용은 그대로 두었습니다.";}
-      renderLibraryRows();refreshLibrary();
+      if(currentDocId===id){currentDocId=null;currentCreatedAt="";attachmentsNeedRestore=false;saveNote.textContent="클라우드 문서는 삭제했습니다. 화면의 작성 내용은 그대로 두었습니다.";}
+      saveDraft();renderLibraryRows();refreshLibrary();
     }).catch(function(err){alert("클라우드 삭제 실패: "+err.message);});
   }
   function moveDocument(id,direction){
@@ -451,21 +476,23 @@
       .finally(function(){libraryList.classList.remove("busy");});
   }
   function clearForm(){
-    ids.forEach(function(id){el[id].value="";});setDocType("decision");applyTypeUi();el.date.value=today();attachmentFiles=[];currentDocId=null;currentCreatedAt="";attachmentsInput.value="";
+    ids.forEach(function(id){el[id].value="";});setDocType("decision");applyTypeUi();el.date.value=today();attachmentFiles=[];currentDocId=null;currentCreatedAt="";attachmentsNeedRestore=false;attachmentsInput.value="";
     renderAttachmentList();clearDraft();update();saveNote.textContent="새 회의자료를 작성하고 있습니다.";renderLibraryRows();
   }
   function newDocument(){
+    if(documentLoading||documentSaving)return;
     var hasText=editableIds.some(function(id){return id!=="date"&&el[id].value.trim();})||attachmentFiles.length;
-    if(hasText&&!confirm("새 회의자료를 작성할까요? 아직 ‘문서 저장’을 누르지 않은 내용은 클라우드에 남지 않습니다."))return;clearForm();
+    if(hasText&&!confirm("새 회의자료를 작성할까요? 아직 저장하지 않은 내용은 클라우드에 남지 않습니다."))return;clearForm();
   }
   function sample(){
-    currentDocId=null;currentCreatedAt="";attachmentFiles=[];renderAttachmentList();
+    if(documentLoading||documentSaving)return;
+    currentDocId=null;currentCreatedAt="";attachmentsNeedRestore=false;attachmentFiles=[];renderAttachmentList();
     applyData({docType:"decision",agendaNo:"",decisionDate:"",meetingType:"",title:"커뮤니티센터 누수·곰팡이 보수의 건",proposer:"",date:today(),
       decision:"커뮤니티센터 누수·곰팡이 보수 범위와 예상비용, 비용부담 주체 및 가능한 일정을 관리주체가 확인하여 다음 회의에 보고하는 것으로 의결한다.",
       background:"커뮤니티센터에 누수와 곰팡이가 생겨 일부 수업 운영에도 영향을 주고 있습니다. 현재 누수 보수는 LH 관리이관 내용에 포함되어 있으나, 관리이관 시기가 정해지지 않아 실제 공사가 언제 시작될지는 알기 어려운 상태입니다.\n\n누수와 곰팡이는 오래 둘수록 마감재 손상이나 냄새, 습기 문제가 더 커질 수 있어 보수 방법과 일정을 확인할 필요가 있습니다.",
       details:"- LH 관리이관을 통한 보수 가능 여부와 예상 일정 확인\n- LH 보수가 늦어질 경우 단지 선보수 가능 여부 검토\n- 선보수 시 누수 원인, 보수 범위, 예상비용과 재원 확인\n- 공사 전 현재 누수와 곰팡이 상태를 사진으로 기록\n- 벽 설치나 공간 변경은 이번 보수와 분리하여 추후 판단",
       cost:"관리주체에서 보수 범위와 예상비용, 사용 가능한 재원을 확인하여 보고",followup:"",basis:"산들마을 공동주택관리규약 제26조(안건의 제안)",refs:"LH 관리이관 자료, 현재 상태 사진, 보수 견적"});
-    update();saveNote.textContent="의결안건 예시를 불러왔습니다. 필요한 부분을 고친 뒤 ‘문서 저장’을 눌러주세요.";renderLibraryRows();
+    update();saveNote.textContent="의결안건 예시를 불러왔습니다. 필요한 부분을 고친 뒤 ‘새로 등록’을 눌러주세요.";renderLibraryRows();
   }
 
   editableIds.forEach(function(id){el[id].addEventListener("input",update);el[id].addEventListener("change",update);});
@@ -476,6 +503,7 @@
     attachmentsInput.value="";renderAttachmentList();update();if(rejected.length)alert("PDF, JPG, PNG, HWP 파일만 추가할 수 있어요.");
   });
   cloudConnectBtn.addEventListener("click",configureCloud);
+  deleteBtn.addEventListener("click",function(){if(currentDocId)deleteDocument(currentDocId,el.title.value.trim());});
   document.getElementById("sampleBtn").addEventListener("click",sample);
   newBtn.addEventListener("click",newDocument);saveBtn.addEventListener("click",saveDocument);printBtn.addEventListener("click",function(){if(fit())window.print();});
   window.addEventListener("resize",function(){requestAnimationFrame(fit);});

@@ -7,7 +7,7 @@ const fn=source.slice(source.indexOf('  function loadDocument('),source.indexOf(
 async function check(failAttachment){
   const doc={id:'proposal_test',title:'저장된 보고',date:'2026-09-29',docType:'report',orderKey:1024};
   let applied=null,focused=false;
-  const context={documentLoading:false,saveBtn:{},newBtn:{},saveNote:{},cloudStatus:{},
+  const context={documentLoading:false,documentSaving:false,saveBtn:{},newBtn:{},saveNote:{},cloudStatus:{},
     libraryList:{classList:{add(){},remove(){}}},libraryDocs:[doc],order,
     cloudApi:async()=>({item:{json:JSON.stringify({kind:'agenda-proposal',data:{title:doc.title,decision:'보고요지',docType:'report',decisionDate:doc.date},attachments:[{name:'자료.pdf'}]})}}),
     parsePayload:item=>JSON.parse(item.json),storedAttachmentToFile:async item=>{if(failAttachment)throw new Error('첨부 실패');return item;},

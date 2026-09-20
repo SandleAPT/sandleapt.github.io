@@ -20,7 +20,7 @@ assert(html.includes('id="agendaNo" type="hidden"'),'number is automatic, not ma
 assert(!html.includes('향후 일정'));
 assert(html.includes('id="followup" type="hidden"'),'preserve legacy content without displaying it');
 assert(html.includes('./meeting-order.js?v=1'));
-assert(js.includes('같은 회의일 안에서 번호가 자동 정리됩니다.'));
+assert(js.includes('‘수정’은 이 자료에 반영됩니다.'));
 assert(js.includes('moveDocument(doc.id,-1)'));
 assert(js.includes('의결한다|승인한다|선정한다|확정한다|변경한다|집행한다'));
 

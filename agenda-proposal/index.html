@@ -23,7 +23,8 @@
   <div class="top-actions">
     <button type="button" class="ghost" id="sampleBtn">의결 예시</button>
     <button type="button" class="ghost" id="newBtn">새 문서</button>
-    <button type="button" class="save" id="saveBtn">문서 저장</button>
+    <button type="button" class="save" id="saveBtn">새로 등록</button>
+    <button type="button" class="ghost" id="deleteBtn" hidden>삭제</button>
     <button type="button" class="primary" id="printBtn">인쇄 · PDF</button>
   </div>
 </header>
@@ -150,7 +151,7 @@
       <small class="file-note">입주자등이 연명하여 제안하는 경우 신청인 명단(명단·서명) 등 필요한 별지를 함께 첨부해 주세요.</small>
     </div>
 
-    <p class="save-note" id="saveNote">작성 중 내용은 이 기기에 임시 저장되고, ‘문서 저장’을 누르면 클라우드에 저장됩니다.</p>
+    <p class="save-note" id="saveNote">작성 중 내용은 이 기기에 임시 저장되고, 새 자료는 ‘새로 등록’, 불러온 자료는 ‘수정’을 눌러 클라우드에 저장합니다.</p>
   </section>
 
   <section class="preview-area" aria-label="A4 미리보기">
@@ -290,7 +291,7 @@
 </script>
 <script src="./meeting-order.js?v=1"></script>
 <script src="./cloud-request.js?v=2"></script>
-<script src="./app.js?v=14"></script>
+<script src="./app.js?v=15"></script>
 <script src="./procedure-check.js?v=2"></script>
 </body>
 </html>
