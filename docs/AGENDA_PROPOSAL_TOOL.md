@@ -33,7 +33,7 @@
 
 - 초안은 작성한 브라우저의 `localStorage`(`sandle_agenda_proposal_v1`)에만 자동 저장한다.
 - 명시적 `문서 저장 / 불러오기 / 삭제`는 기존 비공개 자료 Apps Script 저장소를 사용한다.
-- 의결/보고 유형과 내부 정렬키, 본문, 첨부 PDF/JPG/PNG를 한 레코드에 함께 보관한다.
+- 의결/보고 유형과 내부 정렬키, 본문, 첨부 PDF/JPG/PNG/HWP를 한 레코드에 함께 보관한다.
 - 기존 v1 클라우드 문서와 로컬 초안에 자료 유형이 없으면 의결안건으로 해석하고, 기존 의안번호를 최초 정렬 기준으로 사용한다.
 
 ## 예시
@@ -56,7 +56,7 @@
 - 포털: 기존 `회의 관리` 첫 화면은 `안건 · 발언`로 유지하고 `회의자료 작성`을 그 다음 소분류로 둔다.
 - 순번 검증: `node agenda-proposal/tests/meeting-order.test.js`
 - 화면 계약 검증: `node agenda-proposal/tests/form-contract.test.js`
-- 포털 버전: v438
+- 포털 버전: v439
 - 첨부 복원은 dataURL 직접 디코딩으로 처리하며 인터넷 요청을 하지 않는다. `node agenda-proposal/tests/attachment-restore.test.js`로 바이트·파일명·복원 오류를 검증한다.
 - 불러오기 검증: `node agenda-proposal/tests/cloud-request.test.js` 및 `node agenda-proposal/tests/load-document.test.js`
 
@@ -89,7 +89,7 @@
 
 - 명시적 `문서 저장 / 불러오기 / 삭제`는 브라우저 IndexedDB 대신 기존 비공개 자료 Apps Script 저장소를 사용한다.
 - 저장소 주소는 기존 `sandle_private_url`, 수정용 비밀번호는 `sandle_admin_key`를 재사용한다. 주소는 기기마다 최초 1회 연결한다.
-- 제안서 본문과 첨부 PDF/JPG/PNG를 한 클라우드 레코드에 함께 보관한다. 다른 PC에서 불러오면 첨부도 복원되어 출력할 수 있다.
+- 제안서 본문과 첨부 PDF/JPG/PNG/HWP를 한 클라우드 레코드에 함께 보관한다. 다른 PC에서 불러오면 첨부도 복원되어 출력할 수 있다.
 - 안전 한도는 레코드 JSON 약 8MB. 그보다 크면 큰 파일을 나누도록 안내한다.
 - 작성 중 자동초안만 `localStorage`에 남겨 브라우저 종료/오류에 대비한다. 명시적으로 저장한 문서의 기준은 클라우드다.
 

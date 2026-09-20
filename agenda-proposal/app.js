@@ -184,7 +184,7 @@
     typeWarning.hidden=!message; typeWarning.textContent=message;
   }
 
-  function fileAllowed(file){var name=(file&&file.name||"").toLowerCase();return /\.(pdf|png|jpe?g)$/.test(name);}
+  function fileAllowed(file){var name=(file&&file.name||"").toLowerCase();return /\.(pdf|png|jpe?g|hwp)$/.test(name);}
   function fileSize(size){
     if(size<1024)return size+" B";
     if(size<1024*1024)return Math.round(size/1024)+" KB";
@@ -473,7 +473,7 @@
   attachmentsInput.addEventListener("change",function(){
     var files=Array.prototype.slice.call(attachmentsInput.files||[]),rejected=files.filter(function(file){return !fileAllowed(file);});
     files.filter(fileAllowed).forEach(function(file){var duplicate=attachmentFiles.some(function(old){return old.name===file.name&&old.size===file.size&&old.lastModified===file.lastModified;});if(!duplicate)attachmentFiles.push(file);});
-    attachmentsInput.value="";renderAttachmentList();update();if(rejected.length)alert("PDF, JPG, PNG 파일만 추가할 수 있어요.");
+    attachmentsInput.value="";renderAttachmentList();update();if(rejected.length)alert("PDF, JPG, PNG, HWP 파일만 추가할 수 있어요.");
   });
   cloudConnectBtn.addEventListener("click",configureCloud);
   document.getElementById("sampleBtn").addEventListener("click",sample);
