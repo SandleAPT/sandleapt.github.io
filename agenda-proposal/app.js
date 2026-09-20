@@ -30,6 +30,7 @@
   var saveNote=document.getElementById("saveNote");
   var typeWarning=document.getElementById("typeWarning");
   var agendaNoDisplay=document.getElementById("agendaNoDisplay");
+  var showBasis=document.getElementById("showBasis"),showRefs=document.getElementById("showRefs");
   var attachmentFiles=[];
   var currentDocId=null;
   var attachmentsNeedRestore=false;
@@ -133,7 +134,7 @@
     typeInputs.forEach(function(input){input.checked=input.value===value;});
   }
   function formData(){
-    var data={docType:getDocType()}; ids.forEach(function(id){data[id]=el[id].value;}); return data;
+    var data={docType:getDocType(),showBasis:showBasis.checked,showRefs:showRefs.checked}; ids.forEach(function(id){data[id]=el[id].value;}); return data;
   }
   function normalizeMeetingType(value,legacyHeader){
     if(value==="정기"||value==="임시")return value;
@@ -143,7 +144,7 @@
     return "";
   }
   function applyData(data){
-    data=data||{}; setDocType(data.docType||"decision");
+    data=data||{};showBasis.checked=data.showBasis!==false;showRefs.checked=data.showRefs!==false; setDocType(data.docType||"decision");
     ids.forEach(function(id){
       if(id==="agendaNo")el[id].value=normalizeAgendaNo(data[id]);
       else if(id==="meetingType")el[id].value=normalizeMeetingType(data[id],data.meetingHeader);
@@ -248,18 +249,12 @@
     preview.proposer.textContent=el.proposer.value.trim()||"-";preview.date.textContent=fmtDate(el.date.value);
     renderText(preview.decision,el.decision.value);renderText(preview.background,el.background.value);renderText(preview.details,el.details.value);
     renderText(preview.cost,el.cost.value);renderText(preview.basis,el.basis.value,"-");renderText(preview.refs,el.refs.value,"-");
-    renderAttachmentPreview();validateTypeWarning();saveDraft();requestAnimationFrame(fit);
+    renderAttachmentPreview();window.ProposalReferences.apply(bodyPaper,formData(),attachmentFiles);validateTypeWarning();saveDraft();requestAnimationFrame(fit);
   }
   function fit(){
-    var pages=[coverPaper,bodyPaper],sizes=[10.5,10.25,10],lines=[1.62,1.58,1.54],gaps=[12,10,8];
-    var fits=false,used=sizes[sizes.length-1];
-    for(var i=0;i<sizes.length;i++){
-      pages.forEach(function(page){page.style.setProperty("--doc-size",sizes[i]+"pt");page.style.setProperty("--doc-line",lines[i]);page.style.setProperty("--section-gap",gaps[i]+"px");});
-      used=sizes[i]; if(pages.every(function(page){return page.scrollHeight<=page.clientHeight+1;})){fits=true;break;}
-    }
-    pageState.classList.toggle("over",!fits);
-    pageState.textContent=fits?"A4 2장 · 표지 + 본문 · 본문 "+used+"pt":"10pt로도 본문 A4 한 장을 넘습니다. 내용을 조금 줄여 주세요.";
-    return fits;
+    pageState.classList.remove("over");
+    pageState.textContent="A4 표지 + 본문 · 긴 본문은 다음 장으로 이어서 인쇄됩니다.";
+    return true;
   }
 
   function getCloudUrl(ask){
@@ -473,6 +468,7 @@
       .finally(function(){libraryList.classList.remove("busy");});
   }
   function clearForm(){
+    showBasis.checked=showRefs.checked=true;
     ids.forEach(function(id){el[id].value="";});setDocType("decision");applyTypeUi();el.date.value=today();attachmentFiles=[];currentDocId=null;currentCreatedAt="";attachmentsNeedRestore=false;attachmentsInput.value="";
     renderAttachmentList();clearDraft();update();saveNote.textContent="새 회의자료를 작성하고 있습니다.";renderLibraryRows();
   }
@@ -492,6 +488,7 @@
     update();saveNote.textContent="의결안건 예시를 불러왔습니다. 필요한 부분을 고친 뒤 ‘새로 등록’을 눌러주세요.";renderLibraryRows();
   }
 
+  [showBasis,showRefs].forEach(function(input){input.addEventListener("change",update);});
   editableIds.forEach(function(id){el[id].addEventListener("input",update);el[id].addEventListener("change",update);});
   typeInputs.forEach(function(input){input.addEventListener("change",function(){applyTypeUi();update();});});
   attachmentsInput.addEventListener("change",function(){

@@ -13,6 +13,7 @@ Object.defineProperty(window.HTMLElement.prototype,'clientHeight',{get(){return 
 const configSource=fs.readFileSync(__dirname+'/../app.js','utf8');
 const context={window,document,console};vm.createContext(context);
 vm.runInContext(configSource.slice(configSource.indexOf('  var typeConfig='),configSource.indexOf('  function today()')),context);
+vm.runInContext(fs.readFileSync(__dirname+'/../reference-display.js','utf8'),context);
 vm.runInContext(fs.readFileSync(__dirname+'/../batch-print.js','utf8'),context);
 const docs=[{id:'old',date:'2026-08-01',docType:'decision',orderKey:1024,title:'지난 자료'},{id:'report',date:'2026-09-29',docType:'report',orderKey:1024,title:'보고서'},{id:'second',date:'2026-09-29',docType:'decision',orderKey:2048,title:'두번째 안건'},{id:'first',date:'2026-09-29',docType:'decision',orderKey:1024,title:'첫번째 안건'}];
 const loaded=[];const attached=[];window.ProposalAttachmentPrint={kind:file=>file.name.endsWith('.hwp')?'file':'pdf',append:async(file,stage)=>{attached.push(file.name);const page=document.createElement('article');page.className='paper attachment-paper';stage.appendChild(page);}};

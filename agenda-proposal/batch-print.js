@@ -31,7 +31,7 @@
           var payload=await api.load(docs[i]);
           var pages=render(docs[i],payload);
           pages.forEach(function(page){stage.appendChild(page);});
-          if(!fitPages(pages))throw new Error('‘'+docs[i].title+'’의 내용이 A4 한 장을 넘습니다. 내용을 줄인 후 다시 선택해 주세요.');
+
           var host=list.querySelector('[data-attachments="'+rows.indexOf(docs[i])+'"]');
           var include=host.querySelector('input.print-include').checked;
           var files=include?(payload.attachments||[]).filter(function(file){return window.ProposalAttachmentPrint.kind(file)!=='file';}):[];
@@ -46,12 +46,6 @@
       }catch(error){clear();status.textContent='인쇄 준비 실패: '+error.message;}
       finally{lock(false);}
     };
-    function fitPages(pages){
-      return [10.5,10.25,10].some(function(size,i){
-        pages.forEach(function(page){page.style.setProperty('--doc-size',size+'pt');page.style.setProperty('--doc-line',[1.62,1.58,1.54][i]);page.style.setProperty('--section-gap',[12,10,8][i]+'px');});
-        return pages.every(function(page){return page.scrollHeight<=page.clientHeight+1;});
-      });
-    }
     function render(doc,payload){
       var pages=api.currentPages().map(function(page){return page.cloneNode(true);});
       var data=payload.data||payload,cfg=api.config[doc.docType];
@@ -68,6 +62,7 @@
       text('pProposerLabel',doc.docType==='report'?'보 고 자':'제 출 자');
       var attachments=node('pAttachments');attachments.replaceChildren();
       var ul=document.createElement('ul');(payload.attachments||[]).forEach(function(file,i){var li=document.createElement('li');li.textContent='※ 첨부'+(i+1)+': '+(file.name||'첨부파일');ul.appendChild(li);});attachments.appendChild(ul);
+      window.ProposalReferences.apply(pages[1],data,payload.attachments||[]);
       return pages;
     }
     return {open:async function(){
