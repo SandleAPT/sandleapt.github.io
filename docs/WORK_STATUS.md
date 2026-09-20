@@ -6,6 +6,15 @@
 
 ## 활성 작업
 
+### PORTAL-20260921-22 — 이어지는 본문 회의명·안건 식별
+
+- GPT, done(구현·검증), 2026-09-21 03:37:20 KST. v453/proposal iframe22/app23/CSS17/batch5.
+- 사용자 PDF 3쪽에 회의명/구분선 누락, 어느 안건인지 식별 불가 확인. 본문을 문서별 table thead/tfoot 반복 구조로 변경. 매 쪽 회의명·상단선, 하단 의결/보고 번호·제목 표시. 현재 작성본 update와 저장자료 render 각각 반영; 첨부/표지 그대로.
+- 변경: 두 index, app.js/CSS, batch-print.js/테스트, README. 저장 형식 변경 없음.
+- 검증: batch-print DOM 테스트에서 서로 다른 안건의 footer 확인, reference-display 회귀, 문법/diff 통과. WeasyPrint로 실제 CSS·본문 구조의 3쪽 합성 PDF를 생성해 모든 쪽 머리말/안건명 텍스트 및 2쪽 이미지 확인. Chrome/Whale 실제 프린터는 미검증(렌더러 차이 가능).
+- 다음: main 배포와 공개 v453 확인. 사용자 PDF 재출력으로 실제 브라우저 반복 머리말 확인. 재현: NODE_PATH=/tmp/proposal-dom-check/node_modules node agenda-proposal/tests/batch-print.test.js
+
+
 ### PORTAL-20260921-21 — 참고사항 제목과 내용 표시 분리
 
 - GPT, done(구현·자동검증), 2026-09-21 03:28:19 KST. v452/proposal iframe21/app22/CSS16/reference2.

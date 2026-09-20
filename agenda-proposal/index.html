@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 회의자료 작성</title>
 <meta name="description" content="산들마을 입주자대표회의 의결안건과 보고사항을 A4 표지와 분량에 맞춘 본문으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=16">
+<link rel="stylesheet" href="./app.css?v=17">
 </head>
 <body class="access-pending">
 <div class="access-gate" id="accessGate" role="status" aria-live="polite">
@@ -189,44 +189,45 @@
       </article>
 
       <article class="paper body-paper" id="bodyPaper">
-        <header class="paper-header">
+        <table class="body-layout" role="presentation">
+        <thead><tr><td><header class="paper-header">
           <div class="meeting-caption empty" id="pMeetingHeaderBody"></div>
           <div class="meeting-rule"></div>
-        </header>
+        </header></td></tr></thead>
 
-        <div class="body-content">
-          <section class="doc-section">
+        <tbody class="body-content">
+          <tr><td><section class="doc-section">
             <h3 id="pDecisionHeading">1. 의결주문</h3>
             <div class="doc-section-box"><div class="doc-text empty" id="pDecision">내용을 입력해 주세요.</div></div>
-          </section>
+          </section></td></tr>
 
-          <section class="doc-section">
+          <tr><td><section class="doc-section">
             <h3 id="pBackgroundHeading">2. 제안이유</h3>
             <div class="doc-section-box"><div class="doc-text empty" id="pBackground">내용을 입력해 주세요.</div></div>
-          </section>
+          </section></td></tr>
 
-          <section class="doc-section">
+          <tr><td><section class="doc-section">
             <h3>3. 주요내용</h3>
             <div class="doc-section-box"><div class="doc-text empty" id="pDetails">내용을 입력해 주세요.</div></div>
-          </section>
+          </section></td></tr>
 
-          <section class="doc-section">
+          <tr><td><section class="doc-section">
             <h3 id="pCostHeading">4. 비용추계서</h3>
             <div class="doc-section-box"><div class="doc-text empty" id="pCost">내용을 입력해 주세요.</div></div>
-          </section>
+          </section></td></tr>
 
 
-          <section class="doc-section" id="refsSection">
+          <tr><td><section class="doc-section" id="refsSection">
             <h3 id="pRefsHeading">5. 참고사항</h3>
             <div class="doc-section-box refs-box">
               <div class="sub-doc-row"><b id="pBasisLabel">가. 근거규정</b><div class="doc-text empty" id="pBasis">-</div></div>
               <div class="sub-doc-row"><b id="pRefsLabel">나. 기타</b><div class="doc-text empty" id="pRefs">-</div></div>
               <div class="doc-attachments" id="pAttachments"></div>
             </div>
-          </section>
-        </div>
-
-        <div class="paper-bottom-rule"></div>
+          </section></td></tr>
+        </tbody>
+        <tfoot><tr><td><div class="body-agenda-footer" id="pBodyAgendaFooter"></div></td></tr></tfoot>
+        </table>
       </article>
     </div>
   </section>
@@ -238,8 +239,8 @@
 <script src="./cloud-request.js?v=2"></script>
 <script src="./attachment-print.js?v=1"></script>
 <script src="./reference-display.js?v=2"></script>
-<script src="./batch-print.js?v=4"></script>
-<script src="./app.js?v=22"></script>
+<script src="./batch-print.js?v=5"></script>
+<script src="./app.js?v=23"></script>
 <script src="./procedure-check.js?v=2"></script>
 </body>
 </html>

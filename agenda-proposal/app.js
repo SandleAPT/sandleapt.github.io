@@ -247,6 +247,7 @@
     [preview.meetingHeaderCover,preview.meetingHeaderBody].forEach(function(node){node.textContent=meetingHeader;node.classList.toggle("empty",!meetingHeader);});
     preview.agendaNo.textContent=number?"제 "+number+" 호":"제   호"; preview.decisionMeta.textContent=decisionMeta();
     preview.title.textContent=el.title.value.trim()||"제목을 입력해 주세요.";preview.title.classList.toggle("empty",!el.title.value.trim());
+    document.getElementById("pBodyAgendaFooter").textContent=(getDocType()==="report"?"보고 ":"의결 ")+(number||"-")+"호 · "+(el.title.value.trim()||"제목 미입력");
     preview.proposer.textContent=el.proposer.value.trim()||"-";preview.date.textContent=fmtDate(el.date.value);
     renderText(preview.decision,el.decision.value);renderText(preview.background,el.background.value);renderText(preview.details,el.details.value);
     renderText(preview.cost,el.cost.value);renderText(preview.basis,el.basis.value,"-");renderText(preview.refs,el.refs.value,"-");

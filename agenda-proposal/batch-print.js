@@ -54,6 +54,7 @@
       var date=data.decisionDate||doc.date,parts=date.split('-');
       var header=parts.length===3?'제'+api.term+'기 '+parts[0]+'년'+parts[1]+'월'+((data.meetingType||doc.meetingType)?' '+(data.meetingType||doc.meetingType):'')+' 입주자대표회의':'';
       text('pMeetingHeaderCover',header);text('pMeetingHeaderBody',header);
+      text('pBodyAgendaFooter',(doc.docType==='report'?'보고 ':'의결 ')+api.number(doc)+'호 · '+(data.title||doc.title||'제목 미입력'));
       text('pAgendaNo','제 '+api.number(doc)+' 호');text('pDecisionMeta',api.date(date));
       text('pTitle',data.title||doc.title);text('pProposer',data.proposer||'-');text('pDate',api.date(data.date));
       ['Decision','Background','Details','Cost','Basis','Refs'].forEach(function(key){api.renderText(node('p'+key),data[key.toLowerCase()],'-');});

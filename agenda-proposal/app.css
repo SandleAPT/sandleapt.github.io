@@ -216,3 +216,21 @@ body.access-pending .print-picker{visibility:hidden}
 .output-options{display:flex;flex-wrap:wrap;gap:6px 18px}
 .sub-field>label{font-size:12px;font-weight:bold;color:#514d45}
 .sub-doc-row.without-title{grid-template-columns:1fr}
+
+/* Each document owns its repeating print furniture, including in a batch. */
+.body-layout{width:100%;table-layout:fixed;border-collapse:collapse;border:0}
+.body-layout>thead>tr>td,.body-layout>tbody>tr>td,.body-layout>tfoot>tr>td{padding:0;border:0;vertical-align:top}
+.body-layout>thead>tr>td{padding-bottom:7mm}
+.body-layout .body-content{padding:0}
+.body-layout>tbody>tr>td{padding-bottom:var(--section-gap)}
+.body-agenda-footer{border-top:3px double var(--doc-rule);padding-top:2mm;font-size:8pt;line-height:1.4;color:var(--doc-muted);overflow-wrap:anywhere}
+@media print{
+  .body-layout>thead{display:table-header-group;break-inside:avoid}
+  .body-layout>tfoot{display:table-footer-group;break-inside:avoid}
+  .body-layout>tbody{display:table-row-group}
+  .body-layout>tbody>tr{break-inside:auto}
+  .body-layout>thead>tr>td{padding-bottom:4mm}
+  .body-layout>tfoot>tr>td{padding-top:3mm}
+}
+
+.body-layout>tbody>tr:has(>td>section[hidden]){display:none}

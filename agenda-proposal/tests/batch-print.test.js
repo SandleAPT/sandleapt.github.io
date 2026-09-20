@@ -31,6 +31,9 @@ const app=window.ProposalPrint.create({config:context.typeConfig,term:6,fit:()=>
  assert.deepEqual(loaded,['second','report']);assert.equal(prints,1);
  const papers=document.querySelectorAll('#printBatch .paper');assert.equal(papers.length,4);
  assert(papers[0].textContent.includes('제 2 호'));assert(papers[2].textContent.includes('보고사항'));assert(papers[3].textContent.includes('1. 보고요지'));assert(papers[3].textContent.includes('※ 첨부1: 첨부.hwp'));
+ assert.equal(papers[1].querySelector('tfoot').textContent.trim(),'의결 2호 · 두번째 안건');
+ assert.equal(papers[3].querySelector('tfoot').textContent.trim(),'보고 1호 · 보고서');
+ assert(papers[1].querySelector('thead .meeting-rule'));
  assert.equal(document.querySelectorAll('#printBatch [id]').length,0);
  assert.equal(document.getElementById('title').value,'저장 전 초안');
  await app.open();
