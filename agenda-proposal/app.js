@@ -3,7 +3,7 @@
   var DRAFT_KEY="sandle_agenda_proposal_v1";
   var DB_NAME="sandle_agenda_proposals_v1";
   var STORE="documents";
-  var ids=["meetingHeader","agendaNo","decisionDate","meetingNo","title","proposer","date","decision","background","details","cost","basis","refs"];
+  var ids=["meetingHeader","agendaNo","decisionDate","title","proposer","date","decision","background","details","cost","basis","refs"];
   var el={}; ids.forEach(function(id){el[id]=document.getElementById(id);});
   var attachmentsInput=document.getElementById("attachments");
   var attachmentList=document.getElementById("attachmentList");
@@ -57,13 +57,30 @@
       node.innerHTML=html.join("").replace(/<\/ul><ul>/g,"");
     }else node.textContent=text;
   }
+  function initAgendaOptions(){
+    for(var n=1;n<=50;n++){
+      var option=document.createElement("option");
+      option.value=String(n);
+      option.textContent=n+"호";
+      el.agendaNo.appendChild(option);
+    }
+  }
+  function normalizeAgendaNo(value){
+    var m=String(value||"").match(/\d+/);
+    if(!m)return "";
+    var n=Number(m[0]);
+    return n>=1&&n<=50?String(n):"";
+  }
   function formData(){
     var data={}; ids.forEach(function(id){data[id]=el[id].value;});
     return data;
   }
   function applyData(data){
     data=data||{};
-    ids.forEach(function(id){el[id].value=typeof data[id]==="string"?data[id]:"";});
+    ids.forEach(function(id){
+      if(id==="agendaNo")el[id].value=normalizeAgendaNo(data[id]);
+      else el[id].value=typeof data[id]==="string"?data[id]:"";
+    });
     if(!el.date.value)el.date.value=today();
   }
   function saveDraft(){
@@ -102,9 +119,7 @@
     pAttachments.appendChild(ul);
   }
   function decisionMeta(){
-    var date=el.decisionDate.value?fmtDate(el.decisionDate.value):"20  .  .  .";
-    var meeting=el.meetingNo.value.trim();
-    return date+"  (제 "+(meeting||"  ")+"회)";
+    return el.decisionDate.value?fmtDate(el.decisionDate.value):"20  .  .  .";
   }
   function update(){
     var meetingHeader=el.meetingHeader.value.trim();
@@ -112,7 +127,7 @@
       node.textContent=meetingHeader;
       node.classList.toggle("empty",!meetingHeader);
     });
-    preview.agendaNo.textContent=el.agendaNo.value.trim()||"제   호";
+    preview.agendaNo.textContent=el.agendaNo.value ? "제 "+el.agendaNo.value+" 호" : "제   호";
     preview.decisionMeta.textContent=decisionMeta();
     preview.title.textContent=el.title.value.trim()||"제목을 입력해 주세요.";
     preview.title.classList.toggle("empty",!el.title.value.trim());
@@ -275,7 +290,7 @@
   function sample(){
     currentDocId=null; attachmentFiles=[]; renderAttachmentList();
     applyData({
-      meetingHeader:"", agendaNo:"", decisionDate:"", meetingNo:"",
+      meetingHeader:"", agendaNo:"", decisionDate:"",
       title:"커뮤니티센터 누수·곰팡이 보수의 건",
       proposer:"", date:today(),
       decision:"커뮤니티센터 누수·곰팡이 보수 범위와 예상비용, 비용부담 주체 및 가능한 일정을 관리주체가 확인하여 다음 회의에 보고하는 것으로 의결한다.",
@@ -305,5 +320,5 @@
   printBtn.addEventListener("click",function(){if(fit())window.print();});
   window.addEventListener("resize",function(){requestAnimationFrame(fit);});
 
-  loadDraft(); update(); renderLibrary();
+  initAgendaOptions(); loadDraft(); update(); renderLibrary();
 })();
