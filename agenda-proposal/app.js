@@ -3,7 +3,8 @@
   var DRAFT_KEY="sandle_agenda_proposal_v1";
   var DB_NAME="sandle_agenda_proposals_v1";
   var STORE="documents";
-  var ids=["meetingHeader","agendaNo","decisionDate","title","proposer","date","decision","background","details","cost","basis","refs"];
+  var CURRENT_TERM=6;
+  var ids=["agendaNo","decisionDate","meetingType","title","proposer","date","decision","background","details","cost","basis","refs"];
   var el={}; ids.forEach(function(id){el[id]=document.getElementById(id);});
   var attachmentsInput=document.getElementById("attachments");
   var attachmentList=document.getElementById("attachmentList");
@@ -75,10 +76,18 @@
     var data={}; ids.forEach(function(id){data[id]=el[id].value;});
     return data;
   }
+  function normalizeMeetingType(value,legacyHeader){
+    if(value==="정기"||value==="임시")return value;
+    var legacy=String(legacyHeader||"");
+    if(legacy.indexOf("임시")>=0)return "임시";
+    if(legacy.indexOf("정기")>=0)return "정기";
+    return "";
+  }
   function applyData(data){
     data=data||{};
     ids.forEach(function(id){
       if(id==="agendaNo")el[id].value=normalizeAgendaNo(data[id]);
+      else if(id==="meetingType")el[id].value=normalizeMeetingType(data[id],data.meetingHeader);
       else el[id].value=typeof data[id]==="string"?data[id]:"";
     });
     if(!el.date.value)el.date.value=today();
@@ -121,8 +130,16 @@
   function decisionMeta(){
     return el.decisionDate.value?fmtDate(el.decisionDate.value):"20  .  .  .";
   }
+  function meetingHeaderText(){
+    if(!el.decisionDate.value)return "";
+    var p=el.decisionDate.value.split("-");
+    if(p.length!==3)return "";
+    var year=p[0],month=String(Number(p[1])).padStart(2,"0");
+    var type=el.meetingType.value;
+    return "제"+CURRENT_TERM+"기 "+year+"년"+month+"월"+(type?" "+type:"")+" 입주자대표회의";
+  }
   function update(){
-    var meetingHeader=el.meetingHeader.value.trim();
+    var meetingHeader=meetingHeaderText();
     [preview.meetingHeaderCover,preview.meetingHeaderBody].forEach(function(node){
       node.textContent=meetingHeader;
       node.classList.toggle("empty",!meetingHeader);
@@ -290,7 +307,7 @@
   function sample(){
     currentDocId=null; attachmentFiles=[]; renderAttachmentList();
     applyData({
-      meetingHeader:"", agendaNo:"", decisionDate:"",
+      agendaNo:"", decisionDate:"", meetingType:"",
       title:"커뮤니티센터 누수·곰팡이 보수의 건",
       proposer:"", date:today(),
       decision:"커뮤니티센터 누수·곰팡이 보수 범위와 예상비용, 비용부담 주체 및 가능한 일정을 관리주체가 확인하여 다음 회의에 보고하는 것으로 의결한다.",
