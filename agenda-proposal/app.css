@@ -188,3 +188,10 @@ body.access-pending .print-picker{visibility:hidden}
   body.batch-printing > #printBatch{display:block!important;position:static;width:auto;visibility:visible}
   body.access-pending > #printBatch{display:none!important}
 }
+
+.print-attachments{padding:0 8px 8px 38px;font-size:12px;color:var(--muted)}
+.print-attachment{display:flex;align-items:center;gap:7px;padding:6px 0;flex-wrap:wrap}
+.print-attachment a{color:var(--gold-dark)}
+.attachment-paper img{display:block;width:100%;height:255mm;object-fit:contain}
+.attachment-caption{font-size:10pt;overflow-wrap:anywhere;margin-bottom:3mm}
+@media print{.attachment-paper{height:276mm;min-height:0;break-inside:avoid}.attachment-caption{max-height:12mm;overflow:hidden}.attachment-paper img{flex:1;min-height:0;max-height:255mm}}
