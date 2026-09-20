@@ -1,8 +1,9 @@
 (function(){
   "use strict";
   var DRAFT_KEY="sandle_agenda_proposal_v1";
-  var DB_NAME="sandle_agenda_proposals_v1";
-  var STORE="documents";
+  var CLOUD_URL_KEY="sandle_private_url";
+  var ADMIN_KEY="sandle_admin_key";
+  var MAX_CLOUD_JSON=8*1024*1024;
   var CURRENT_TERM=6;
   var ids=["agendaNo","decisionDate","meetingType","title","proposer","date","decision","background","details","cost","basis","refs"];
   var el={}; ids.forEach(function(id){el[id]=document.getElementById(id);});
@@ -19,10 +20,12 @@
   var newBtn=document.getElementById("newBtn");
   var libraryList=document.getElementById("libraryList");
   var libraryCount=document.getElementById("libraryCount");
+  var cloudConnectBtn=document.getElementById("cloudConnectBtn");
+  var cloudStatus=document.getElementById("cloudStatus");
   var saveNote=document.getElementById("saveNote");
   var attachmentFiles=[];
   var currentDocId=null;
-  var dbPromise=null;
+  var currentCreatedAt="";
   var preview={
     meetingHeaderCover:document.getElementById("pMeetingHeaderCover"),meetingHeaderBody:document.getElementById("pMeetingHeaderBody"),
     agendaNo:document.getElementById("pAgendaNo"),decisionMeta:document.getElementById("pDecisionMeta"),
@@ -179,122 +182,148 @@
     return fits;
   }
 
-  function openDb(){
-    if(dbPromise)return dbPromise;
-    dbPromise=new Promise(function(resolve,reject){
-      if(!window.indexedDB){reject(new Error("indexedDB unavailable"));return;}
-      var req=indexedDB.open(DB_NAME,1);
-      req.onupgradeneeded=function(){
-        var db=req.result;
-        if(!db.objectStoreNames.contains(STORE)){
-          var store=db.createObjectStore(STORE,{keyPath:"id"});
-          store.createIndex("updatedAt","updatedAt",{unique:false});
-        }
-      };
-      req.onsuccess=function(){resolve(req.result);};
-      req.onerror=function(){reject(req.error||new Error("DB open failed"));};
+  function getCloudUrl(ask){
+    var url="";
+    try{url=localStorage.getItem(CLOUD_URL_KEY)||"";}catch(e){}
+    if(!url&&ask){
+      url=(prompt("클라우드 저장소 주소(Apps Script 웹앱 URL)를 입력하세요.\n한 번 입력하면 이 기기에 기억됩니다.")||"").trim();
+      if(url)try{localStorage.setItem(CLOUD_URL_KEY,url);}catch(e){}
+    }
+    return url;
+  }
+  function getCloudKey(){
+    try{return localStorage.getItem(ADMIN_KEY)||"";}catch(e){return "";}
+  }
+  function cloudApi(body,askUrl){
+    var url=getCloudUrl(askUrl!==false);
+    if(!url)return Promise.reject(new Error("클라우드 저장소 연결이 필요합니다."));
+    var key=getCloudKey();
+    if(!key)return Promise.reject(new Error("수정용 비밀번호가 필요합니다."));
+    body.adminKey=key;
+    return fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)})
+      .then(function(r){return r.json();})
+      .then(function(res){
+        if(res&&res.ok)return res;
+        if(res&&res.error==="edit_required")throw new Error("수정용 비밀번호가 필요합니다.");
+        if(res&&res.error==="denied")throw new Error("클라우드 저장소 비밀번호가 올바르지 않습니다.");
+        throw new Error((res&&res.error)||"클라우드 요청에 실패했습니다.");
+      });
+  }
+  function configureCloud(){
+    var current=getCloudUrl(false);
+    var next=(prompt(current?"클라우드 저장소 주소를 변경할까요?\n현재 주소를 그대로 쓰려면 취소하세요.":"클라우드 저장소 주소(Apps Script 웹앱 URL)를 입력하세요.\n비공개 자료 저장소와 같은 주소를 사용합니다.",current||"")||"").trim();
+    if(!next)return;
+    try{localStorage.setItem(CLOUD_URL_KEY,next);}catch(e){}
+    renderLibrary();
+  }
+  function readFileDataUrl(file){
+    return new Promise(function(resolve,reject){
+      var r=new FileReader();
+      r.onload=function(){resolve({name:file.name||"첨부파일",type:file.type||"application/octet-stream",size:file.size||0,lastModified:file.lastModified||0,dataUrl:String(r.result||"")});};
+      r.onerror=function(){reject(r.error||new Error("첨부파일을 읽지 못했습니다."));};
+      r.readAsDataURL(file);
     });
-    return dbPromise;
   }
-  function dbGetAll(){
-    return openDb().then(function(db){return new Promise(function(resolve,reject){
-      var req=db.transaction(STORE,"readonly").objectStore(STORE).getAll();
-      req.onsuccess=function(){resolve((req.result||[]).sort(function(a,b){return String(b.updatedAt||"").localeCompare(String(a.updatedAt||""));}));};
-      req.onerror=function(){reject(req.error);};
-    });});
-  }
-  function dbGet(id){
-    return openDb().then(function(db){return new Promise(function(resolve,reject){
-      var req=db.transaction(STORE,"readonly").objectStore(STORE).get(id);
-      req.onsuccess=function(){resolve(req.result||null);}; req.onerror=function(){reject(req.error);};
-    });});
-  }
-  function dbPut(doc){
-    return openDb().then(function(db){return new Promise(function(resolve,reject){
-      var req=db.transaction(STORE,"readwrite").objectStore(STORE).put(doc);
-      req.onsuccess=function(){resolve(doc);}; req.onerror=function(){reject(req.error);};
-    });});
-  }
-  function dbDelete(id){
-    return openDb().then(function(db){return new Promise(function(resolve,reject){
-      var req=db.transaction(STORE,"readwrite").objectStore(STORE).delete(id);
-      req.onsuccess=function(){resolve();}; req.onerror=function(){reject(req.error);};
-    });});
+  function storedAttachmentToFile(item){
+    if(!item||!item.dataUrl)return Promise.resolve(null);
+    return fetch(item.dataUrl).then(function(r){return r.blob();}).then(function(blob){
+      try{return new File([blob],item.name||"첨부파일",{type:item.type||blob.type||"application/octet-stream",lastModified:item.lastModified||Date.now()});}
+      catch(e){blob.name=item.name||"첨부파일";blob.lastModified=item.lastModified||Date.now();return blob;}
+    });
   }
   function newId(){
     if(window.crypto&&typeof crypto.randomUUID==="function")return "proposal_"+crypto.randomUUID();
     return "proposal_"+Date.now()+"_"+Math.random().toString(36).slice(2,9);
   }
   function renderLibrary(){
-    dbGetAll().then(function(rows){
+    var url=getCloudUrl(false);
+    cloudConnectBtn.textContent=url?"클라우드 설정":"클라우드 연결";
+    if(!url){
+      libraryCount.textContent="-";
+      cloudStatus.textContent="이 기기에서 한 번만 저장소 주소를 연결하면 됩니다.";
+      libraryList.innerHTML='<div class="library-empty">클라우드 저장소를 연결하면 다른 PC에서도 같은 제안서를 불러올 수 있어요.</div>';
+      return;
+    }
+    cloudStatus.textContent="클라우드 목록을 불러오는 중…";
+    libraryList.innerHTML='<div class="library-empty">불러오는 중…</div>';
+    cloudApi({action:"list"},false).then(function(res){
+      var rows=(res.items||[]).filter(function(x){return x&&String(x.id||"").indexOf("proposal_")===0;});
       libraryCount.textContent=rows.length+"건";
+      cloudStatus.textContent="연결됨 · 같은 저장소와 수정용 비밀번호로 다른 PC에서도 불러올 수 있어요.";
       libraryList.innerHTML="";
-      if(!rows.length){libraryList.innerHTML='<div class="library-empty">저장된 제안서가 없습니다.</div>';return;}
+      if(!rows.length){libraryList.innerHTML='<div class="library-empty">클라우드에 저장된 제안서가 없습니다.</div>';return;}
       rows.forEach(function(doc){
         var item=document.createElement("div"); item.className="library-item"+(doc.id===currentDocId?" active":"");
         var main=document.createElement("div"); main.className="library-main";
-        var title=document.createElement("div"); title.className="library-title"; title.textContent=doc.title||"제목 없는 안건";
+        var title=document.createElement("div"); title.className="library-title"; title.textContent=String(doc.title||"제목 없는 안건").replace(/^\[안건제안서\]\s*/,"");
         var meta=document.createElement("div"); meta.className="library-meta";
-        var parts=[]; if(doc.date)parts.push(fmtDate(doc.date)); if(doc.proposer)parts.push(doc.proposer); if(doc.attachments&&doc.attachments.length)parts.push("첨부 "+doc.attachments.length+"개"); parts.push("저장 "+fmtSaved(doc.updatedAt));
+        var parts=[]; if(doc.date)parts.push(fmtDate(doc.date)); if(doc.updatedAt)parts.push("저장 "+fmtSaved(doc.updatedAt));
         meta.textContent=parts.join(" · ");
         main.appendChild(title); main.appendChild(meta);
         var actions=document.createElement("div"); actions.className="library-actions";
         var load=document.createElement("button"); load.type="button"; load.textContent="불러오기";
         load.addEventListener("click",function(){loadDocument(doc.id);});
         var del=document.createElement("button"); del.type="button"; del.className="delete"; del.textContent="삭제";
-        del.addEventListener("click",function(){deleteDocument(doc.id,doc.title);});
+        del.addEventListener("click",function(){deleteDocument(doc.id,title.textContent);});
         actions.appendChild(load); actions.appendChild(del); item.appendChild(main); item.appendChild(actions); libraryList.appendChild(item);
       });
-    }).catch(function(){
-      libraryCount.textContent="사용 불가";
-      libraryList.innerHTML='<div class="library-empty">이 브라우저에서는 문서 보관함을 사용할 수 없습니다.</div>';
-      saveBtn.disabled=true;
+    }).catch(function(err){
+      console.error(err);
+      libraryCount.textContent="!";
+      cloudStatus.textContent=err.message;
+      libraryList.innerHTML='<div class="library-empty">클라우드 목록을 불러오지 못했습니다.</div>';
     });
   }
   function saveDocument(){
     var title=el.title.value.trim();
     if(!title){alert("안건 제목을 먼저 적어주세요.");el.title.focus();return;}
-    saveBtn.disabled=true; saveNote.textContent="문서를 저장하고 있습니다…";
+    saveBtn.disabled=true; saveNote.textContent="제안서와 첨부파일을 클라우드에 저장하고 있습니다…";
     var now=new Date().toISOString();
-    var existingPromise=currentDocId?dbGet(currentDocId):Promise.resolve(null);
-    existingPromise.then(function(old){
-      var data=formData();
-      data.id=currentDocId||newId();
-      data.createdAt=old&&old.createdAt?old.createdAt:now;
-      data.updatedAt=now;
-      data.attachments=attachmentFiles.slice();
-      return dbPut(data);
-    }).then(function(doc){
-      currentDocId=doc.id;
-      saveNote.textContent="저장했습니다. 목록에서 언제든 다시 불러올 수 있어요.";
+    Promise.all(attachmentFiles.map(readFileDataUrl)).then(function(files){
+      var id=currentDocId||newId();
+      var payload={kind:"agenda-proposal",version:1,data:formData(),attachments:files,createdAt:currentCreatedAt||now,updatedAt:now};
+      var json=JSON.stringify(payload);
+      if(json.length>MAX_CLOUD_JSON)throw new Error("첨부파일을 포함한 저장 크기가 8MB를 넘습니다. 큰 파일은 나누거나 줄여 주세요.");
+      return cloudApi({action:"save",record:{id:id,title:"[안건제안서] "+title,date:el.decisionDate.value||el.date.value||"",json:json}},true)
+        .then(function(){return {id:id,createdAt:payload.createdAt};});
+    }).then(function(saved){
+      currentDocId=saved.id; currentCreatedAt=saved.createdAt;
+      saveNote.textContent="클라우드에 저장했습니다. 다른 PC에서도 ‘불러오기’로 열 수 있어요.";
       renderLibrary();
     }).catch(function(err){
       console.error(err);
-      alert("문서를 저장하지 못했습니다. 첨부파일이 너무 크거나 브라우저 저장공간이 부족할 수 있어요.");
-      saveNote.textContent="저장하지 못했습니다.";
+      alert("클라우드 저장 실패: "+err.message);
+      saveNote.textContent="클라우드에 저장하지 못했습니다. 작성 중 내용은 이 기기의 임시초안에 남아 있습니다.";
     }).finally(function(){saveBtn.disabled=false;});
   }
   function loadDocument(id){
-    dbGet(id).then(function(doc){
-      if(!doc)return;
-      applyData(doc);
-      attachmentFiles=Array.isArray(doc.attachments)?doc.attachments.slice():[];
-      currentDocId=doc.id;
-      renderAttachmentList(); update();
-      saveNote.textContent="저장된 제안서를 불러왔습니다. 수정한 뒤 다시 저장하면 이 문서가 갱신됩니다.";
-      renderLibrary();
-    }).catch(function(){alert("문서를 불러오지 못했습니다.");});
+    saveNote.textContent="클라우드에서 제안서와 첨부파일을 불러오는 중…";
+    cloudApi({action:"get",id:id},true).then(function(res){
+      if(!res.item)throw new Error("저장된 제안서를 찾지 못했습니다.");
+      var obj=JSON.parse(res.item.json||"{}");
+      if(obj.kind&&obj.kind!=="agenda-proposal")throw new Error("안건 제안서 형식이 아닙니다.");
+      applyData(obj.data||obj);
+      return Promise.all((obj.attachments||[]).map(storedAttachmentToFile)).then(function(files){
+        attachmentFiles=files.filter(Boolean);
+        currentDocId=res.item.id; currentCreatedAt=obj.createdAt||"";
+        renderAttachmentList(); update();
+        saveNote.textContent="클라우드 제안서를 불러왔습니다. 첨부파일도 이 기기에서 바로 출력할 수 있어요.";
+        renderLibrary();
+      });
+    }).catch(function(err){
+      console.error(err); alert("클라우드 불러오기 실패: "+err.message); saveNote.textContent="불러오지 못했습니다.";
+    });
   }
   function deleteDocument(id,title){
-    if(!confirm("‘"+(title||"이 제안서")+"’를 저장 목록에서 삭제할까요?"))return;
-    dbDelete(id).then(function(){
-      if(currentDocId===id){currentDocId=null;saveNote.textContent="저장된 문서는 삭제했습니다. 화면의 작성 내용은 그대로 두었습니다.";}
+    if(!confirm("‘"+(title||"이 제안서")+"’를 클라우드에서 삭제할까요?"))return;
+    cloudApi({action:"delete",id:id},true).then(function(){
+      if(currentDocId===id){currentDocId=null;currentCreatedAt="";saveNote.textContent="클라우드 문서는 삭제했습니다. 화면의 작성 내용은 그대로 두었습니다.";}
       renderLibrary();
-    }).catch(function(){alert("문서를 삭제하지 못했습니다.");});
+    }).catch(function(err){alert("클라우드 삭제 실패: "+err.message);});
   }
   function clearForm(){
     ids.forEach(function(id){el[id].value="";});
-    el.date.value=today(); attachmentFiles=[]; currentDocId=null; attachmentsInput.value="";
+    el.date.value=today(); attachmentFiles=[]; currentDocId=null; currentCreatedAt=""; attachmentsInput.value="";
     renderAttachmentList(); clearDraft(); update();
     saveNote.textContent="새 제안서를 작성하고 있습니다.";
     renderLibrary();
@@ -305,7 +334,7 @@
     clearForm();
   }
   function sample(){
-    currentDocId=null; attachmentFiles=[]; renderAttachmentList();
+    currentDocId=null; currentCreatedAt=""; attachmentFiles=[]; renderAttachmentList();
     applyData({
       agendaNo:"", decisionDate:"", meetingType:"",
       title:"커뮤니티센터 누수·곰팡이 보수의 건",
@@ -331,6 +360,7 @@
     attachmentsInput.value=""; renderAttachmentList(); update();
     if(rejected.length)alert("PDF, JPG, PNG 파일만 추가할 수 있어요.");
   });
+  cloudConnectBtn.addEventListener("click",configureCloud);
   document.getElementById("sampleBtn").addEventListener("click",sample);
   newBtn.addEventListener("click",newDocument);
   saveBtn.addEventListener("click",saveDocument);
