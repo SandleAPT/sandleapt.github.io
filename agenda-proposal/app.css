@@ -144,7 +144,7 @@ textarea{resize:vertical;line-height:1.55;min-height:72px}
 .sub-doc-row{display:grid;grid-template-columns:26mm 1fr;gap:3mm;align-items:start;margin:2mm 0}
 .sub-doc-row>b{font-size:calc(var(--doc-size) - .2pt);white-space:nowrap}
 .doc-attachments{margin-top:3mm;word-break:break-all;font-size:calc(var(--doc-size) - .2pt)}
-.doc-attachments ul{margin:0;padding-left:17px}.doc-attachments li{margin:1mm 0}
+.doc-attachments ul{margin:0;padding-left:0;list-style:none}.doc-attachments li{margin:1mm 0}
 .doc-section[hidden]{display:none!important}
 
 @media (max-width:1180px){

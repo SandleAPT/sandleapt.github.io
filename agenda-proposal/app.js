@@ -214,7 +214,7 @@
   function renderAttachmentPreview(){
     pAttachments.innerHTML=""; if(!attachmentFiles.length)return;
     var ul=document.createElement("ul");
-    attachmentFiles.forEach(function(file){var li=document.createElement("li");li.textContent="첨부: "+(file.name||"첨부파일");ul.appendChild(li);});
+    attachmentFiles.forEach(function(file,index){var li=document.createElement("li");li.textContent="※ 첨부"+(index+1)+": "+(file.name||"첨부파일");ul.appendChild(li);});
     pAttachments.appendChild(ul);
   }
   function decisionMeta(){return el.decisionDate.value?fmtDate(el.decisionDate.value):"20  .  .  .";}
