@@ -127,11 +127,7 @@
       <textarea id="cost" rows="4" placeholder="예: 관리주체에서 보수 범위와 예상비용, 사용 가능한 재원을 확인 후 보고"></textarea>
     </label>
 
-    <label class="field" id="followupField" hidden>
-      <span>5. 향후 일정·후속사항</span>
-      <small>보고 뒤 예정된 일정이나 다음에 확인할 내용을 적어주세요.</small>
-      <textarea id="followup" rows="4" placeholder="예: 확정되는 항목부터 관리비 부과 전에 주민에게 안내"></textarea>
-    </label>
+    <input id="followup" type="hidden">
 
     <div class="field ref-field" id="refsField">
       <div class="field-title-row">
@@ -216,10 +212,6 @@
             <div class="doc-section-box"><div class="doc-text empty" id="pCost">내용을 입력해 주세요.</div></div>
           </section>
 
-          <section class="doc-section" id="followupSection" hidden>
-            <h3>5. 향후 일정·후속사항</h3>
-            <div class="doc-section-box"><div class="doc-text empty" id="pFollowup">내용을 입력해 주세요.</div></div>
-          </section>
 
           <section class="doc-section" id="refsSection">
             <h3 id="pRefsHeading">5. 참고사항</h3>
@@ -297,7 +289,8 @@
 })();
 </script>
 <script src="./meeting-order.js?v=1"></script>
-<script src="./app.js?v=11"></script>
+<script src="./cloud-request.js?v=1"></script>
+<script src="./app.js?v=12"></script>
 <script src="./procedure-check.js?v=2"></script>
 </body>
 </html>

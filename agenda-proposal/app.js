@@ -15,8 +15,6 @@
   var typeInputs=Array.prototype.slice.call(document.querySelectorAll('input[name="docType"]'));
   var attachmentsInput=document.getElementById("attachments");
   var attachmentList=document.getElementById("attachmentList");
-  var followupField=document.getElementById("followupField");
-  var followupSection=document.getElementById("followupSection");
   var pAttachments=document.getElementById("pAttachments");
   var coverPaper=document.getElementById("coverPaper");
   var bodyPaper=document.getElementById("bodyPaper");
@@ -38,13 +36,14 @@
   var libraryLoaded=false;
   var libraryPromise=null;
   var libraryLoadToken=0;
+  var documentLoading=false;
 
   var preview={
     meetingHeaderCover:document.getElementById("pMeetingHeaderCover"),meetingHeaderBody:document.getElementById("pMeetingHeaderBody"),
     agendaNo:document.getElementById("pAgendaNo"),decisionMeta:document.getElementById("pDecisionMeta"),
     title:document.getElementById("pTitle"),proposer:document.getElementById("pProposer"),date:document.getElementById("pDate"),
     decision:document.getElementById("pDecision"),background:document.getElementById("pBackground"),details:document.getElementById("pDetails"),
-    cost:document.getElementById("pCost"),followup:document.getElementById("pFollowup"),basis:document.getElementById("pBasis"),refs:document.getElementById("pRefs")
+    cost:document.getElementById("pCost"),basis:document.getElementById("pBasis"),refs:document.getElementById("pRefs")
   };
 
   var ui={
@@ -79,14 +78,14 @@
     },
     report:{
       introTitle:"보고사항 작성 기준",
-      introText:"보고요지 → 보고배경 → 주요내용 → 비용·관리비 영향 → 향후 일정 → 참고사항 순서로 작성합니다. 보고사항은 별도로 표결하지 않습니다.",
+      introText:"보고요지 → 보고배경 → 주요내용 → 비용·관리비 영향 → 참고사항 순서로 작성합니다. 보고사항은 별도로 표결하지 않습니다.",
       notice:"이미 정해진 의무, 진행현황, 변동요인처럼 구성원이 알아야 할 내용을 적어주세요. 결정이 필요하면 의결안건으로 분리합니다.",
       numberLabel:"보고번호",numberHelp:"같은 회의일의 보고사항끼리 저장 순서대로 자동 배정됩니다.",meetingDateLabel:"보고일자",
       proposerLabel:"보고자",submissionDateLabel:"작성일",typeLabel:"보고사항",
       decisionHeading:"1. 보고요지",decisionHelp:"이번 자료에서 무엇을 알리려는지 한두 문장으로 적어주세요.",
       backgroundHeading:"2. 보고배경",backgroundHelp:"왜 지금 이 내용을 공유하는지 배경을 적어주세요.",
       costHeading:"4. 비용·관리비 영향",costHelp:"비용 영향이 있으면 금액이나 변동 가능성을 적고, 없으면 ‘해당 없음’으로 적어도 됩니다.",
-      refsHeading:"6. 참고사항",basisLabel:"가. 관련 규정·근거",refsLabel:"나. 기타·첨부자료",
+      refsHeading:"5. 참고사항",basisLabel:"가. 관련 규정·근거",refsLabel:"나. 기타·첨부자료",
       decisionPlaceholder:"예: 2026년 하반기 관리비 등에 영향을 미치는 주요 변동요인을 공유하고자 함.",
       backgroundPlaceholder:"예: 장기수선충당금 적립률 조정 등 예정된 변동요인을 사전에 공유할 필요가 있음.",
       costPlaceholder:"예: 항목별 금액 확정 후 세대별 예상 영향을 산정하여 안내 예정"
@@ -171,16 +170,15 @@
     ui.pCostHeading.textContent=cfg.costHeading; ui.pRefsHeading.textContent=cfg.refsHeading;
     ui.pBasisLabel.textContent=cfg.basisLabel; ui.pRefsLabel.textContent=cfg.refsLabel;
     el.decision.placeholder=cfg.decisionPlaceholder; el.background.placeholder=cfg.backgroundPlaceholder; el.cost.placeholder=cfg.costPlaceholder;
-    followupField.hidden=!isReport; followupSection.hidden=!isReport;
     document.body.setAttribute("data-doc-type",type);
     document.dispatchEvent(new CustomEvent("proposal-type-change",{detail:{docType:type}}));
   }
   function validateTypeWarning(){
-    var type=getDocType(),hasOther=!!(el.title.value.trim()||el.background.value.trim()||el.details.value.trim()||el.cost.value.trim()||el.followup.value.trim());
+    var type=getDocType(),hasOther=!!(el.title.value.trim()||el.background.value.trim()||el.details.value.trim()||el.cost.value.trim());
     var message="";
     if(type==="decision"&&hasOther&&!el.decision.value.trim())message="무엇을 표결할지 의결주문을 먼저 적어주세요.";
     if(type==="report"){
-      var text=[el.decision.value,el.background.value,el.details.value,el.cost.value,el.followup.value].join(" ");
+      var text=[el.decision.value,el.background.value,el.details.value,el.cost.value].join(" ");
       if(/의결한다|승인한다|선정한다|확정한다|변경한다|집행한다/.test(text))message="실제 결정이 포함된 표현이 보여요. 입주자대표회의의 결정이 필요하다면 그 부분은 의결안건으로 분리해 주세요.";
     }
     typeWarning.hidden=!message; typeWarning.textContent=message;
@@ -238,7 +236,7 @@
     preview.title.textContent=el.title.value.trim()||"제목을 입력해 주세요.";preview.title.classList.toggle("empty",!el.title.value.trim());
     preview.proposer.textContent=el.proposer.value.trim()||"-";preview.date.textContent=fmtDate(el.date.value);
     renderText(preview.decision,el.decision.value);renderText(preview.background,el.background.value);renderText(preview.details,el.details.value);
-    renderText(preview.cost,el.cost.value);renderText(preview.followup,el.followup.value);renderText(preview.basis,el.basis.value,"-");renderText(preview.refs,el.refs.value,"-");
+    renderText(preview.cost,el.cost.value);renderText(preview.basis,el.basis.value,"-");renderText(preview.refs,el.refs.value,"-");
     renderAttachmentPreview();validateTypeWarning();saveDraft();requestAnimationFrame(fit);
   }
   function fit(){
@@ -262,8 +260,7 @@
   function cloudApi(body,askUrl){
     var url=getCloudUrl(askUrl!==false); if(!url)return Promise.reject(new Error("클라우드 저장소 연결이 필요합니다."));
     var key=getCloudKey(); if(!key)return Promise.reject(new Error("수정용 비밀번호가 필요합니다.")); body.adminKey=key;
-    return fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)})
-      .then(function(r){return r.json();})
+    return window.ProposalCloud.json(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)})
       .then(function(res){
         if(res&&res.ok)return res;
         if(res&&res.error==="edit_required")throw new Error("수정용 비밀번호가 필요합니다.");
@@ -345,7 +342,7 @@
       var group=order.group(libraryDocs,doc.date,doc.docType),index=group.findIndex(function(row){return row.id===doc.id;});
       var up=document.createElement("button");up.type="button";up.className="order-button";up.textContent="↑";up.title="앞 번호로 이동";up.setAttribute("aria-label",doc.title+" 앞 번호로 이동");up.disabled=index<=0;up.addEventListener("click",function(){moveDocument(doc.id,-1);});
       var down=document.createElement("button");down.type="button";down.className="order-button";down.textContent="↓";down.title="뒤 번호로 이동";down.setAttribute("aria-label",doc.title+" 뒤 번호로 이동");down.disabled=index<0||index>=group.length-1;down.addEventListener("click",function(){moveDocument(doc.id,1);});
-      var load=document.createElement("button");load.type="button";load.textContent="불러오기";load.addEventListener("click",function(){loadDocument(doc.id);});
+      var load=document.createElement("button");load.type="button";load.textContent="불러오기";load.addEventListener("click",function(){loadDocument(doc.id,load);});
       var del=document.createElement("button");del.type="button";del.className="delete";del.textContent="삭제";del.addEventListener("click",function(){deleteDocument(doc.id,doc.title);});
       actions.appendChild(up);actions.appendChild(down);actions.appendChild(load);actions.appendChild(del);item.appendChild(main);item.appendChild(actions);libraryList.appendChild(item);
     });
@@ -396,18 +393,24 @@
     }).catch(function(err){console.error(err);alert("클라우드 저장 실패: "+err.message);saveNote.textContent="클라우드에 저장하지 못했습니다. 작성 중 내용은 이 기기의 임시초안에 남아 있습니다.";})
       .finally(function(){saveBtn.disabled=false;});
   }
-  function loadDocument(id){
-    saveNote.textContent="클라우드에서 회의자료와 첨부파일을 불러오는 중…";
-    cloudApi({action:"get",id:id},true).then(function(res){
+  function loadDocument(id,button){
+    if(documentLoading)return;
+    documentLoading=true;button.disabled=true;button.textContent="불러오는 중…";
+    saveBtn.disabled=true;newBtn.disabled=true;libraryList.classList.add("busy");
+    cloudStatus.textContent=saveNote.textContent="클라우드에서 회의자료와 첨부파일을 불러오는 중…";
+    return cloudApi({action:"get",id:id},true).then(function(res){
       if(!res.item)throw new Error("저장된 회의자료를 찾지 못했습니다.");
       var obj=parsePayload(res.item),doc=libraryDocs.find(function(row){return row.id===id;});
       if(!doc){doc=order.parseRecord(res.item);order.hydrateRecord(doc,obj);upsertLocalDoc(doc);}
-      var data=Object.assign({},obj.data||obj);data.docType=doc.docType;data.meetingType=data.meetingType||doc.meetingType;data.agendaNo=String(order.displayNumber(doc,libraryDocs)||normalizeAgendaNo(data.agendaNo)||1);applyData(data);
+      var data=Object.assign({},obj.data||obj);data.docType=doc.docType;data.meetingType=data.meetingType||doc.meetingType;data.agendaNo=String(order.displayNumber(doc,libraryDocs)||normalizeAgendaNo(data.agendaNo)||1);
       return Promise.all((obj.attachments||[]).map(storedAttachmentToFile)).then(function(files){
+        applyData(data);
         attachmentFiles=files.filter(Boolean);currentDocId=id;currentCreatedAt=obj.createdAt||doc.createdAt||"";
-        renderAttachmentList();update();saveNote.textContent="클라우드 회의자료를 불러왔습니다. 첨부파일도 이 기기에서 바로 출력할 수 있어요.";renderLibraryRows();
+        renderAttachmentList();update();cloudStatus.textContent=saveNote.textContent="‘"+doc.title+"’ 자료를 불러왔습니다.";renderLibraryRows();
+        el.title.scrollIntoView({behavior:"smooth",block:"center"});el.title.focus({preventScroll:true});
       });
-    }).catch(function(err){console.error(err);alert("클라우드 불러오기 실패: "+err.message);saveNote.textContent="불러오지 못했습니다.";});
+    }).catch(function(err){console.error(err);cloudStatus.textContent=saveNote.textContent="불러오기 실패: "+err.message;})
+      .finally(function(){documentLoading=false;button.disabled=false;button.textContent="불러오기";saveBtn.disabled=false;newBtn.disabled=false;libraryList.classList.remove("busy");});
   }
   function deleteDocument(id,title){
     if(!confirm("‘"+(title||"이 회의자료")+"’를 클라우드에서 삭제할까요?\n뒤 자료의 번호는 자동으로 한 칸씩 당겨집니다."))return;

@@ -17,7 +17,8 @@ for(const id of [...js.matchAll(/getElementById\("([^"]+)"\)/g)].map(match=>matc
 assert(html.includes('name="docType" value="decision"'));
 assert(html.includes('name="docType" value="report"'));
 assert(html.includes('id="agendaNo" type="hidden"'),'number is automatic, not manually selected');
-assert(html.includes('id="followupField" hidden'));
+assert(!html.includes('향후 일정'));
+assert(html.includes('id="followup" type="hidden"'),'preserve legacy content without displaying it');
 assert(html.includes('./meeting-order.js?v=1'));
 assert(js.includes('같은 회의일 안에서 번호가 자동 정리됩니다.'));
 assert(js.includes('moveDocument(doc.id,-1)'));
