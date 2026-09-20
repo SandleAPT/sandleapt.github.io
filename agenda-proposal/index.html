@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>산들마을 안건 제안서</title>
 <meta name="description" content="산들마을 공동주택관리규약 별지 제7호 서식에 맞춰 의안을 표지와 본문 A4 2장으로 작성하는 도구">
-<link rel="stylesheet" href="./app.css?v=7">
+<link rel="stylesheet" href="./app.css?v=8">
 </head>
 <body class="access-pending">
 <div class="access-gate" id="accessGate" role="status" aria-live="polite">
@@ -49,21 +49,18 @@
       <input id="meetingHeader" type="text" placeholder="예: 제6기 2026년09월 정기 입주자대표회의">
     </label>
 
-    <div class="field-grid three compact-row official-fields">
+    <div class="field-grid two compact-row official-fields">
       <label class="field">
         <span>의안번호</span>
-        <small>회의 편성 시 입력해도 됩니다.</small>
-        <input id="agendaNo" type="text" placeholder="예: 제 3호">
+        <small>안건 순서에 맞는 숫자만 선택하면 됩니다.</small>
+        <select id="agendaNo" aria-label="의안번호">
+          <option value="">번호 선택</option>
+        </select>
       </label>
       <label class="field">
         <span>의결년월일</span>
         <small>아직 의결 전이면 비워두세요.</small>
         <input id="decisionDate" type="date">
-      </label>
-      <label class="field">
-        <span>회의차수</span>
-        <small>별지의 ‘제 ○회’ 항목입니다.</small>
-        <input id="meetingNo" type="text" placeholder="예: 1">
       </label>
     </div>
 
@@ -146,7 +143,7 @@
             <div class="cover-meta-value strong" id="pAgendaNo">제&nbsp;&nbsp;&nbsp;호</div>
             <div class="cover-meta-label decision-merged">의결사항</div>
             <div class="cover-meta-label second-row">의결년월일</div>
-            <div class="cover-meta-value second-row" id="pDecisionMeta">20&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp; (제&nbsp;&nbsp;회)</div>
+            <div class="cover-meta-value second-row" id="pDecisionMeta">20&nbsp;&nbsp;.&nbsp;&nbsp;.&nbsp;&nbsp;.</div>
           </div>
 
           <section class="cover-title-block">
@@ -266,7 +263,7 @@
   check();
 })();
 </script>
-<script src="./app.js?v=6"></script>
+<script src="./app.js?v=7"></script>
 <script src="./procedure-check.js?v=1"></script>
 </body>
 </html>
