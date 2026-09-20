@@ -117,3 +117,7 @@
 - 클라우드 설정에서 주소 복사 또는 연결 설정 JSON 내려받기/가져오기를 지원한다. 다른 기기에서 가져온 뒤 연결 적용한다. 비밀번호·회의자료는 파일에 포함하지 않는다.
 - 포털 내 작성 화면은 부모의 검증된 권한을 재사용하며, 직접 접속은 공통 PortalAccess로 검증한다.
 - 검증: `node agenda-proposal/tests/access.test.js`, `node agenda-proposal/tests/cloud-settings.test.js`.
+
+## v446 자동 연결
+
+인증 서버의 수정 verify 응답 privateStoreUrl을 저장하여 기기별 주소 입력을 없앤다. 최초 등록은 기존 연결 기기의 수정 로그인으로 수행한다. 실제 Apps Script 서버 배포가 선행되어야 하며 현재 대기 중이다.

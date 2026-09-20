@@ -264,7 +264,7 @@
 
   function getCloudUrl(ask){
     var url="";try{url=localStorage.getItem(CLOUD_URL_KEY)||"";}catch(e){}
-    if(!url&&ask){url=(prompt("클라우드 저장소 주소(Apps Script 웹앱 URL)를 입력하세요.\n한 번 입력하면 이 기기에 기억됩니다.")||"").trim();if(url)try{localStorage.setItem(CLOUD_URL_KEY,url);}catch(e){}}
+
     return url;
   }
   function getCloudKey(){try{return localStorage.getItem(ADMIN_KEY)||"";}catch(e){return "";}}
@@ -279,6 +279,8 @@
         throw new Error((res&&res.error)||"클라우드 요청에 실패했습니다.");
       });
   }
+  window.addEventListener('sandle-cloud-connected',function(){libraryLoaded=false;refreshLibrary();});
+  window.addEventListener('storage',function(e){if(e.key===CLOUD_URL_KEY){libraryLoaded=false;refreshLibrary();}});
   function configureCloud(){
     window.ProposalCloudSettings.open(getCloudUrl(false),function(url){
       localStorage.setItem(CLOUD_URL_KEY,url);
@@ -374,8 +376,8 @@
   function refreshLibrary(){
     var url=getCloudUrl(false);cloudConnectBtn.textContent=url?"클라우드 설정":"클라우드 연결";
     if(!url){
-      libraryLoaded=false;libraryDocs=[];libraryCount.textContent="-";cloudStatus.textContent="이 기기에서 한 번만 저장소 주소를 연결하면 됩니다.";
-      libraryList.innerHTML='<div class="library-empty">클라우드 저장소를 연결하면 다른 PC에서도 같은 회의자료를 불러올 수 있어요.</div>';update();return Promise.resolve([]);
+      libraryLoaded=false;libraryDocs=[];libraryCount.textContent="-";cloudStatus.textContent="수정용 권한 확인 후 저장소에 자동 연결됩니다. 연결되지 않으면 관리자모드에서 다시 로그인해 주세요.";
+      libraryList.innerHTML='<div class="library-empty">기존에 연결된 기기에서 한 번 로그인하면 다른 기기도 같은 저장소를 자동으로 사용합니다.</div>';update();return Promise.resolve([]);
     }
     cloudStatus.textContent="클라우드 목록을 불러오는 중…";libraryList.innerHTML='<div class="library-empty">불러오는 중…</div>';
     return loadLibraryData(false,true).then(function(){cloudStatus.textContent="연결됨 · 같은 저장소와 수정용 비밀번호로 다른 PC에서도 불러올 수 있어요.";renderLibraryRows();return libraryDocs;})
