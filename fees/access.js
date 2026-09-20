@@ -2,12 +2,12 @@
 let feesRole='',feesAuth=null,feesLoginBusy=false;
 const feesEditTabs=['decisions','audit','auditcheck'];
 function feesCanEdit(){return feesRole==='edit';}
-function feesTabAllowed(tab){return !!feesRole&&(!feesEditTabs.includes(tab)||feesCanEdit());}
+function feesTabAllowed(tab){return feesEditTabs.includes(tab)?feesCanEdit():tab==='checks'?!!feesRole:['detail','trend'].includes(tab);}
 function feesApplyRole(role){
   const previous=feesRole;feesRole=role;
   document.querySelectorAll('.tabs button').forEach(button=>{button.hidden=!feesTabAllowed(button.dataset.tab);});
-  if(previous&&previous!==role){location.reload();return;}
-  if(role)appBoot();else appShowGate();
+  if((previous||DATA)&&previous!==role){location.reload();return;}
+  if(role)appBoot();
 }
 async function feesSignIn(inputId,messageId){
   if(feesLoginBusy)return;
@@ -20,7 +20,7 @@ async function feesSignIn(inputId,messageId){
 }
 function feesInitAccess(){
   feesAuth=PortalAccess.create({storage:localStorage,fetch:window.fetch.bind(window),url:GAS_URL,token:GAS_TOKEN,change:feesApplyRole});
-  feesApplyRole('');feesAuth.restore(false);
+  feesApplyRole('');feesAuth.restore(false).then(()=>{if(!feesRole)appBoot();});
   function check(){if(!feesLoginBusy)feesAuth.restore(false);}
   window.addEventListener('storage',event=>{if(!event.key||['sandle_admin_key','sandle_admin_unlock_at','sandle_admin_trust'].includes(event.key))check();});
   window.addEventListener('focus',check);

@@ -1,10 +1,19 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-21 00:41:12 KST
+마지막 갱신: 2026-09-21 00:50:35 KST
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
 ## 활성 작업
+
+### PORTAL-20260921-12 — 기준문서·관리비 권한 재분류
+
+- 담당: GPT
+- 상태: `done` — 2026-09-21 00:50:35 KST (구현·자동검증)
+- 범위: 포털 index/README, fees/access.js·index·tests, minutes의 notices.js/notice-access.js/index·tests·문서. 두 앱 하위 메뉴까지 같은 기능이라 함께 배포. v443, fees v103.
+- 구현: 절차 점검을 기준·문서로 이동. 계약·기준문서=view 이상, 공고·안내/절차점검=edit. 관리비 상세/흐름=공개, 점검후보=view 이상, 의결/감사=edit. 권한 없는 하위 메뉴와 빈 상위 메뉴 숨김(좌측·상단·모바일). 본문 기준문서 탭 선택도 포털 위치 동기화.
+- 검증: fees/tests/access.test.js, portal/tests/access.test.js, minutes/tests/notice-access.test.js 및 JS 파싱. 실제 사용자 암호 미입력. 기존 정적 파일 공개 여부 변경 없음.
+- 다음: 두 저장소 반영 후 v443 메뉴·본문 탭의 비인증 표시 확인.
 
 ### FEES-20260920-11 — 관리비 내부 탭 권한 분리
 
