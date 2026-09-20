@@ -158,16 +158,33 @@ textarea{resize:vertical;line-height:1.55;min-height:72px}
   .preview-area{padding:12px}
 }
 @media (max-width:480px){.library-item{grid-template-columns:1fr}.library-actions{justify-content:flex-end;flex-wrap:wrap}}
+/* Keep print pages outside the editor; never change the current draft to render saved records. */
+#printBatch{position:absolute;left:-10000px;top:0;width:210mm;visibility:hidden}
+.print-picker{width:min(760px,94vw);max-height:85vh;border:1px solid var(--line);border-radius:16px;padding:22px;color:var(--ink)}
+body.access-pending .print-picker{visibility:hidden}
+.print-picker::backdrop{background:#0006}
+.print-picker h2{margin-top:0;font-size:20px}
+.print-picker p{font-size:13px;line-height:1.6;color:var(--muted)}
+.print-list{max-height:45vh;overflow:auto;margin:14px 0}
+.print-choice{display:flex;gap:12px;align-items:center;padding:14px 8px;border-bottom:1px solid var(--line);cursor:pointer;font-size:14px}
+.print-choice input{width:18px;height:18px;flex-shrink:0;accent-color:var(--gold)}
+.print-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 @media print{
-  @page{size:A4 portrait;margin:0}
-  html,body{margin:0;padding:0;background:#fff;overflow:visible}
-  .topbar,.editor{display:none!important}
+  @page{size:A4 portrait;margin:10mm}
+  html,body{margin:0;padding:0;min-height:0;min-width:0;background:#fff;overflow:visible}
+  .topbar,.editor,.access-gate,.print-picker{display:none!important}
   .workspace{display:block;min-height:0}
-  .preview-area{display:block;padding:0;margin:0;background:#fff;overflow:visible}
+  .preview-area{display:block;min-height:0;padding:0;margin:0;background:#fff;overflow:visible}
   .paper-spread{display:block;min-width:0;margin:0}
   .paper{
-    box-shadow:none;margin:0;width:210mm;height:297mm;page-break-after:always;break-after:page;
+    box-shadow:none;margin:0;width:100%;height:auto;min-height:276mm;padding:2mm 4mm 3mm;
+    display:flex;flex-direction:column;overflow:visible;page-break-after:always;break-after:page;
     print-color-adjust:exact;-webkit-print-color-adjust:exact
   }
+  .paper > *{flex-shrink:0}
+  .paper-bottom-rule{position:static;margin-top:auto;padding-top:4mm;border-top:0;border-bottom:3px double var(--doc-rule)}
   .paper:last-child{page-break-after:auto;break-after:auto}
+  body.batch-printing > *{display:none!important}
+  body.batch-printing > #printBatch{display:block!important;position:static;width:auto;visibility:visible}
+  body.access-pending > #printBatch{display:none!important}
 }

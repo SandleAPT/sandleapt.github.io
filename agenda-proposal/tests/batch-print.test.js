@@ -1,0 +1,39 @@
+// NODE_PATH=/tmp/proposal-dom-check/node_modules node agenda-proposal/tests/batch-print.test.js
+const assert=require('assert'),fs=require('fs'),vm=require('vm');
+const {parseHTML}=require('linkedom');
+const order=require('../meeting-order.js');
+const {document,window}=parseHTML(fs.readFileSync(__dirname+'/../index.html','utf8'));
+document.body.classList.remove('access-pending');
+let prints=0,fail=false;
+window.print=()=>{prints++;};
+window.HTMLElement.prototype.showModal=function(){this.open=true;};
+window.HTMLElement.prototype.close=function(){this.open=false;};
+Object.defineProperty(window.HTMLElement.prototype,'scrollHeight',{get(){return 100;}});
+Object.defineProperty(window.HTMLElement.prototype,'clientHeight',{get(){return 100;}});
+const configSource=fs.readFileSync(__dirname+'/../app.js','utf8');
+const context={window,document,console};vm.createContext(context);
+vm.runInContext(configSource.slice(configSource.indexOf('  var typeConfig='),configSource.indexOf('  function today()')),context);
+vm.runInContext(fs.readFileSync(__dirname+'/../batch-print.js','utf8'),context);
+const docs=[{id:'old',date:'2026-08-01',docType:'decision',orderKey:1024,title:'지난 자료'},{id:'report',date:'2026-09-29',docType:'report',orderKey:1024,title:'보고서'},{id:'second',date:'2026-09-29',docType:'decision',orderKey:2048,title:'두번째 안건'},{id:'first',date:'2026-09-29',docType:'decision',orderKey:1024,title:'첫번째 안건'}];
+const loaded=[];
+const app=window.ProposalPrint.create({config:context.typeConfig,term:6,fit:()=>true,currentPages:()=>[document.getElementById('coverPaper'),document.getElementById('bodyPaper')],renderText:(el,text)=>el.textContent=text||'-',date:v=>v||'-',sort:order.sortedForLibrary,number:doc=>order.displayNumber(doc,docs),list:async()=>docs,load:async doc=>{loaded.push(doc.id);if(fail)throw Error('연결 실패');return {data:{title:doc.title,decisionDate:doc.date,decision:'본문 '+doc.id},attachments:[{name:'첨부.hwp'}]};}});
+(async()=>{
+ document.getElementById('title').value='저장 전 초안';
+ await app.open();
+ const choices=Array.from(document.querySelectorAll('.print-choice'));
+ assert(choices[0].textContent.includes('첫번째'));assert(choices[1].textContent.includes('두번째'));assert(choices[2].textContent.includes('보고서'));assert(choices[3].textContent.includes('지난'));
+ const submit=document.querySelector('[data-print]');assert(submit.disabled);
+ choices[1].querySelector('input').checked=true;choices[2].querySelector('input').checked=true;
+ // linkedom models checked as a property only; mirror browser selector matching.
+ choices[1].querySelector('input').setAttribute('checked','');choices[2].querySelector('input').setAttribute('checked','');
+ await submit.onclick();
+ assert.deepEqual(loaded,['second','report']);assert.equal(prints,1);
+ const papers=document.querySelectorAll('#printBatch .paper');assert.equal(papers.length,4);
+ assert(papers[0].textContent.includes('제 2 호'));assert(papers[2].textContent.includes('보고사항'));assert(papers[3].textContent.includes('1. 보고요지'));assert(papers[3].textContent.includes('※ 첨부1: 첨부.hwp'));
+ assert.equal(document.querySelectorAll('#printBatch [id]').length,0);
+ assert.equal(document.getElementById('title').value,'저장 전 초안');
+ await app.open();fail=true;const input=document.querySelector('.print-choice input');input.setAttribute('checked','');
+ await submit.onclick();assert.equal(prints,1);assert.equal(document.querySelectorAll('#printBatch .paper').length,0);assert(document.querySelector('[role=status]').textContent!==undefined);
+ assert(document.querySelector('.print-picker [role=status]').textContent.includes('연결 실패'));assert(!document.querySelector('[data-close]').disabled);
+ console.log('Batch print passed: newest first, group numbers, selected only, report labels, HWP names, unchanged draft, no partial print on failure.');
+})().catch(e=>{console.error(e);process.exitCode=1;});

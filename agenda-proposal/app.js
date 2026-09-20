@@ -259,7 +259,7 @@
     }
     pageState.classList.toggle("over",!fits);
     pageState.textContent=fits?"A4 2장 · 표지 + 본문 · 본문 "+used+"pt":"10pt로도 본문 A4 한 장을 넘습니다. 내용을 조금 줄여 주세요.";
-    printBtn.disabled=!fits; return fits;
+    return fits;
   }
 
   function getCloudUrl(ask){
@@ -281,12 +281,6 @@
   }
   window.addEventListener('sandle-cloud-connected',function(){libraryLoaded=false;refreshLibrary();});
   window.addEventListener('storage',function(e){if(e.key===CLOUD_URL_KEY){libraryLoaded=false;refreshLibrary();}});
-  function configureCloud(){
-    window.ProposalCloudSettings.open(getCloudUrl(false),function(url){
-      localStorage.setItem(CLOUD_URL_KEY,url);
-      libraryLoaded=false;libraryPromise=null;refreshLibrary();
-    });
-  }
   function readFileDataUrl(file){
     return new Promise(function(resolve,reject){
       var r=new FileReader();
@@ -374,7 +368,7 @@
     update();
   }
   function refreshLibrary(){
-    var url=getCloudUrl(false);cloudConnectBtn.textContent=url?"클라우드 설정":"클라우드 연결";
+    var url=getCloudUrl(false);cloudConnectBtn.textContent="목록 새로고침";
     if(!url){
       libraryLoaded=false;libraryDocs=[];libraryCount.textContent="-";cloudStatus.textContent="수정용 권한 확인 후 저장소에 자동 연결됩니다. 연결되지 않으면 관리자모드에서 다시 로그인해 주세요.";
       libraryList.innerHTML='<div class="library-empty">기존에 연결된 기기에서 한 번 로그인하면 다른 기기도 같은 저장소를 자동으로 사용합니다.</div>';update();return Promise.resolve([]);
@@ -505,10 +499,16 @@
     files.filter(fileAllowed).forEach(function(file){var duplicate=attachmentFiles.some(function(old){return old.name===file.name&&old.size===file.size&&old.lastModified===file.lastModified;});if(!duplicate)attachmentFiles.push(file);});
     attachmentsInput.value="";renderAttachmentList();update();if(rejected.length)alert("PDF, JPG, PNG, HWP 파일만 추가할 수 있어요.");
   });
-  cloudConnectBtn.addEventListener("click",configureCloud);
+  cloudConnectBtn.addEventListener("click",refreshLibrary);
   deleteBtn.addEventListener("click",function(){if(currentDocId)deleteDocument(currentDocId,el.title.value.trim());});
   document.getElementById("sampleBtn").addEventListener("click",sample);
-  newBtn.addEventListener("click",newDocument);saveBtn.addEventListener("click",saveDocument);printBtn.addEventListener("click",function(){if(fit())window.print();});
+  newBtn.addEventListener("click",newDocument);saveBtn.addEventListener("click",saveDocument);var printer=window.ProposalPrint.create({
+    fit:fit,currentPages:function(){return [coverPaper,bodyPaper];},config:typeConfig,term:CURRENT_TERM,date:fmtDate,renderText:renderText,
+    sort:order.sortedForLibrary,number:function(doc){return order.displayNumber(doc,libraryDocs);},
+    list:function(){return loadLibraryData(false,true);},
+    load:function(doc){return cloudApi({action:"get",id:doc.id},false).then(function(res){if(!res.item)throw new Error("저장된 자료를 찾지 못했습니다.");return parsePayload(res.item);});}
+  });
+  printBtn.addEventListener("click",function(){if(!documentLoading&&!documentSaving)printer.open();});
   window.addEventListener("resize",function(){requestAnimationFrame(fit);});
 
   loadDraft();update();refreshLibrary();

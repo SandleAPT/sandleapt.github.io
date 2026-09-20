@@ -12,7 +12,7 @@
 - 저장소 이름이 `sandleapt.github.io`라서 루트 주소 **https://sandleapt.github.io/** 로 열립니다(2026-08-23 이름 변경 완료).
 - Settings → Pages → Build and deployment: `Deploy from a branch`, Branch `main` / `(root)`.
 - 특정 화면으로 바로 가기: `https://sandleapt.github.io/#hajaView`처럼 `#항목id`를 사용합니다. 기존 항목 ID는 유지하며, 문서 하위 탭은 `noticeView`(관리규약) · `noticeContracts` · `noticeElections` · `noticeAnnouncements` · `noticeChecks`로 바로 엽니다.
-- 회의자료 작성 도구: `https://sandleapt.github.io/#proposalView` 또는 `https://sandleapt.github.io/agenda-proposal/`. 의결안건/보고사항을 나눠 작성하고, 같은 회의일·같은 유형 안에서 번호를 자동 배정하고 순서를 바꿀 수 있습니다. 작성 중 초안은 브라우저에 자동 저장되며, `문서 저장`을 누르면 첨부파일과 함께 비공개 클라우드에 보관됩니다.
+- 회의자료 작성 도구: `https://sandleapt.github.io/#proposalView` 또는 `https://sandleapt.github.io/agenda-proposal/`. 의결안건/보고사항을 나눠 작성하고, 같은 회의일·같은 유형 안에서 번호를 자동 배정하고 순서를 바꿀 수 있습니다. 작성 중 초안은 브라우저에 자동 저장되며, `새로 등록` 또는 `수정`을 누르면 첨부파일과 함께 비공개 클라우드에 보관됩니다.
 
 ## 구조 (2026-08-23, 사이드바형)
 - 한 파일 `index.html`. 데스크탑은 5개 대분류의 왼쪽 사이드바, 모바일(860px 이하)은 같은 5개 대분류의 하단 바와 ☰ 서랍을 사용합니다. 하단 대분류를 누르면 해당 분류의 첫 화면으로 바로 이동합니다.
@@ -29,3 +29,5 @@
 왼쪽 하단 `관리자모드`에서 기존 열람용 또는 수정용 비밀번호를 입력한다. 일반 방문자는 공개 메뉴, 열람용은 계약·기준문서와 관리비 점검 후보, 수정용은 회의 관리·비공개 자료·공고·안내·절차 점검까지 볼 수 있다. `권한 종료`와 만료 시 공개 메뉴로 돌아가며 기존 iframe을 다시 생성한다. 기본 24시간, 기기 기억 시 30일, 서버 재확인 5분. 검증: `node portal/tests/access.test.js`.
 
 관리비 추적의 `전체 상세내역·월별 흐름`은 공개, `점검 후보`는 열람용 이상, `의결 대조·감사 사례·감사 대조`는 수정용만 표시한다. 검증: `node fees/tests/access.test.js`.
+
+회의자료의 `인쇄 · PDF`는 최근 회의일순 목록에서 체크한 저장 자료만 표지·본문 순서로 출력합니다. 같은 날짜는 의결안건·보고사항의 번호순이며, 현재 작성 중인 내용은 `현재 작성본 인쇄`로 출력합니다. 별지 첨부는 파일명만 표시됩니다. 클라우드는 수정 로그인 시 자동 연결되고 `목록 새로고침`으로 다시 조회합니다.
