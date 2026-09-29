@@ -9,6 +9,7 @@
 - 남은 단계: 브라우저 보안 규칙상 새 인증정보 입력/저장은 사용자 직접 조작 필요. 메인 프로젝트 설정→스크립트 속성에 WRITER_KEY 추가 후 지정 비밀번호 입력/저장. 비공개 저장소에는 추가하지 않는다. 키 등록 전 writer 로그인 불가이며, 실제 writer 로그인·저장 왕복은 아직 미검증. 기존 ADMIN_KEY/VIEW_KEY는 변경하지 말 것.
 - 재현: minutes에서 `for f in tests/*.test.js; do node "$f"; done`; site에서 `node portal/tests/access.test.js` 및 `node fees/tests/access.test.js`. 다음: 두 GAS URL v9 확인, 포털 Pages 성공/공개 화면 확인, 사용자에게 비밀번호 등록 단계만 인계.
 - v460 양쪽 Pages 성공 및 두 GAS 주소 v9 확인 완료. 공개 브라우저에서 권한 스크립트 캐시 혼재가 관찰되어 v461로 모든 관련 캐시 키 통일, 포털 작성자 메뉴 조건도 명시적으로 보강. 서버 차단에는 영향 없음. v461 배포 확인 후 WRITER_KEY 사용자 입력 단계 인계.
+- v461 양쪽 Pages 성공: minutes a91157d5d1e13ef339d038018e16928fabacfb1c, 포털 4cc41a9aabe19edd24b0931563afb5fcf414c835. 실제 공개 포털 v461에서 안건·회의설정·명단 메뉴 숨김 확인. 메인 GAS 프로젝트 설정의 스크립트 속성 위치까지 준비, 비밀값은 조회하지 않음. 남은 작업은 사용자 WRITER_KEY 입력·저장 및 실제 작성자 로그인/저장 왕복 확인.
 
 ### MINUTES-20260930-05 — 발행 전 공개 차단
 
