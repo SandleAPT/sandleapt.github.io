@@ -1,6 +1,14 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-21 01:34:22 KST
+마지막 갱신: 2026-09-30 03:47:07 KST
+
+### MINUTES-20260930-01 — 의결사항·보고사항 분리
+
+- 담당 GPT, 상태 `done` (코드·자동검증 완료), 2026-09-30 03:47:07 KST.
+- `SandleAPT/minutes`의 `agendaView` 저장 안건에 `type:decision|report`, 보고내용·관련근거를 추가. 기존 유형 누락은 의결사항. 인쇄/PDF·Word HTML·DOCX 모두 보고의 의결/표결 부분을 제외하고 표지의 유형을 구분. `SandleAPT/sandleapt.github.io` 포털 iframe 캐시 키를 v454로 갱신.
+- 변경: minutes `core.js`, `app.css`, `index.html`, `docs/DATA.md`, `CHANGELOG.md`, `tests/report-agenda.test.js`; 포털 `index.html`, `docs/WORK_STATUS.md`.
+- 검증: `node tests/report-agenda.test.js`, `for f in tests/*.test.js; do node "$f"; done`, `node --check assets/js/app/core.js`, `git diff --check` 통과. 실제 브라우저 인쇄/PDF와 클라우드 저장 실자료는 미확인.
+- 다음 행동: 공개 v447/v454 반영 확인 및 실제 브라우저 인쇄 미리보기 확인. 재현 명령은 위와 같음. minutes 원격 커밋 `3b8f2c4`.
 
 > GPT와 Claude가 번갈아 작업할 때 가장 먼저 확인하는 파일이다. 과거 상세 로그는 Git 커밋 이력에서 확인할 수 있다.
 
