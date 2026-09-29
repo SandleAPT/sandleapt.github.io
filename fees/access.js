@@ -4,6 +4,7 @@ const feesEditTabs=['decisions','audit','auditcheck'];
 function feesCanEdit(){return feesRole==='edit';}
 function feesTabAllowed(tab){return feesEditTabs.includes(tab)?feesCanEdit():tab==='checks'?!!feesRole:['detail','trend'].includes(tab);}
 function feesApplyRole(role){
+  if(role==='writer')role=''; // Agenda authors retain public fees access only.
   const previous=feesRole;feesRole=role;
   document.querySelectorAll('.tabs button').forEach(button=>{button.hidden=!feesTabAllowed(button.dataset.tab);});
   if((previous||DATA)&&previous!==role){location.reload();return;}

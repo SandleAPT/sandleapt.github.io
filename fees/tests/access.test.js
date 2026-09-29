@@ -5,9 +5,9 @@ const context={DATA:null,document:{querySelectorAll:s=>s==='.tabs button'?button
 vm.createContext(context);vm.runInContext(fs.readFileSync(__dirname+'/../access.js','utf8'),context);
 const html=fs.readFileSync(__dirname+'/../index.html','utf8');
 vm.runInContext(html.split('\n').find(line=>line.startsWith("document.querySelectorAll('.tabs button').forEach(b=>b.onclick=")),context);
-for(const role of ['', 'view','edit']){
+for(const role of ['', 'view','edit','writer']){
  vm.runInContext('feesApplyRole('+JSON.stringify(role)+')',context);
- for(const button of buttons){const restricted=['decisions','audit','auditcheck'].includes(button.dataset.tab),allowed=restricted?role==='edit':button.dataset.tab==='checks'?!!role:true;assert.equal(button.hidden,!allowed);selected=[];button.onclick();assert.equal(selected.includes(button.dataset.tab),allowed);}
+ for(const button of buttons){const restricted=['decisions','audit','auditcheck'].includes(button.dataset.tab),allowed=restricted?role==='edit':button.dataset.tab==='checks'?(role==='edit'||role==='view'):true;assert.equal(button.hidden,!allowed);selected=[];button.onclick();assert.equal(selected.includes(button.dataset.tab),allowed);}
 }
 assert.deepEqual(loads,['audit','auditcheck']);
 assert(html.includes("feesCanEdit()?fetch('decisions.json"));

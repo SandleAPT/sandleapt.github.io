@@ -1,5 +1,14 @@
 # 공동 작업 현황
 
+### MINUTES-20260930-06 — 안건 작성자 권한
+- GPT, 구현·자동검증 완료 / 비밀번호 활성화 대기, 2026-09-30 07:59:08 KST. 일반 방문자 범위 + 안건·발언 입력만 허용하는 writer 역할. WRITER_KEY는 서버 속성에서 관리하며 공개 소스에 값 기록 금지.
+- 변경 파일: minutes의 agenda-writer.js(신규), core.js/cloud.js/index.html, GAS writer.gs(신규)/main-backend.gs/publication.gs, 관련 tests·DATA/PLAN/CHANGELOG. 포털 index.html/portal/access.js 및 관리비 access.js/index.html/권한 tests. 공통 v460.
+- 서버 전용 authorList/authorGet/saveAgendas, 안건 화면의 회의 선택·저장. 편집자가 만든 발행관리 대상 회의만 수정. 기존 회의설정·명단·발행·회의 삭제는 편집자 전용 유지. 서버 원본에 agendas만 병합하고 date/name/meeting/rosters/source 보존. revision 충돌 검사. 이전 즉시공개 자료는 작성자 수정에서 제외. 신규 회의는 편집자가 먼저 등록해야 한다.
+- 검증: minutes tests/*.test.js 전부, 포털·관리비 권한행렬(writer 포함), JS 문법/diff 통과. 합성 자료로 작성자 저장·금지 API·날짜/원문 보존·발행본 불변·동시수정·권한 종료 응답 폐기 검증. 실제 회의 내용 변경/시험 발행 없음.
+- minutes 원격 b909bd23385d946e1b13aa30c959b6a3f1e83874 Pages 성공. GAS 원본 검사 후 기존 2줄만 수정하고 writer.gs 추가, 기존 운영 URL을 버전9로 배포. 보조 활성 URL도 같은 버전9 배포 완료.
+- 남은 단계: 브라우저 보안 규칙상 새 인증정보 입력/저장은 사용자 직접 조작 필요. 메인 프로젝트 설정→스크립트 속성에 WRITER_KEY 추가 후 지정 비밀번호 입력/저장. 비공개 저장소에는 추가하지 않는다. 키 등록 전 writer 로그인 불가이며, 실제 writer 로그인·저장 왕복은 아직 미검증. 기존 ADMIN_KEY/VIEW_KEY는 변경하지 말 것.
+- 재현: minutes에서 `for f in tests/*.test.js; do node "$f"; done`; site에서 `node portal/tests/access.test.js` 및 `node fees/tests/access.test.js`. 다음: 두 GAS URL v9 확인, 포털 Pages 성공/공개 화면 확인, 사용자에게 비밀번호 등록 단계만 인계.
+
 ### MINUTES-20260930-05 — 발행 전 공개 차단
 
 - GPT, done(구현·배포 및 서버 실자료 검사, 브라우저 발행 왕복은 미검증), 2026-09-30 05:56:33 KST. 사용자 승인: 이번 9월 정기회의부터 적용, 과거 공개 유지, 편집자는 전체 열람.

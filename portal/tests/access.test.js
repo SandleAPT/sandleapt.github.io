@@ -7,10 +7,12 @@ function fixture(){
   return {auth,storage,changes,setReply:r=>{reply=r;}};
 }
 (async()=>{
-  for(const role of ['', 'view','edit']){
-    assert(allowed({},role));assert.equal(allowed({adminOnly:true},role),role==='edit');assert.equal(allowed({memberOnly:true},role),!!role);
+  for(const role of ['', 'view','edit','writer']){
+    assert(allowed({},role));assert.equal(allowed({adminOnly:true},role),role==='edit');assert.equal(allowed({memberOnly:true},role),role==='edit'||role==='view');
+    assert.equal(allowed({agendaOnly:true},role),role==='writer'||role==='edit');
   }
   const f=fixture();await f.auth.login('test-edit',false);assert.equal(f.auth.role(),'edit');
+  f.setReply({ok:true,role:'writer'});await f.auth.login('fixture-writer',false);assert.equal(f.auth.role(),'writer');
   f.setReply({ok:true,role:'view'});await f.auth.login('test-view',true);assert.equal(f.auth.role(),'view');
   assert.equal(f.storage.getItem('sandle_admin_trust'),'1');
   f.setReply({ok:false,role:'edit'});await assert.rejects(f.auth.login('invalid',false));assert.equal(f.auth.role(),'');assert(!f.storage.getItem('sandle_admin_key'));
