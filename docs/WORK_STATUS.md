@@ -8,6 +8,7 @@
 - minutes 원격 b909bd23385d946e1b13aa30c959b6a3f1e83874 Pages 성공. GAS 원본 검사 후 기존 2줄만 수정하고 writer.gs 추가, 기존 운영 URL을 버전9로 배포. 보조 활성 URL도 같은 버전9 배포 완료.
 - 남은 단계: 브라우저 보안 규칙상 새 인증정보 입력/저장은 사용자 직접 조작 필요. 메인 프로젝트 설정→스크립트 속성에 WRITER_KEY 추가 후 지정 비밀번호 입력/저장. 비공개 저장소에는 추가하지 않는다. 키 등록 전 writer 로그인 불가이며, 실제 writer 로그인·저장 왕복은 아직 미검증. 기존 ADMIN_KEY/VIEW_KEY는 변경하지 말 것.
 - 재현: minutes에서 `for f in tests/*.test.js; do node "$f"; done`; site에서 `node portal/tests/access.test.js` 및 `node fees/tests/access.test.js`. 다음: 두 GAS URL v9 확인, 포털 Pages 성공/공개 화면 확인, 사용자에게 비밀번호 등록 단계만 인계.
+- v460 양쪽 Pages 성공 및 두 GAS 주소 v9 확인 완료. 공개 브라우저에서 권한 스크립트 캐시 혼재가 관찰되어 v461로 모든 관련 캐시 키 통일, 포털 작성자 메뉴 조건도 명시적으로 보강. 서버 차단에는 영향 없음. v461 배포 확인 후 WRITER_KEY 사용자 입력 단계 인계.
 
 ### MINUTES-20260930-05 — 발행 전 공개 차단
 
