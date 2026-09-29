@@ -1,6 +1,12 @@
 # 공동 작업 현황
 
-마지막 갱신: 2026-09-30 03:47:07 KST
+마지막 갱신: 2026-09-30 03:57:19 KST
+
+### MINUTES-20260930-02 — 의결사항 근거규정 선택 입력
+
+- 담당 GPT, 상태 `done` (구현·자동검증 완료), 2026-09-30 03:57:19 KST. 기존 `decision`·`votes` 구조를 유지하면서 `decisionBasis`를 별도 문자열로 저장. 빈 값은 출력에서 생략.
+- 변경: minutes `core.js`, `index.html`, `docs/DATA.md`, `CHANGELOG.md`, `tests/report-agenda.test.js`; 포털 `index.html` iframe 캐시 v455, 이 현황 파일.
+- 검증: 보고·기존 의결·선택 근거의 저장 왕복 및 세 출력 경로, 기존 tests/*.test.js, 문법·diff 통과. minutes 원격 커밋 `1a8516a`. 다음: 공개 v448/v455 및 실제 브라우저 인쇄를 확인. 검증 명령 `node tests/report-agenda.test.js`, `for f in tests/*.test.js; do node "$f"; done`, `node --check assets/js/app/core.js`.
 
 ### MINUTES-20260930-01 — 의결사항·보고사항 분리
 
