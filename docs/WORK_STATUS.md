@@ -2215,3 +2215,9 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 - Portal PR #3 merged at 6082b4fc4ca15c0e4627f6936541cdc54bd394fb, Pages run 38065259153 succeeded. Minutes PR #1 merged at 89fb02ab89023dfd57660fb9a59a9290fe124d3d, Pages run 38065270469 succeeded. Both public pages serve v462. Main and secondary GAS version10 remain deployed.
 - Live writer Safari session confirmed the header new-meeting button opens date/type/time/place registration controls, addressing the old basic-information prompt. Server-sheet create/add/edit/remove and four backup snapshots passed; synthetic meeting cleaned up. Full browser register/save click round-trip remains untested.
 - Editor-only smoke code was restored, no credentials or operational project IDs added to this record. Deployment complete.
+
+## v463 시간 입력 수정 — 2026-10-11 00:56:40 KST
+
+- 사용자 요청: 새 회의 등록의 오전·오후 표시가 오류가 되어, 오전·오후 없이 입력하도록 변경.
+- writerCreateTime을 24시간 텍스트 입력으로 교체하고 예시·범위 검증·한 자리 시 보정 추가. 서버 형식과 백업은 유지. 회의록·포털 캐시를 함께 v463으로 갱신.
+- 검증: JS 문법, 기존 작성자 기능 테스트, 포털 권한 테스트, diff 검사 통과. 실제 Safari에서 19:00·09:00·9:00·23:59 허용, 24:00·19:60·오후 문자열 거절, 빈 시간 허용 확인. 배포 후 공개 v463 확인 예정.
