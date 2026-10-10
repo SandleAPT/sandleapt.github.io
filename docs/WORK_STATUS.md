@@ -1,5 +1,19 @@
 # 공동 작업 현황
 
+### MINUTES-20261010-02 — 작성자 새 회의 등록
+- 사용자 후속 결정: 주희님 작성자 키에 새 회의 등록 허용. 기존 회의 삭제·발행·설정/명단 수정은 관리자 전용 유지.
+- Codex, 구현·자동검증 완료 / 운영 미적용, 2026-10-10 23:43:50 KST. 기준 회의의 기수/명단을 서버에서 이어받고 날짜·정기/임시·시간·장소를 입력해 새 미발행 회의를 생성. 등록도 별도 백업. 재시도 중복·기존 회의 덮어쓰기 방지. 안건 화면 등록 폼 및 상단 새 회의록 흐름, 양쪽 v462 예정 캐시.
+- 검증: minutes 5종·포털 권한·JS/GAS/HTML 문법·diff 통과. 실제 회의 생성/수정/발행 없음. 배포·브라우저 왕복 미검증.
+- 공개 업로드 자동 승인 거절 및 Apps Script 배포 연결 부재는 앞 단계와 같음. 재시도/우회/PR 없음. 다음: 게시 승인 후 서버 진본 대조·배포→합성 회의 왕복→양쪽 Pages v462 반영. 상세: minutes docs/WRITER_BACKUP.md 및 docs/WORK_STATUS.md.
+
+### MINUTES-20261010-01 — 작성자 변경 자동 백업
+- Codex, 구현·자동검증 완료 / 운영 배포·공개 업로드 대기. 체크포인트 2026-10-10 23:35:21 KST.
+- 사용자 결정: 관리자 비밀번호 작업은 제외하고, 주희님 작성자 비밀번호로 안건 수정·추가·삭제를 저장할 때 별도 보관. 회의 자체 신규등록·삭제 권한은 확대하지 않는다.
+- 구현은 로컬 작업 폴더 `sandle-minutes-writer-backup`: writer.gs의 저장 전 전체 원본·변경 예정 JSON 백업 및 재조회 검증, publication.gs의 관리자 전용 이력 조회, tests/publication.test.js 및 DATA/PLAN/WRITER_BACKUP/CHANGELOG/WORK_STATUS 문서.
+- 검증: tests/*.test.js 5종, GAS 문법, diff 검사 통과. 수정·추가·삭제 백업, 관리자 제외, 백업 실패 시 원본 불변, 이력 비공개, 발행본 보존 fixture. 사용자 실제 회의 내용 변경 없음.
+- 운영 제한: Apps Script 배포 가능한 연결 없음. GitHub 새 브랜치 생성 후 create_tree 자동 승인 검토가 공개 코드·운영정보 게시 승인이 불명확하다는 이유로 거절. PR 없음·원격 코드 변경 없음·우회 없음. 서버 적용 완료로 보고하지 말 것.
+- 다음: 공개 게시 승인 후 검증된 변경안을 업로드하고, 기존 메인 GAS의 writer/publication 진본 대조→새 버전으로 기존 배포 갱신→관리자 이력 API 확인→합성 회의 왕복 검증. 세부 절차는 minutes docs/WRITER_BACKUP.md. 로컬 재현: `for f in tests/*.test.js; do node "$f" || exit 1; done`.
+
 ### MINUTES-20260930-06 — 안건 작성자 권한
 - GPT, 구현·자동검증 완료 / 비밀번호 활성화 대기, 2026-09-30 07:59:08 KST. 일반 방문자 범위 + 안건·발언 입력만 허용하는 writer 역할. WRITER_KEY는 서버 속성에서 관리하며 공개 소스에 값 기록 금지.
 - 변경 파일: minutes의 agenda-writer.js(신규), core.js/cloud.js/index.html, GAS writer.gs(신규)/main-backend.gs/publication.gs, 관련 tests·DATA/PLAN/CHANGELOG. 포털 index.html/portal/access.js 및 관리비 access.js/index.html/권한 tests. 공통 v460.
@@ -15,7 +29,7 @@
 
 - GPT, done(구현·배포 및 서버 실자료 검사, 브라우저 발행 왕복은 미검증), 2026-09-30 05:56:33 KST. 사용자 승인: 이번 9월 정기회의부터 적용, 과거 공개 유지, 편집자는 전체 열람.
 - 수정 범위: minutes GAS 백엔드/발행 모듈/cloud/core/정적 빌드/검증; 포털 캐시와 인계 문서.
-- 실제 Apps Script 편집기 접근 복구. 프로젝트 ID `1owjlasAVPPVz6hkYx5hsna6w3zQg9bhPXZ-yzx1B4FB3zM-3S5FJnx-f`. 원래 Code.gs 9948자/254줄/검사합52826642 일치. 진입점 2곳만 변경하고 publication.gs 추가(5786자/117줄/검사합4853880 일치). 운영 URL 버전8 배포 완료(2026-09-30 05:48:09 KST 확인). 또 다른 활성 v1 주소도 v8로 갱신 중.
+- 실제 Apps Script 편집기 접근 복구. 프로젝트 ID (관리자 로컬 배포 기록 참조). 원래 Code.gs 9948자/254줄/검사합52826642 일치. 진입점 2곳만 변경하고 publication.gs 추가(5786자/117줄/검사합4853880 일치). 운영 URL 버전8 배포 완료(2026-09-30 05:48:09 KST 확인). 또 다른 활성 v1 주소도 v8로 갱신 중.
 - 두 활성 URL 모두 GAS 버전8로 갱신 완료. 진본 Code.gs는 기존 사본과 진입점 이름 2개 외 일치(9960자/검사합52827836). 발행 대상 실제 자료는 수정·발행하지 않았다.
 - 로컬 전체 tests/*.test.js 및 문법·diff 검사 통과. 과거 정적 사본에 9월 입대의 정기 작성본이 없는 것 확인. v458 공개 화면 로드 및 과거 회의록 정적 폴백 확인. v459에서 권한 종료 중 도착한 작성본 응답 폐기, 모바일 목록 줄바꿈 보강.
 - 실제 서버 `publicationDiagnostics` 읽기 전용 실행 결과: 전체241/공개240(시스템 레코드 포함), 관리대상1/미발행1, unpublishedHidden=true, legacyUnchanged=true. 이번 9월 입대의 작성본임을 관리 화면에서 확인. 진단 함수는 편집기에만 추가했고 웹 배포 v8에는 포함하지 않음(업무 로직은 동일).
@@ -2177,3 +2191,21 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 ## 기록 규칙
 
 작업 종료 시 현재 번호, 완료 번호, 다음 번호, 변경 파일, 주의사항, 완료 시각 `YYYY-MM-DD HH:mm:ss KST`, 관련 커밋을 남긴다.
+
+## 공개 업로드 준비 — 2026-10-11 00:33:19 KST
+
+- 사용자 승인: 운영 프로젝트 정보를 제외한 새 회의 등록·자동 백업 코드와 문서를 두 공개 GitHub 저장소의 작업 브랜치에 업로드.
+- 공개 문서의 운영 Apps Script 프로젝트 식별자는 제거하고 배포 정보는 저장소 밖 로컬 전용 파일에 보관한다. 이전 로컬 커밋을 공개 업로드의 부모로 사용하지 않는다.
+- 검증된 구현은 유지한다. 운영 서버를 배포하기 전에는 main 병합·Pages 반영을 하지 않는다.
+- 서버 접근 확인: Safari에서 프로젝트를 열었지만 Apple Events JavaScript 허용이 꺼져 자동 편집·배포는 미실행. 서버 원본 및 배포 버전 변경 없음.
+- 다음: 작업 브랜치 업로드 확인, 서버 접근 연결 후 writer/publication 진본 대조·배포, 합성 회의 검증, main/Pages 반영.
+
+- 공개 업로드 완료: 2026-10-11 00:34:44 KST. 정리된 작업 브랜치 codex/writer-backup-public, 구현 커밋 6f22b28, 초안 PR https://github.com/SandleAPT/sandleapt.github.io/pull/3. main 병합·서버 배포·실회의 변경 없음. 다음: Safari의 Apple Events JavaScript 허용 후 운영 GAS 원본 대조·적용·배포·합성 회의 검증.
+
+## Server deployment verified - 2026-10-11 00:50:13 KST
+
+- Main and secondary existing web apps now use version 10. Original server files matched the baseline; only writer.gs and publication.gs changed. URLs, Code.gs, credentials and Script Properties were preserved.
+- Live server sheet smoke test passed: create, idempotent retry, agenda add/edit/remove, four administrator-readable snapshots, writer history access denied, unpublished meeting hidden, template unchanged, and Korea calendar dates preserved. The synthetic meeting was removed; test snapshots remain.
+- The first diagnostic compared a Sheets Date with a date string and failed; comparing the same Korea calendar day passed. Product code was unchanged. The editor-only diagnostic was restored and never deployed.
+- Deployed HTTP authorCreate without credentials returns writer_required, confirming the new route. Browser create/save click round-trip is still unverified.
+- The reported basic-information prompt comes from the previous new-meeting screen. The v462 writer form collects date/type/time/place before registration. Publish both corresponding PRs, verify live v462, and assess any further settings access from that flow.
