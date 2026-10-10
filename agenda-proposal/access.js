@@ -2,8 +2,8 @@
   'use strict';
   var gate=document.getElementById('accessGate'),title=document.getElementById('accessGateTitle'),text=document.getElementById('accessGateText');
   function render(role){
-    if(window.ProposalWorkspace)ProposalWorkspace.setRole(role);var allowed=role==='edit'||role==='writer';document.body.classList.toggle('access-pending',!allowed);gate.style.display=allowed?'none':'';
-    if(!allowed){title.textContent='회의자료 작성 권한을 확인해 주세요.';text.textContent='왼쪽 하단 관리자모드에서 수정용 비밀번호를 입력해 주세요. 권한 확인에 실패했다면 관리자모드에서 다시 연결해 주세요.';}
+    var allowed=role==='edit';document.body.classList.toggle('access-pending',!allowed);gate.style.display=allowed?'none':'';
+    if(!allowed){title.textContent='회의자료 작성은 수정용 권한에서만 보여요.';text.textContent='왼쪽 하단 관리자모드에서 수정용 비밀번호를 입력해 주세요. 권한 확인에 실패했다면 관리자모드에서 다시 연결해 주세요.';}
   }
   var parentAccess=null;
   try{if(window.parent!==window&&window.parent.location.origin===location.origin)parentAccess=window.parent.portalAccess;}catch(e){}

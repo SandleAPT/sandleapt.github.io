@@ -2231,3 +2231,11 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 - 변경: 포털 메뉴/access, 회의자료 workspace 라우팅·역할별 초안·작성자 표시, minutes writer 소유권/설정/defaults, writer-proposals 별도 리비전 저장. 기존 관리자 자료 이동 없음.
 - 검증: `node --test tests/*.test.js` (minutes 5개), `NODE_PATH=/private/tmp/sandle-test-deps/node_modules node --test portal/tests/*.test.js agenda-proposal/tests/*.test.js` (portal 13개), GAS/JS 문법. 운영 프로젝트 ID·비밀번호는 로컬 비공개 배포정보만 사용.
 - 다음: 운영 임시회의 검사 로그 확인 → 진단 원본 복원 → 두 기존 GAS 웹앱 새 버전 → main 업로드/Pages → 실제 writer 메뉴와 저장 round-trip 확인.
+
+## v465 메뉴 선택 정정·회의별 권한 확정 — 2026-10-11 01:40:34 KST
+
+- 사용자 정정: 회의자료 작성이 아니라 안건·발언. 후속 질문에서 회의별 제한(본인이 신규 등록한 회의만 편집)을 명시 선택했다.
+- 최종 메뉴: writer 안건·발언 + 회의설정, 회의자료 작성은 기존 관리자 전용. 신규 회의 시간·장소 빈 입력 기본값 적용은 유지.
+- v464 메인 GAS 버전11과 두 Pages는 반영되었고 운영 임시회의 검증은 통과했다. 보조 GAS는 버전10인 채 편집 중이며 최신 v465로 바로 맞출 예정이다. v464 별도 회의자료 모듈은 제거하고 회의자료 앱을 기존 동작으로 복원한다. 사용자 자료 이전·복제 없음.
+- 주희님 신규 회의는 별도 m_writer_ 레코드로 저장하며 기존 관리자 회의 수정 거절. 안건/설정 동시 저장과 변경 전후 백업, 관리자 양쪽 편집 및 작성자 표식 보존 검증 추가. 관리자 회의 목록에 작성자 표시.
+- 현재 구현/테스트 완료. 다음: GAS writer/publication 적용·진단 원본 상태 확인 → 기존 두 웹앱 새 버전 → 두 main/Pages v465 → 실제 메뉴/기본값/안건 저장 확인.
