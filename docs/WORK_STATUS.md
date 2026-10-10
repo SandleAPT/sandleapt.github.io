@@ -2199,3 +2199,5 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 - 검증된 구현은 유지한다. 운영 서버를 배포하기 전에는 main 병합·Pages 반영을 하지 않는다.
 - 서버 접근 확인: Safari에서 프로젝트를 열었지만 Apple Events JavaScript 허용이 꺼져 자동 편집·배포는 미실행. 서버 원본 및 배포 버전 변경 없음.
 - 다음: 작업 브랜치 업로드 확인, 서버 접근 연결 후 writer/publication 진본 대조·배포, 합성 회의 검증, main/Pages 반영.
+
+- 공개 업로드 완료: 2026-10-11 00:34:44 KST. 정리된 작업 브랜치 codex/writer-backup-public, 구현 커밋 6f22b28, 초안 PR https://github.com/SandleAPT/sandleapt.github.io/pull/3. main 병합·서버 배포·실회의 변경 없음. 다음: Safari의 Apple Events JavaScript 허용 후 운영 GAS 원본 대조·적용·배포·합성 회의 검증.
