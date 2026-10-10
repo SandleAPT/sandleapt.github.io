@@ -2209,3 +2209,9 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 - The first diagnostic compared a Sheets Date with a date string and failed; comparing the same Korea calendar day passed. Product code was unchanged. The editor-only diagnostic was restored and never deployed.
 - Deployed HTTP authorCreate without credentials returns writer_required, confirming the new route. Browser create/save click round-trip is still unverified.
 - The reported basic-information prompt comes from the previous new-meeting screen. The v462 writer form collects date/type/time/place before registration. Publish both corresponding PRs, verify live v462, and assess any further settings access from that flow.
+
+## Deployment complete - 2026-10-11 00:53:21 KST
+
+- Portal PR #3 merged at 6082b4fc4ca15c0e4627f6936541cdc54bd394fb, Pages run 38065259153 succeeded. Minutes PR #1 merged at 89fb02ab89023dfd57660fb9a59a9290fe124d3d, Pages run 38065270469 succeeded. Both public pages serve v462. Main and secondary GAS version10 remain deployed.
+- Live writer Safari session confirmed the header new-meeting button opens date/type/time/place registration controls, addressing the old basic-information prompt. Server-sheet create/add/edit/remove and four backup snapshots passed; synthetic meeting cleaned up. Full browser register/save click round-trip remains untested.
+- Editor-only smoke code was restored, no credentials or operational project IDs added to this record. Deployment complete.
