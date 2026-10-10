@@ -9,7 +9,7 @@ function fixture(){
 (async()=>{
   for(const role of ['', 'view','edit','writer']){
     assert(allowed({},role));assert.equal(allowed({adminOnly:true},role),role==='edit');assert.equal(allowed({memberOnly:true},role),role==='edit'||role==='view');
-    assert.equal(allowed({agendaOnly:true},role),role==='writer'||role==='edit');
+    assert.equal(allowed({agendaOnly:true},role),role==='writer'||role==='edit');assert.equal(allowed({writerEdit:true},role),role==='writer'||role==='edit');
   }
   const f=fixture();await f.auth.login('test-edit',false);assert.equal(f.auth.role(),'edit');
   f.setReply({ok:true,role:'writer'});await f.auth.login('fixture-writer',false);assert.equal(f.auth.role(),'writer');

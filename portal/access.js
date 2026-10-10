@@ -1,6 +1,6 @@
 (function(root){
   'use strict';
-  function allowed(item,role){return !!item&&(!item.adminOnly||role==='edit')&&(!item.agendaOnly||role==='writer'||role==='edit')&&(!item.memberOnly||role==='view'||role==='edit');}
+  function allowed(item,role){return !!item&&(!item.adminOnly||role==='edit')&&(!item.writerEdit||role==='writer'||role==='edit')&&(!item.agendaOnly||role==='writer'||role==='edit')&&(!item.memberOnly||role==='view'||role==='edit');}
   function create(options){
     var storage=options.storage,role='',verifiedKey='',verifiedAt=0,sequence=0;
     function read(key){try{return storage.getItem(key)||'';}catch(e){return '';}}

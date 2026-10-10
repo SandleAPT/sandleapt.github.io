@@ -2223,3 +2223,11 @@ SANDLE_MINUTES_ROOT=/path/to/minutes node archive-v1/tests/stage3-live-data.test
 - 검증: JS 문법, 기존 작성자 기능 테스트, 포털 권한 테스트, diff 검사 통과. 실제 Safari에서 19:00·09:00·9:00·23:59 허용, 24:00·19:60·오후 문자열 거절, 빈 시간 허용 확인. 배포 후 공개 v463 확인 예정.
 
 - v463 배포 완료: 2026-10-11 00:59:28 KST. 회의록 커밋 e296078 / Pages 38065714667 성공, 포털 커밋 a1fbfb2 / Pages 38065717736 성공. 공개 두 페이지의 v463 및 agenda-writer.js 텍스트 시간 입력 반영 확인. 서버 배포는 필요하지 않음.
+
+## v464 작성자 작업 범위 변경 — 2026-10-11 01:29:43 KST
+
+- 사용자 요청: 주희님 안건·발언 숨김, 회의자료 작성·회의설정 허용. 주희님은 신규 작성·본인 자료 수정, 유네님은 양쪽 수정. 회색 예시 기본값도 빈 입력 때 적용.
+- 상태: 구현·로컬 검증 완료, 운영 서버 임시회의 검증과 배포 진행 중. 서버·프론트 권한이 맞아야 하므로 함께 적용한다.
+- 변경: 포털 메뉴/access, 회의자료 workspace 라우팅·역할별 초안·작성자 표시, minutes writer 소유권/설정/defaults, writer-proposals 별도 리비전 저장. 기존 관리자 자료 이동 없음.
+- 검증: `node --test tests/*.test.js` (minutes 5개), `NODE_PATH=/private/tmp/sandle-test-deps/node_modules node --test portal/tests/*.test.js agenda-proposal/tests/*.test.js` (portal 13개), GAS/JS 문법. 운영 프로젝트 ID·비밀번호는 로컬 비공개 배포정보만 사용.
+- 다음: 운영 임시회의 검사 로그 확인 → 진단 원본 복원 → 두 기존 GAS 웹앱 새 버전 → main 업로드/Pages → 실제 writer 메뉴와 저장 round-trip 확인.

@@ -153,7 +153,7 @@
     });
     if(!el.date.value)el.date.value=today(); applyTypeUi();
   }
-  function saveDraft(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify(Object.assign({},formData(),{savedDocument:{id:currentDocId,createdAt:currentCreatedAt,url:getCloudUrl(false)}})));}catch(e){}}
+  function saveDraft(){if(window.ProposalWorkspace&&!["edit","writer"].includes(ProposalWorkspace.role()))return;try{localStorage.setItem(DRAFT_KEY,JSON.stringify(Object.assign({},formData(),{savedDocument:{id:currentDocId,createdAt:currentCreatedAt,url:getCloudUrl(false)}})));}catch(e){}}
   function loadDraft(){
     var data=null; try{data=JSON.parse(localStorage.getItem(DRAFT_KEY)||"null");}catch(e){}
     if(data){
@@ -260,21 +260,19 @@
   }
 
   function getCloudUrl(ask){
+    if(window.ProposalWorkspace){if(!["edit","writer"].includes(ProposalWorkspace.role()))return "";if(ProposalWorkspace.role()==="writer")return ProposalWorkspace.url;}
     var url="";try{url=localStorage.getItem(CLOUD_URL_KEY)||"";}catch(e){}
 
     return url;
   }
   function getCloudKey(){try{return localStorage.getItem(ADMIN_KEY)||"";}catch(e){return "";}}
   function cloudApi(body,askUrl,onProgress){
-    var url=getCloudUrl(askUrl!==false); if(!url)return Promise.reject(new Error("클라우드 저장소 연결이 필요합니다."));
-    var key=getCloudKey(); if(!key)return Promise.reject(new Error("수정용 비밀번호가 필요합니다.")); body.adminKey=key;
-    return window.ProposalCloud.json(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)},onProgress)
-      .then(function(res){
-        if(res&&res.ok)return res;
-        if(res&&res.error==="edit_required")throw new Error("수정용 비밀번호가 필요합니다.");
-        if(res&&res.error==="denied")throw new Error("클라우드 저장소 비밀번호가 올바르지 않습니다.");
-        throw new Error((res&&res.error)||"클라우드 요청에 실패했습니다.");
-      });
+    function legacy(original){
+      var url=localStorage.getItem(CLOUD_URL_KEY)||'',key=getCloudKey();
+      if(!url||!key)return Promise.reject(new Error('클라우드 저장소 연결이 필요합니다.'));
+      return window.ProposalCloud.json(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({},original,{adminKey:key}))},onProgress).then(function(res){if(res&&res.ok)return res;throw new Error('클라우드 요청에 실패했습니다.');});
+    }
+    return ProposalWorkspace.request(body,legacy,onProgress);
   }
   window.addEventListener('sandle-cloud-connected',function(){libraryLoaded=false;refreshLibrary();});
   window.addEventListener('storage',function(e){if(e.key===CLOUD_URL_KEY){libraryLoaded=false;refreshLibrary();}});
@@ -304,8 +302,9 @@
     });
   }
   function newId(){
-    if(window.crypto&&typeof crypto.randomUUID==="function")return "proposal_"+crypto.randomUUID();
-    return "proposal_"+Date.now()+"_"+Math.random().toString(36).slice(2,9);
+    var prefix=window.ProposalWorkspace&&ProposalWorkspace.role()==="writer"?"proposal_writer_":"proposal_";
+    if(window.crypto&&typeof crypto.randomUUID==="function")return prefix+crypto.randomUUID();
+    return prefix+Date.now()+"_"+Math.random().toString(36).slice(2,9);
   }
   function parsePayload(item){
     var obj=JSON.parse(item&&item.json||"{}");if(obj.kind&&obj.kind!=="agenda-proposal")throw new Error("회의자료 형식이 아닙니다.");return obj;
@@ -352,7 +351,7 @@
       var title=document.createElement("div");title.className="library-title";title.appendChild(libraryBadge(doc,number));
       var titleText=document.createElement("span");titleText.textContent=doc.title;title.appendChild(titleText);
       var meta=document.createElement("div");meta.className="library-meta";
-      var parts=[];if(doc.meetingType)parts.push(doc.meetingType+"회의");if(doc.updatedAt)parts.push("저장 "+fmtSaved(doc.updatedAt));meta.textContent=parts.join(" · ");
+      var parts=[ProposalWorkspace.own(doc.id)?"주희님 작성":"유네님 작성"];if(doc.meetingType)parts.push(doc.meetingType+"회의");if(doc.updatedAt)parts.push("저장 "+fmtSaved(doc.updatedAt));meta.textContent=parts.join(" · ");
       main.appendChild(title);main.appendChild(meta);
       var actions=document.createElement("div");actions.className="library-actions";
       var group=order.group(libraryDocs,doc.date,doc.docType),index=group.findIndex(function(row){return row.id===doc.id;});
@@ -365,13 +364,13 @@
     update();
   }
   function refreshLibrary(){
-    var url=getCloudUrl(false);cloudConnectBtn.textContent="목록 새로고침";
+    var url=getCloudUrl(false)||(ProposalWorkspace.role()==="edit"?ProposalWorkspace.url:"");cloudConnectBtn.textContent="목록 새로고침";
     if(!url){
       libraryLoaded=false;libraryDocs=[];libraryCount.textContent="-";cloudStatus.textContent="수정용 권한 확인 후 저장소에 자동 연결됩니다. 연결되지 않으면 관리자모드에서 다시 로그인해 주세요.";
       libraryList.innerHTML='<div class="library-empty">기존에 연결된 기기에서 한 번 로그인하면 다른 기기도 같은 저장소를 자동으로 사용합니다.</div>';update();return Promise.resolve([]);
     }
     cloudStatus.textContent="클라우드 목록을 불러오는 중…";libraryList.innerHTML='<div class="library-empty">불러오는 중…</div>';
-    return loadLibraryData(false,true).then(function(){cloudStatus.textContent="연결됨 · 같은 저장소와 수정용 비밀번호로 다른 PC에서도 불러올 수 있어요.";renderLibraryRows();return libraryDocs;})
+    return loadLibraryData(false,true).then(function(){cloudStatus.textContent="연결됨 · 주희님은 본인 자료만, 유네님은 두 사람의 자료를 편집할 수 있어요.";renderLibraryRows();return libraryDocs;})
       .catch(function(err){console.error(err);libraryLoaded=false;libraryCount.textContent="!";cloudStatus.textContent=err.message;libraryList.innerHTML='<div class="library-empty">클라우드 목록을 불러오지 못했습니다.</div>';update();return [];});
   }
   function ensureLibraryReady(){
@@ -510,5 +509,11 @@
   printBtn.addEventListener("click",function(){if(!documentLoading&&!documentSaving)printer.open();});
   window.addEventListener("resize",function(){requestAnimationFrame(fit);});
 
-  loadDraft();update();refreshLibrary();
+  function syncWorkspace(){
+    DRAFT_KEY=ProposalWorkspace.role()==='writer'?'sandle_agenda_proposal_v1_writer':'sandle_agenda_proposal_v1';
+    currentDocId='';currentCreatedAt='';attachmentFiles=[];libraryDocs=[];libraryLoaded=false;libraryPromise=null;
+    libraryLoadToken++;attachmentsNeedRestore=false;attachmentsInput.value="";renderAttachmentList();applyData({});if(["edit","writer"].includes(ProposalWorkspace.role()))loadDraft();update();refreshLibrary();
+  }
+  window.addEventListener('sandle-proposal-role',syncWorkspace);
+  syncWorkspace();
 })();
